@@ -1,0 +1,128 @@
+<div class="bg-[#F8F8F8] dark:bg-[#101828] h-full" *hasPermissions="['admin']">
+  <div class="bg-white dark:bg-[#1C2736] rounded-[12px] relative h-full">
+    <div class="absolute inset-6 overflow-auto">
+      <div class="flex items-center justify-between pb-3 border-b">
+        <div class="text-[16px] font-semibold dark:text-white">{{ 'departments'| translate }}</div>
+
+        <input
+          class="h-10 w-96 px-3 bg-[#F2F4F7] dark:bg-[#4D5669] rounded-[8px] text-[#101828] dark:text-white text-[14px] font-medium cursor-pointer"
+          type="search"
+          [placeholder]="'search'| translate"
+          [(ngModel)]="departmentSearch"
+        >
+      </div>
+      <table class="w-full border-none dark:text-white">
+        <thead>
+        <tr class="border-b">
+          <th class="p-5"></th>
+          <th class="border-x p-5">{{ 'uzbek'| translate }} ({{ 'latin'| translate }})</th>
+          <th class="border-x p-5">{{ 'uzbek'| translate }} ({{ 'kiril'| translate }})</th>
+          <th class="border-x p-5">{{ 'russian'| translate }} ({{ 'kiril'| translate }})</th>
+          <th class="p-5"></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr class="last:border-none border-b" [formGroup]="departmentForm">
+          <td>
+            <div class="p-3">
+            </div>
+          </td>
+
+          <td class="border-x">
+            <div class="p-3">
+              <input
+                class="w-full h-10 px-3 bg-[#F2F4F7] dark:bg-[#4D5669] rounded-[8px] text-[#101828] dark:text-white text-[14px] font-medium cursor-pointer appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                type="text"
+                [formControlName]="'name_uz_latn'"
+              >
+            </div>
+          </td>
+
+          <td class="border-x">
+            <div class="p-3">
+              <input
+                class="w-full h-10 px-3 bg-[#F2F4F7] dark:bg-[#4D5669] rounded-[8px] text-[#101828] dark:text-white text-[14px] font-medium cursor-pointer appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                type="text"
+                [formControlName]="'name_uz'"
+              >
+            </div>
+          </td>
+
+          <td class="border-x">
+            <div class="p-3">
+              <input
+                class="w-full h-10 px-3 bg-[#F2F4F7] dark:bg-[#4D5669] rounded-[8px] text-[#101828] dark:text-white text-[14px] font-medium cursor-pointer appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                type="text"
+                [formControlName]="'name_ru'"
+              >
+            </div>
+          </td>
+
+          <td>
+            <div class="p-3">
+              <div
+                (click)="createDepartment()"
+                class="w-[42.5px] h-[42.5px] grid place-items-center rounded-[8px] border border-[#F2F4F7] dark:border-[#36455899] hover:bg-[#F2F4F7] dark:hover:bg-[#4D5669] text-[#667085] dark:text-[#A2A8B2] cursor-pointer">
+                <mat-icon class="icon-size-18" [svgIcon]="'icon:outline-plus'"/>
+              </div>
+            </div>
+          </td>
+        </tr>
+          @for (department of departments| search: [ 'department_name' ]: departmentSearch; track department; let i = $index) {
+            <tr class="last:border-none border-b">
+              <td>
+                <div class="p-3">
+                  {{ i + 1 }}
+                </div>
+              </td>
+
+              <td class="border-x">
+                <div class="p-3">
+                  <input
+                    class="w-full h-10 px-3 bg-[#F2F4F7] dark:bg-[#4D5669] rounded-[8px] text-[#101828] dark:text-white text-[14px] font-medium cursor-pointer appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    type="text"
+                    [(ngModel)]="department.name_json.name_uz_latn"
+                    (keydown.enter)="updateDepartment(department)"
+                  >
+                </div>
+              </td>
+
+              <td class="border-x">
+                <div class="p-3">
+                  <input
+                    class="w-full h-10 px-3 bg-[#F2F4F7] dark:bg-[#4D5669] rounded-[8px] text-[#101828] dark:text-white text-[14px] font-medium cursor-pointer appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    type="text"
+                    [(ngModel)]="department.name_json.name_uz"
+                    (keydown.enter)="updateDepartment(department)"
+                  >
+                </div>
+              </td>
+
+              <td class="border-x">
+                <div class="p-3">
+                  <input
+                    class="w-full h-10 px-3 bg-[#F2F4F7] dark:bg-[#4D5669] rounded-[8px] text-[#101828] dark:text-white text-[14px] font-medium cursor-pointer appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    type="text"
+                    [(ngModel)]="department.name_json.name_ru"
+                    (keydown.enter)="updateDepartment(department)"
+                  >
+                </div>
+              </td>
+
+              <td>
+                <div class="p-3">
+                  <div
+                    (click)="deleteDepartment(department?.id)"
+                    class="w-[42.5px] h-[42.5px] grid place-items-center rounded-[8px] border border-[#F2F4F7] dark:border-[#36455899] hover:bg-[#F2F4F7] dark:hover:bg-[#4D5669] text-[#667085] dark:text-[#A2A8B2] cursor-pointer">
+                    <mat-icon class="icon-size-18" [svgIcon]="'icon:trash'"/>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

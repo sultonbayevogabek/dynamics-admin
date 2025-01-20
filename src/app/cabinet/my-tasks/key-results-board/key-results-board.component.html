@@ -1,0 +1,93 @@
+<div class="grid grid-cols-4 gap-6 grow h-full" #tasksGrid>
+  <div class="flex flex-col gap-6">
+    <div
+      class="flex items-center justify-between h-14 px-4 rounded-[8px] bg-white dark:bg-[#1C2736] border-t-2 border-t-[#2E90FA] text-[#101828] dark:text-white font-medium">
+      <span>{{ 'in.progress'| translate }}</span>
+
+      <span class="grid place-items-center h-6 px-3 border border-[#E4E7EC] rounded-full">
+        {{ tasks?.inProgress?.length }}
+      </span>
+    </div>
+
+    <div class="relative grow">
+      <div
+        class="flex flex-col gap-3 absolute inset-0 overflow-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-white"
+        cdkDropList
+        #inProgressList="cdkDropList"
+        [cdkDropListData]="tasks?.inProgress"
+        [id]="'1'"
+        [cdkDropListConnectedTo]="[doneList]"
+        [cdkDropListDisabled]="true"
+        (cdkDropListDropped)="drop($event)">
+        @for (item of tasks?.inProgress; track item) {
+          <div cdkDrag [cdkDragData]="item">
+            <task-card (click)="openDetailsDialog(item)" [task]="item"/>
+            <div class="h-48 shrink-0 bg-[#F2F4F7] rounded-[12px]" *cdkDragPlaceholder></div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-6">
+    <div
+      class="flex items-center justify-between h-14 px-4 rounded-[8px] bg-white dark:bg-[#1C2736] border-t-2 border-t-[#F97066] text-[#101828] dark:text-white font-medium">
+      <span>{{ 'overdue'| translate }}</span>
+
+      <span class="grid place-items-center h-6 px-3 border border-[#E4E7EC] rounded-full">
+            {{ tasks?.overdue?.length }}
+          </span>
+    </div>
+
+    <div class="relative grow">
+      <div
+        class="flex flex-col gap-3 absolute inset-0 overflow-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-white"
+        cdkDropList
+        #doneList="cdkDropList"
+        [cdkDropListData]="tasks?.overdue"
+        [id]="'4'"
+        [cdkDropListConnectedTo]="[inProgressList]"
+        [cdkDropListDisabled]="true"
+        (cdkDropListDropped)="drop($event)"
+      >
+        @for (item of tasks?.overdue; track item) {
+          <div cdkDrag [cdkDragData]="item">
+            <task-card (click)="openDetailsDialog(item)" [task]="item"/>
+            <div class="h-48 shrink-0 bg-[#F2F4F7] dark:bg-[#6A7F9C4D] rounded-[12px]" *cdkDragPlaceholder></div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-6">
+    <div
+      class="flex items-center justify-between h-14 px-4 rounded-[8px] bg-white dark:bg-[#1C2736] border-t-2 border-t-[#12B76A] text-[#101828] dark:text-white font-medium">
+      <span>{{ 'done'| translate }}</span>
+
+      <span class="grid place-items-center h-6 px-3 border border-[#E4E7EC] rounded-full">
+        {{ tasks?.done?.length }}
+      </span>
+    </div>
+
+    <div class="relative grow">
+      <div
+        class="flex flex-col gap-3 absolute inset-0 overflow-auto scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-white"
+        cdkDropList
+        #doneList="cdkDropList"
+        [cdkDropListData]="tasks?.done"
+        [id]="'3'"
+        [cdkDropListConnectedTo]="[ inProgressList]"
+        [cdkDropListDisabled]="true"
+        (cdkDropListDropped)="drop($event)">
+        @for (item of tasks?.done; track item) {
+          <div cdkDrag [cdkDragData]="item">
+            <task-card (click)="openDetailsDialog(item)" [task]="item"/>
+            <div class="h-48 shrink-0 bg-[#F2F4F7] rounded-[12px]" *cdkDragPlaceholder></div>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</div>
+

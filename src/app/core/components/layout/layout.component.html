@@ -1,0 +1,13 @@
+<mat-drawer-container class="w-screen h-screen" autosize>
+  <mat-drawer #drawer class="h-full" mode="side" [opened]="true">
+    <side-menu/>
+  </mat-drawer>
+
+  <mat-drawer-content class="flex flex-col overflow-auto">
+    <site-header class="sticky top-0 z-10"/>
+
+    <main class="grow">
+      <router-outlet/>
+    </main>
+  </mat-drawer-content>
+</mat-drawer-container>

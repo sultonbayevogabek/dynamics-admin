@@ -1,0 +1,28 @@
+<div
+  class="flex items-start gap-2 border border-[#F2F4F7] dark:border-[#36455899] rounded-[8px] p-2"
+>
+  <mat-icon class="shrink-0 icon-size-28" [svgIcon]="'icon:file'"/>
+
+  <div class="flex-grow">
+    <div class="line-clamp-1 text-[#9E77ED] underline text-[14px]">{{ file?.name }}</div>
+    <div class="text-xs dark:text-[#A2A8B2]">{{ file | fileSize | number : '1.0-2' }} {{ 'mb'| translate }}</div>
+  </div>
+
+  @if (removable) {
+    <div
+      class="shshrink-0 grid place-items-center w-10 h-10 rounded-full border border-[#F2F4F7] dark:border-[#36455899] dark:hover:bg-[#4D5669] dark:text-[#A2A8B2] hover:bg-[#F2F4F7] cursor-pointer"
+      mat-ripple
+      (click)="removeFile()"
+    >
+      <mat-icon class="icon-size-16" [svgIcon]="'icon:trash'"/>
+    </div>
+  }
+
+  <div
+    class="shrink-0 grid place-items-center w-10 h-10 rounded-full border border-[#F2F4F7] dark:border-[#36455899] dark:hover:bg-[#4D5669] dark:text-[#A2A8B2] hover:bg-[#F2F4F7] cursor-pointer"
+    mat-ripple
+    (click)="downloadFile()"
+  >
+    <mat-icon class="icon-size-12" [svgIcon]="'icon:download'"/>
+  </div>
+</div>

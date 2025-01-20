@@ -1,0 +1,43 @@
+<div class="p-4 bg-white rounded-[12px] cursor-pointer hover:shadow dark:bg-[#1C2736]" mat-ripple>
+  <div class="flex items-center gap-3 mb-5">
+    <div class="w-12 h-12 rounded-full relative overflow-hidden shrink-0">
+      @if (member?.file_id) {
+        <img class="object-cover" [ngSrc]="fileHost + 'download/' + member.file_id + '/content'" [fill]="true" [alt]="member?.full_name">
+      } @else {
+        <img class="object-cover" [ngSrc]="'assets/img/anonym.png'" [fill]="true" [alt]="member?.full_name">
+      }
+    </div>
+
+    <div class="flex-grow">
+      <div class="text-[#141522] text-[16px] font-medium line-clamp-1 uppercase dark:text-white">{{ member?.full_name }}</div>
+      <div class="text-[#54577A] text-[12px] line-clamp-1 dark:text-[#A2A8B2]">{{ member?.position_name || ('not.specified'| translate) }}</div>
+    </div>
+
+    <member-actions
+      *hasPermissions="['admin']"
+      class="shrink-0 self-start translate-x-2 -translate-y-2"
+      (click)="$event.stopPropagation();"
+      [memberId]="member.id"
+    />
+  </div>
+
+  <div class="flex flex-col gap-1 mb-5">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <mat-icon class="text-[#667085] dark:text-[#A2A8B2]" [svgIcon]="'icon:objective'"/>
+        <span class="text-[#141522] dark:text-white">{{ 'objectives'| translate }}</span>
+      </div>
+
+      <div class="font-semibold dark:text-white">{{ member?.objectives_count }}</div>
+    </div>
+
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <mat-icon class="text-[#667085] dark:text-[#A2A8B2]" [svgIcon]="'icon:growing-arrow'"/>
+        <span class="text-[#141522] dark:text-white">{{ 'key.results'| translate }}</span>
+      </div>
+
+      <div class="font-semibold dark:text-white">{{ member?.keys_count }}</div>
+    </div>
+  </div>
+</div>

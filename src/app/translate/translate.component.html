@@ -1,0 +1,152 @@
+<div class="grid grid-cols-12">
+	<div class="col-span-2 p-4 border border-gray-200 bg-gray-100">
+		<form class="sticky top-0" [formGroup]="translationForm" (ngSubmit)="addNewWord()">
+			<mat-form-field class="fuse-mat-dense w-full fuse-mat-no-subscript mb-3 relative">
+				<mat-label>Kalit</mat-label>
+				<textarea matInput type="text" [formControlName]="'key'"></textarea>
+				<mat-spinner
+					*ngIf="converting"
+					class="gray-spinner absolute top-[5px] right-[5px]"
+					[diameter]="20"
+				></mat-spinner>
+			</mat-form-field>
+
+			<mat-form-field class="fuse-mat-dense w-full fuse-mat-no-subscript mb-3 relative">
+				<mat-label>O'zbek (lotin)</mat-label>
+				<textarea matInput type="text" [formControlName]="'uzbekLatin'" (keydown.enter)="convert($event)"></textarea>
+			</mat-form-field>
+
+			<mat-form-field class="fuse-mat-dense w-full fuse-mat-no-subscript mb-3 relative">
+				<mat-label>Ўзбек (кирил)</mat-label>
+				<textarea matInput type="text" [formControlName]="'uzbekCyrillic'"></textarea>
+				<mat-spinner
+					*ngIf="converting"
+					class="gray-spinner absolute top-[5px] right-[5px]"
+					[diameter]="20"
+				></mat-spinner>
+			</mat-form-field>
+
+			<mat-form-field class="fuse-mat-dense w-full fuse-mat-no-subscript mb-3 relative">
+				<mat-label>Қарақалпақша</mat-label>
+				<textarea matInput type="text" [formControlName]="'karakalpak'"></textarea>
+				<mat-spinner
+					*ngIf="converting"
+					class="gray-spinner absolute top-[5px] right-[5px]"
+					[diameter]="20"
+				></mat-spinner>
+			</mat-form-field>
+
+			<mat-form-field class="fuse-mat-dense w-full fuse-mat-no-subscript mb-3 relative">
+				<mat-label>Русский</mat-label>
+				<textarea matInput type="text" [formControlName]="'russian'"></textarea>
+				<mat-spinner
+					*ngIf="converting"
+					class="gray-spinner absolute top-[5px] right-[5px]"
+					[diameter]="20"
+				></mat-spinner>
+			</mat-form-field>
+
+			<mat-form-field class="fuse-mat-dense w-full fuse-mat-no-subscript mb-3">
+				<mat-label>English</mat-label>
+				<textarea matInput type="text" [formControlName]="'english'"></textarea>
+				<mat-spinner
+					*ngIf="converting"
+					class="gray-spinner absolute top-[5px] right-[5px]"
+					[diameter]="20"
+				></mat-spinner>
+			</mat-form-field>
+
+			<div class="flex justify-end">
+				<button [disabled]="translationForm.invalid" class="bg-primary text-white" mat-flat-button color="primary">
+					Qo'shish
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<div class="col-span-10 border border-gray-200 sticky top-0">
+		<div class="sticky top-0 bg-gray-100 z-10 p-4">
+			<mat-form-field class="fuse-mat-dense w-full">
+				<input
+					matInput
+					placeholder="Qidirish"
+					type="search"
+					[(ngModel)]="searchParams.search"
+					(keydown.enter)="searchParams.page = 0; getTranslationsList()"
+				/>
+			</mat-form-field>
+
+			<div class="grid grid-cols-6 gap-2 text-center">
+				<div class="font-medium">Kalit</div>
+				<div class="font-medium">O'zbek (lotin)</div>
+				<div class="font-medium">Ўзбек (кирил)</div>
+				<div class="font-medium">Қарақалпақша</div>
+				<div class="font-medium">Русский</div>
+				<div class="font-medium">English</div>
+			</div>
+		</div>
+
+		<div class="px-4 pb-4 pt-2" *ngIf="translations?.length">
+			<div class="grid grid-cols-6 gap-2 mt-2" *ngFor="let translation of translations">
+				<mat-form-field class="w-full fuse-mat-no-subscript">
+					<textarea matInput #key [value]="translation.key" disabled></textarea>
+				</mat-form-field>
+
+				<mat-form-field class="w-full fuse-mat-no-subscript">
+					<textarea
+						matInput
+						#uzbekLatin
+						[value]="translation.uzbekLatin"
+						(keydown.enter)="editWord($event, translation, 'uzbekLatin', uzbekLatin.value)"
+					></textarea>
+				</mat-form-field>
+
+				<mat-form-field class="w-full fuse-mat-no-subscript">
+					<textarea
+						matInput
+						#uzbekCyrillic
+						[value]="translation.uzbekCyrillic"
+						(keydown.enter)="editWord($event, translation, 'uzbekCyrillic', uzbekCyrillic.value)"
+					></textarea>
+				</mat-form-field>
+
+				<mat-form-field class="w-full fuse-mat-no-subscript">
+					<textarea
+						matInput
+						#karakalpak
+						[value]="translation.karakalpak"
+						(keydown.enter)="editWord($event, translation, 'karakalpak', karakalpak.value)"
+					></textarea>
+				</mat-form-field>
+
+				<mat-form-field class="w-full fuse-mat-no-subscript">
+					<textarea
+						matInput
+						#russian
+						[value]="translation.russian"
+						(keydown.enter)="editWord($event, translation, 'russian', russian.value)"
+					></textarea>
+				</mat-form-field>
+
+				<mat-form-field class="w-full fuse-mat-no-subscript">
+					<textarea
+						matInput
+						#english
+						[value]="translation.english"
+						(keydown.enter)="editWord($event, translation, 'english', english.value)"
+					></textarea>
+				</mat-form-field>
+			</div>
+		</div>
+
+		<mat-paginator
+			#paginator
+			class="sticky bottom-0 z-10 p-4 bg-gray-100"
+			[length]="total"
+			[pageSize]="100"
+			(page)="getPage($event)"
+			[pageIndex]="searchParams.page"
+			[showFirstLastButtons]="true"
+		></mat-paginator>
+	</div>
+</div>

@@ -1,0 +1,118 @@
+::ng-deep {
+  .mat-mdc-snack-bar-container .mdc-snackbar__surface {
+    padding-right: 0;
+    background-color: #FFFFFF;
+    box-shadow: 0 0.25rem 1.5rem 0 rgba(51, 51, 51, 0.12);
+    overflow: hidden;
+  }
+
+  .mdc-snackbar__label {
+    padding: 0;
+  }
+}
+
+.toaster-inner {
+  position: relative;
+  display: flex;
+  align-items: start;
+  gap: 0.5rem;
+  padding: 1rem 0.75rem;
+}
+
+.toaster-decoration {
+  position: absolute;
+  top: -4rem;
+  left: -4rem;
+  width: 12rem;
+  height: 12rem;
+  border-radius: 50%;
+
+  &.success {
+    background-image: radial-gradient(50% 50% at 50% 50%, rgba(6, 187, 84, 0.1) 0%, rgba(6, 187, 84, 0) 100%);
+  }
+
+  &.error {
+    background-image: radial-gradient(50% 50% at 50% 50%, rgba(240, 66, 72, 0.1) 0%, rgba(240, 66, 72, 0) 100%);
+  }
+
+  &.warning {
+    background-image: radial-gradient(50% 50% at 50% 50%, rgba(255, 201, 0, 0.1) 0%, rgba(255, 201, 0, 0) 100%);
+  }
+
+  &.info {
+    background-image: radial-gradient(50% 50% at 50% 50%, rgba(0, 148, 255, 0.1) 0%, rgba(25, 132, 193, 0) 100%);
+  }
+}
+
+.toaster-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.toaster-body {
+  flex-grow: 1;
+  padding-right: 2rem;
+}
+
+.toaster-title {
+  margin-bottom: 0.125rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #101828;
+}
+
+.toaster-text {
+  font-size: 1rem;
+  color: #667085
+}
+
+.toaster-close {
+  transform: translate(0.5rem, -0.75rem);
+}
+
+.black {
+  color: #101828;
+}
+
+.secondary {
+  color: #667085;
+}
+
+.toaster-progress {
+  height: 0.25rem;
+  margin-left: auto;
+
+  &.success {
+    background-color: #06BB54;
+  }
+
+  &.error {
+    background-color: #FD3A7E;
+  }
+
+  &.warning {
+    background-color: #FFC900;
+  }
+
+  &.info {
+    background-color:  #0CA4FA;
+  }
+}
+
+@for $i from 1 through 5 {
+  .progress-#{$i * 5} {
+    animation-name: progress;
+    animation-duration: #{$i * 5}s;
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+  }
+}
+
+@keyframes progress {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0;
+  }
+}

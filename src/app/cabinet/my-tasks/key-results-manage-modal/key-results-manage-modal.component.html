@@ -1,0 +1,425 @@
+<div
+  class="flex items-center justify-between px-6 py-4 border-b border-b-[#F2F4F7] dark:border-b-[#36455899] dark:bg-[#1C2736]">
+  <div class="text-[20px] font-semibold text-[#101828] dark:text-white">{{ 'task'| translate }}</div>
+  <div class="flex items-center gap-1">
+    <button
+      class="w-10 h-10 grid place-items-center rounded-full hover:bg-[#F2F4F7] dark:hover:bg-[#4D5669] cursor-pointer text-[#667085]"
+      mat-ripple
+      #actionsPanel
+      (click)="overlayPanel.openPanel()"
+    >
+      <mat-icon class="icon-size-16 dark:text-[#A2A8B2]" [svgIcon]="'icon:three-dots'"/>
+    </button>
+    <button
+      class="w-10 h-10 grid place-items-center rounded-full hover:bg-[#F2F4F7] dark:hover:bg-[#4D5669] cursor-pointer text-[#667085]"
+      mat-ripple
+      mat-dialog-close
+    >
+      <mat-icon class="icon-size-14 dark:text-[#A2A8B2]" [svgIcon]="'icon:x'"/>
+    </button>
+  </div>
+</div>
+
+<mat-dialog-content class="p-0 dark:bg-[#1C2736]">
+  <quill-editor
+    class="w-full mb-6 objective-title"
+    [classes]="'min-h-[24px] w-full focus:outline-none text-[20px] font-semibold text-[#101828] dark:text-white'"
+    [(ngModel)]="keyResult.name.name_lat"
+    [modules]="{ toolbar: false }"
+    [format]="'text'"
+    [theme]="'bubble'"
+    [placeholder]="'enter.target.name'| translate"
+  ></quill-editor>
+
+  <div class="border border-[#F2F4F7] dark:border-[#36455899] rounded-[8px] mb-6 relative">
+    <div
+      class="px-4 py-2.5 text-[#101828] dark:text-[#e4e7ec] text-[14px] font-semibold border-b border-b-[#F2F4F7] dark:border-b-[#36455899]">
+      {{ 'details'| translate }}
+    </div>
+
+    <div class="grid grid-cols-4 gap-x-3 px-4 pt-[16px]">
+      <div class="col-span-1">
+        <div class="text-[12px] text-[#98A2B3] dark:text-[#e4e7ec] font-medium mb-1">{{ 'performers'| translate }}</div>
+        <div
+          (click)="showMembersSelect = true"
+          class="flex h-10 max-w-full text-[#667085] text-[12px] cursor-pointer relative">
+          @if (keyResult.recipients?.length) {
+            @for (rec of keyResult.recipients; track rec.id; let i = $index) {
+              @if (i <= 6) {
+                <div
+                  [title]="rec?.last_name + ' ' + rec?.first_name"
+                  [ngStyle]="{
+                      'left': 12 * i + 'px',
+                      'z-index': i
+                    }"
+                  class="w-10 h-10 shrink-0 rounded-full overflow-hidden absolute border-2 border-[#FFFFFF]">
+                  @if (rec?.file_id) {
+                    <img class="object-cover" [ngSrc]="fileHost + 'download/' + rec?.file_id + '/content'" [fill]="true"
+                         [alt]="rec?.full_name">
+                  } @else {
+                    <img class="object-cover" [ngSrc]="'assets/img/anonym.png'" [fill]="true" [alt]="rec?.full_name">
+                  }
+                </div>
+              }
+            }
+
+            @if (keyResult.recipients?.length > 7) {
+              <div
+                [ngStyle]="{
+                  'left': 12 * 7 + 'px',
+                  'z-index': keyResult.recipients?.length
+                }"
+                class="w-10 h-10 grid place-items-center border-2 border-[#98A2B3] rounded-full bg-[#F2F4F7] overflow-hidden absolute top-0 text-[#101828]">
+                +{{ keyResult.recipients?.length - 7 }}
+              </div>
+            }
+          } @else {
+            <mat-icon class="" [svgIcon]="'icon:outlined-avatar'"/>
+            <span class="line-clamp-1 dark:text-[#e4e7ec] ml-1">{{ 'not.selected'| translate }}</span>
+          }
+        </div>
+      </div>
+
+      <div>
+        <div class="text-[12px] text-[#98A2B3] dark:text-[#e4e7ec] font-medium mb-1">{{ 'due.date'| translate }}</div>
+        <div
+          class="w-full inline-flex items-center gap-2 h-10 px-3 bg-[#F2F4F7] dark:bg-[#4D5669] rounded-[8px] text-[#101828] dark:text-white text-[12px] font-medium cursor-pointer"
+          mat-ripple
+          (click)="dueDatePicker.open()"
+        >
+          <mat-icon class="icon-size-18" [svgIcon]="'icon:calendar'"/>
+          <span class="line-clamp-1">{{ keyResult.due_date| date }}</span>
+
+        </div>
+        <input class="w-full h-0" [(ngModel)]="keyResult.due_date" [matDatepicker]="dueDatePicker">
+        <mat-datepicker #dueDatePicker></mat-datepicker>
+      </div>
+
+      <div class="col-span-2">
+        <div class="text-[12px] text-[#98A2B3] dark:text-[#e4e7ec] font-medium mb-1">{{ 'measurement'| translate }}
+        </div>
+        <div
+          class="w-full flex h-10 px-3 py-0.5 bg-[#F2F4F7] dark:bg-[#4D5669] rounded-[8px] text-[#101828] dark:text-white text-[12px] font-medium cursor-pointer"
+        >
+          <input
+            class="flex-grow focus:outline-0 bg-transparent appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            type="text"
+            [mask]="'separator'"
+            [thousandSeparator]="' '"
+            [(ngModel)]="keyResult.unit_value"
+            [placeholder]="'value'| translate"
+          >
+
+          <div class="w-[1px] h-4/5 bg-[#98A2B3] self-center"></div>
+
+          <mat-select
+            class="flex-grow"
+            disabled
+            [matTooltip]="'select.a.target.to.display.the.unit'| translate"
+            [(ngModel)]="keyResult.unit_type"
+            [placeholder]="'unity'| translate"
+          >
+            @for (key of units; track key) {
+              <mat-option [value]="key">{{ key }}</mat-option>
+            }
+          </mat-select>
+        </div>
+      </div>
+
+      @if (currentUser?.id === keyResult?.created_by_json?.id) {
+        <label
+          class="col-span-2 pb-3">
+          <span
+            class="block text-[12px] text-[#98A2B3] dark:text-[#e4e7ec] font-medium mb-1">{{ 'done.value'| translate }}
+            :</span>
+          <input
+            class="w-full h-10 px-3 bg-[#F2F4F7] dark:bg-[#4D5669] rounded-[8px] text-[#101828] dark:text-white text-[12px] font-medium focus:outline-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            type="text"
+            [mask]="'separator'"
+            [thousandSeparator]="' '"
+            [placeholder]="'0'"
+            [(ngModel)]="doneValue"
+            [readOnly]="isDoneValueInputReadonly"
+          >
+        </label>
+      }
+
+      @if (showMembersSelect) {
+        <div class="fixed top-0 left-0 right-0 bottom-0 bg-transparent z-10" (click)="showMembersSelect = false"></div>
+        <div
+          class="absolute z-[11] left-[-1px] top-0 right-[-1px] border border-[#F2F4F7] dark:border-none rounded-[8px] shadow bg-white dark:bg-[#4D5669]"
+        >
+          <div class="p-3">
+            <div class="text-[#98A2B3] text-xs font-medium uppercase mb-2">{{ 'performers'| translate }}</div>
+            <div class="flex items-center flex-wrap gap-y-2 gap-x-5">
+              @for (member of keyResult.recipients; track member) {
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full relative overflow-hidden shrink-0">
+                    @if (member?.file_id) {
+                      <img class="object-cover" [ngSrc]="fileHost + 'download/' + member.file_id + '/content'"
+                           [fill]="true" [alt]="member?.full_name">
+                    } @else {
+                      <img class="object-cover" [ngSrc]="'assets/img/anonym.png'" [fill]="true"
+                           [alt]="member?.full_name">
+                    }
+                  </div>
+
+                  <span class="text-[#101828] dark:text-white font-medium text-[14px]">{{ member?.short_name }}</span>
+
+                  <mat-icon
+                    (click)="remove(member)"
+                    class="text-[#667085] icon-size-14 cursor-pointer"
+                    [svgIcon]="'icon:x'"/>
+                </div>
+              }
+              <input
+                [(ngModel)]="memberSearchText"
+                class="min-w-48 h-8 border-none text-[#101828] dark:text-white dark:bg-transparent grow focus:outline-0 text-[14px]"
+                [placeholder]="'search'| translate"
+                type="text"
+              >
+            </div>
+          </div>
+
+          @if (members?.length) {
+            <div
+              class="py-2 border-t border-t-[#F2F4F7] dark:border-t-[#726e6e] max-h-[200px] scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-white overflow-auto">
+              @for (member of members| search: [ 'last_name', 'first_name', 'short_name' ]: memberSearchText; track member) {
+                <div
+                  class="flex items-center gap-3 px-3 py-2 hover:bg-[#F2F4F7] dark:hover:bg-[#1C2736] cursor-pointer"
+                  mat-ripple
+                  (click)="add(member)"
+                >
+                  <div class="w-8 h-8 rounded-full relative overflow-hidden shrink-0">
+                    @if (member?.file_id) {
+                      <img class="object-cover" [ngSrc]="fileHost + 'download/' + member.file_id + '/content'"
+                           [fill]="true" [alt]="member?.full_name">
+                    } @else {
+                      <img class="object-cover" [ngSrc]="'assets/img/anonym.png'" [fill]="true"
+                           [alt]="member?.full_name">
+                    }
+                  </div>
+
+                  <span
+                    class="text-[#101828] dark:text-white font-medium text-[14px]">{{ member?.last_name| titlecase }} {{ member?.first_name| titlecase }}</span>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="mb-6">
+    <div class="mb-2 text-[#101828] dark:text-[#e4e7ec] font-medium">{{ 'description'| translate }}</div>
+
+    <quill-editor
+      class="w-full"
+      [classes]="'text-[#667085] dark:text-white focus:outline-0 min-h-20 rounded-[8px] px-[15px] py-2.5 border border-[#F2F4F7] dark:border-[#36455899] text-[13px]'"
+      [(ngModel)]="keyResult.description"
+      [modules]="{ toolbar: false }"
+      [format]="'text'"
+      [theme]="'bubble'"
+      [placeholder]="'enter.a.description...'| translate"
+    ></quill-editor>
+  </div>
+
+  <div class="mb-6">
+    <div class="flex items-center gap-2 mb-3">
+      <div class="text-[#101828] dark:text-white font-medium">{{ 'objectives'| translate }}</div>
+
+      <div class="w-1/2">
+        <mat-select
+          class="py-1 border dark:border-[#36455899] rounded-lg"
+          [placeholder]="'objective'| translate"
+          [(ngModel)]="keyResult.objective_id"
+          [disabled]="isObjectiveSelectDisabled"
+          (selectionChange)="onObjectiveSelected()"
+        >
+          @for (obj of objectivesList; track obj) {
+            <mat-option [value]="obj?.id">{{ obj?.name?.name_lat }}</mat-option>
+          }
+        </mat-select>
+      </div>
+    </div>
+
+    @for (key of keyResult?.keys; track key) {
+      <div class="flex items-center gap-2 text-[#667085] mb-2 text-[14px]">
+        <mat-icon class="icon-size-20" [svgIcon]="'icon:objective'"/>
+        <div>{{ key?.contents }}</div>
+      </div>
+    }
+  </div>
+
+  @if (data && !data?.parentObjectiveId) {
+    <div class="flex items-center justify-between mb-3">
+      <div class="text-[#101828] dark:text-white font-medium">{{ 'comments'| translate }}</div>
+    </div>
+
+    <div class="mb-6">
+      <div class="flex gap-3">
+        <div class="grid place-items-center w-8 h-8 rounded-full relative overflow-hidden shrink-0">
+          <img class="object-cover select-none" [ngSrc]="'assets/img/anonym.png'" [fill]="true" [alt]="">
+        </div>
+
+        <quill-editor
+          class="grow"
+          [classes]="'text-[#667085] dark:text-white focus:outline-0 min-h-[34px] text-[14px] rounded-[8px] px-[15px] py-2.5 border border-[#F2F4F7] dark:border-[#36455899]'"
+          [(ngModel)]="comment.comment"
+          [modules]="{ toolbar: false }"
+          [format]="'text'"
+          [theme]="'bubble'"
+          [placeholder]="'enter.your.comment...'| translate"
+        ></quill-editor>
+
+        <div class="flex gap-1">
+          <label
+            class="w-[42.5px] h-[42.5px] grid place-items-center rounded-[8px] border border-[#F2F4F7] dark:border-[#36455899] hover:bg-[#F2F4F7] dark:hover:bg-[#4D5669] text-[#667085] dark:text-[#A2A8B2] cursor-pointer"
+            mat-ripple
+          >
+            <mat-icon class="icon-size-18" [svgIcon]="'icon:paper-clip'"/>
+
+            <input
+              class="hidden"
+              type="file"
+              multiple
+              (change)="chooseFile(attachFile.files)"
+              #attachFile>
+          </label>
+          <div
+            class="w-[42.5px] h-[42.5px] grid place-items-center rounded-[8px] border border-[#F2F4F7] dark:border-[#36455899] hover:bg-[#F2F4F7] dark:hover:bg-[#4D5669] text-[#667085] dark:text-[#A2A8B2] cursor-pointer"
+            (click)="addCommentToKeyResult()"
+            mat-ripple
+          >
+            <mat-icon class="icon-size-16" [svgIcon]="'icon:paper-plane'"/>
+          </div>
+        </div>
+      </div>
+
+      @if (comment?.files?.length) {
+        <div class="grid grid-cols-2 gap-3 pt-3 pl-[44px]">
+          @for (file of comment.files; track file) {
+            <file-component
+              [file]="file"
+              [removable]="true"
+              (onFileRemoved)="removeFile($event)"
+            />
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!--  COMMENTS LIST -->
+  @for (comment of commentList; track comment) {
+    <div class="flex gap-3 mb-2">
+      <div class="grid place-items-center w-8 h-8 rounded-full relative overflow-hidden">
+        <img class="object-cover select-none" [ngSrc]="'assets/img/anonym.png'" [fill]="true" [alt]="">
+      </div>
+      <div class="grow">
+        <div class="flex items-center gap-4">
+          <div
+            class="text-[#101828] dark:text-white font-medium">{{ comment?.created_by?.last_name| titlecase }} {{ comment?.created_by?.first_name| titlecase }}
+          </div>
+
+          <div class="flex items-center gap-1.5 text-[#94A3B8] text-[13px]">
+            <mat-icon class="icon-size-16" [svgIcon]="'icon:clock'"/>
+            <span>{{ comment.created_at| date: 'dd.MM.YYYY HH:mm' }}</span>
+          </div>
+
+          @if (currentUser.id === comment?.created_by?.id) {
+            <button
+              class="w-10 h-10 grid place-items-center rounded-full hover:bg-[#F2F4F7] dark:hover:bg-[#4D5669] cursor-pointer text-[#667085] dark:text-[#A2A8B2] ml-auto"
+              mat-ripple
+              #commentOptionsPanelBtn
+              (click)="commentOptionsPanel.openPanel()"
+            >
+              <mat-icon class="icon-size-16" [svgIcon]="'icon:three-dots'"/>
+            </button>
+
+            <overlay-panel
+              [originElement]="commentOptionsPanelBtn" #commentOptionsPanel>
+              <div
+                class="py-1 rounded-[8px] shadow-lg bg-white border-[#F2F4F7] dark:bg-[#4D5669] dark:border-none"
+                overlay-content>
+                <div
+                  (click)="deleteComment(comment.id)"
+                  class="flex items-center gap-2 py-2 px-4 text-[#101828] dark:text-white hover:bg-[#F2F4F7] dark:hover:bg-[#1C2736] cursor-pointer font-medium"
+                  mat-ripple
+                >
+                  <mat-icon class="icon-size-20" [svgIcon]="'icon:trash'"/>
+                  <span>{{ 'delete'| translate }}</span>
+                </div>
+              </div>
+            </overlay-panel>
+          }
+        </div>
+        <div class="text-[#667085] dark:text-white text-[14px]">{{ comment?.content }}</div>
+        <div class="grid grid-cols-2 gap-3">
+          @for (file of comment?.files; track file) {
+            <file-component [file]="file"/>
+          }
+        </div>
+      </div>
+    </div>
+  }
+  <!--  COMMENTS LIST -->
+</mat-dialog-content>
+
+<div class="flex items-end justify-between px-6 py-4 dark:bg-[#1C2736]">
+  <div class="text-xs text-[#667085] dark:text-[#A2A8B2]">
+    @if (data && !data?.parentObjectiveId) {
+      {{ 'created.by'| translate: { creator: keyResult?.created_by_json?.short_name } }}
+      - {{ keyResult?.created_at| date: 'dd.MM.YYYY HH:mm' }}
+    }
+  </div>
+  @if (!data || data?.parentObjectiveId) {
+    <button
+      (click)="createKeyResult()"
+      class="h-[42px] rounded-[8px] text-white font-medium px-5 bg-[#9E77ED]"
+      mat-ripple
+      [disabled]="loading"
+    >
+      @if (loading) {
+        <mat-spinner [diameter]="24"/>
+      } @else {
+        {{ 'save'| translate }}
+      }
+    </button>
+  }
+
+  @if (data && !data?.parentObjectiveId) {
+    <button
+      (click)="updateKeyResult()"
+      class="h-[42px] rounded-[8px] text-white font-medium px-5 bg-[#9E77ED]"
+      mat-ripple
+      [disabled]="loading"
+    >
+      @if (loading) {
+        <mat-spinner [diameter]="24"/>
+      } @else {
+        {{ 'save'| translate }}
+      }
+    </button>
+  }
+
+</div>
+
+<overlay-panel
+  [originElement]="actionsPanel" #overlayPanel>
+  <div
+    class="py-1 rounded-[8px] shadow-lg bg-white border-[#F2F4F7] dark:bg-[#4D5669] dark:border-none"
+    overlay-content>
+    @if (currentUser?.id === keyResult?.created_by_json?.id) {
+      <div
+        (click)="deleteKeyResult(overlayPanel._overlayRef)"
+        class="flex items-center gap-2 py-2 px-4 text-[#101828] dark:text-white hover:bg-[#F2F4F7] dark:hover:bg-[#1C2736] cursor-pointer font-medium"
+        mat-ripple
+      >
+        <mat-icon class="icon-size-20" [svgIcon]="'icon:trash'"/>
+        <span>{{ 'delete'| translate }}</span>
+      </div>
+    }
+  </div>
+</overlay-panel>

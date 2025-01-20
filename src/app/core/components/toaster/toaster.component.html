@@ -1,0 +1,29 @@
+<div class="toaster relative">
+  <div class="toaster-inner">
+    <div [class]="'toaster-decoration ' + data.type"></div>
+
+    <mat-icon class="toaster-icon" [svgIcon]="'icon:toaster-' + data.type"/>
+
+    <div class="toaster-body">
+      @if (data.title) {
+        <div class="toaster-title">{{ data.title| translate }}</div>
+      }
+
+      <p class="toaster-text">{{ data.message| translate }}</p>
+    </div>
+
+    <div
+      class="grid place-items-center w-8 h-8 rounded-full hover:bg-[#F2F4F7] cursor-pointer -top-2.5 -right-2"
+      mat-ripple
+      (click)="dismissSnackbar()"
+    >
+      <mat-icon class="icon-size-12 text-gray-500" [svgIcon]="'icon:x'" />
+    </div>
+  </div>
+
+  <div
+    [class]="'toaster-progress ' + data.type +
+        (data.dismissible ? ' progress-' + data.duration / 1000 : '')
+    "
+  ></div>
+</div>

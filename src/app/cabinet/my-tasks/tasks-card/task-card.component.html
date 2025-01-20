@@ -1,0 +1,76 @@
+<div class="p-6 bg-white dark:bg-[#1C2736] rounded-[12px]" #tasksGrid>
+  <div
+    class="mb-1 line-clamp-2 text-[16px] font-semibold leading-[22px] dark:text-white"
+  >{{ task?.name?.name_lat }}
+  </div>
+
+  @if (task?.root_objective_id) {
+    <div class="flex items-start gap-1 mb-5">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#9E77ED] mt-1.5 shrink-0"></span>
+      <span class="text-[#9E77ED] font-medium">
+      {{ rootObjectives[task?.root_objective_id]| translate }}
+    </span>
+    </div>
+  }
+
+  <div class="mb-5">
+    <div class="flex items-center justify-between font-medium mb-1.5">
+      <span class="dark:text-white">{{ 'progress'| translate }}</span>
+      <span class="text-[#9E77ED]">{{ (task?.percentage || 0)| number }}%</span>
+    </div>
+
+    <div class="h-2 rounded-full bg-[#E9D7FE] overflow-hidden">
+      <div
+        class="h-full rounded-full bg-[#9E77ED]"
+        [ngStyle]="{
+          'width': (task?.percentage ? +task?.percentage : 0) + '%'
+        }"
+      ></div>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2">
+      <mat-icon class="text-[#667085] icon-size-20" [svgIcon]="'icon:clock'"/>
+      <span
+        class="font-medium dark:text-white">{{ task?.due_date ? (task?.due_date| date) : ('not.specified'| translate) }}</span>
+    </div>
+
+    @if (task?.recipients?.length) {
+      <div class="flex w-1/2 h-6 relative">
+        @if (task.recipients?.length > 7) {
+          <div
+            [ngStyle]="{
+              'right': 0,
+              'z-index': task.recipients?.length
+            }"
+            class="w-6 h-6 grid place-items-center border-s2 border-[#98A2B3] rounded-full bg-[#F2F4F7] overflow-hidden absolute top-0 text-[#101828] text-[10px]">
+            +{{ task.recipients?.length - 7 }}
+          </div>
+        }
+        @for (rec of task?.recipients; track rec; let i = $index) {
+          @if (i <= 6) {
+            <div
+              [title]="rec?.short_name"
+              [ngStyle]="{
+                'right': 12 * (i + 1) + 'px',
+                'z-index': task.recipients?.length - (i + 1)
+              }"
+
+              class="w-6 h-6 dark:border dark:border-[#364558] rounded-full overflow-hidden absolute top-0">
+              <img class="w-full h-full object-cover" [ngSrc]="'assets/img/anonym.png'" [fill]="true" alt="">
+
+              @if (rec?.file_id) {
+                <img class="object-cover" [ngSrc]="fileHost + 'download/' + rec.file_id + '/content'" [fill]="true"
+                     [alt]="rec?.full_name">
+              } @else {
+                <img class="object-cover" [ngSrc]="'assets/img/anonym.png'" [fill]="true" [alt]="rec?.full_name">
+              }
+
+            </div>
+          }
+        }
+      </div>
+    }
+  </div>
+</div>

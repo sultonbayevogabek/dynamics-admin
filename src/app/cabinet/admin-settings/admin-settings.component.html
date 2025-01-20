@@ -1,0 +1,24 @@
+<div class="flex flex-col h-full">
+  <div class="flex flex-col grow p-6 bg-[#F8F8F8] dark:bg-[#101828]">
+    <div class="flex mb-6 pl-4 pr-2 rounded-[8px] bg-white dark:bg-[#1C2736]">
+      <ng-container *ngTemplateOutlet="tabsTemplate"/>
+    </div>
+
+    <div class="grow">
+      <router-outlet/>
+    </div>
+  </div>
+</div>
+
+<ng-template #tabsTemplate>
+  @for (tab of tabs; track tab) {
+    <div
+      [routerLink]="['./', tab.link]"
+      [routerLinkActive]="'after:bg-[#9E77ED]'"
+      class="relative flex items-center gap-3 text-[#141522] dark:text-white font-medium px-4 py-5 cursor-pointer after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px]"
+      mat-ripple
+    >
+      {{ tab.text| translate }}
+    </div>
+  }
+</ng-template>
