@@ -247,6 +247,10 @@ export const appRoutes: Route[] = [
           { path: 'guides', loadChildren: () => import('app/modules/admin/docs/guides/guides.routes') }
         ]
       },
+      {
+        path: 'categories',
+        loadChildren: () => import('app/modules/admin/categories/categories.routes')
+      },
 
       // 404 & Catch all
       {
