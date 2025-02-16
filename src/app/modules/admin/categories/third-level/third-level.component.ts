@@ -117,7 +117,11 @@ export class ThirdLevelComponent implements OnInit {
       this.snackbar.open(`Kategoriya o'chirildi`, 'OK', {
         duration: 2000
       })
-      this.categories.update(oldValue => oldValue.filter(c => c._id !== _id));
+      await this.getCategories();
+    } else {
+      this.snackbar.open(`O'chirishda xatolik sodir bo'ldi`, 'OK', {
+        duration: 2000
+      })
     }
   }
 }
