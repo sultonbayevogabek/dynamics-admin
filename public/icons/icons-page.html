@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>SVG Icons</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: #026aa2;
+      }
+
+      .search-bar {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+      }
+
+      .icon-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+      }
+
+      .icon-item {
+        width: 130px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 10px;
+        background: #d6f7f8;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+      }
+
+      .icon-item:hover {
+        opacity: 0.8;
+      }
+
+      .icon-item:focus {
+        background: #85e268;
+      }
+
+      .icon-item svg {
+        display: block;
+        margin: 0 auto 10px;
+        width: 40px;
+        height: 40px;
+      }
+
+      .icon-id {
+        font-size: 12px;
+        color: #666;
+        word-wrap: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>SVG Icons</h1>
+      <input class="search-bar" id="search" placeholder="Search by ID..." type="text" />
+      <div class="icon-list" id="icon-list"></div>
+    </div>
+
+    <script>
+      const svgFiles = [
+        'own-icons.svg',
+        'heroicons-solid.svg',
+        'heroicons-outline.svg',
+        'sidebar-icons.svg',
+      ];
+      const fileNames = ['own_icons', 'heroicons_solid', 'heroicons_outline', 'sidebar_icons'];
+
+      function fetchSvgFiles(files) {
+        return Promise.all(files.map((file) => fetch(file).then((response) => response.text())));
+      }
+
+      function parseSvgContent(content) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(content, 'image/svg+xml');
+        return Array.from(doc.querySelectorAll('svg[id]'));
+      }
+
+      function displayIcons(icons, filenames, index) {
+        const iconList = document.getElementById('icon-list');
+
+        icons.forEach((icon) => {
+          const iconItem = document.createElement('button');
+          iconItem.className = 'icon-item';
+          iconItem.innerHTML = `
+                    ${icon.outerHTML}
+                    <span class="icon-id">${filenames[index]}:${icon.id}</span>
+                `;
+          iconList.appendChild(iconItem);
+        });
+      }
+
+      function filterIcons() {
+        const query = document.getElementById('search').value.toLowerCase();
+        const icons = Array.from(document.querySelectorAll('.icon-item'));
+        icons.forEach((icon) => {
+          const id = icon.querySelector('.icon-id').textContent.toLowerCase();
+          icon.style.display = id.includes(query) ? 'block' : 'none';
+        });
+      }
+
+      document.getElementById('search').addEventListener('input', filterIcons);
+
+      fetchSvgFiles(svgFiles)
+        .then((contents) => {
+          contents.forEach((content, index) => {
+            const icons = [content].flatMap(parseSvgContent);
+            displayIcons(icons, fileNames, index);
+
+            document.querySelectorAll('.icon-item').forEach((icon) => {
+              icon.addEventListener('click', (event) => {
+                event.stopPropagation();
+                console.dir(icon);
+                navigator.clipboard.writeText(icon.innerText).then(console.log);
+              });
+            });
+          });
+        })
+        .catch((error) => console.error('Error fetching SVG files:', error));
+    </script>
+  </body>
+</html>
