@@ -1,15 +1,17 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FuseCardComponent } from '../../../../@fuse/components/card';
 import { FirstLevelComponent } from './first-level/first-level.component';
+import { SecondLevelComponent } from './second-level/second-level.component';
+import { ThirdLevelComponent } from './third-level/third-level.component';
 
 @Component({
   selector: 'categories',
   templateUrl: './categories.component.html',
   imports: [
     FormsModule,
-    FuseCardComponent,
-    FirstLevelComponent
+    FirstLevelComponent,
+    SecondLevelComponent,
+    ThirdLevelComponent
   ]
 })
 

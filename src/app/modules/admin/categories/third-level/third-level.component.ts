@@ -10,9 +10,11 @@ import { firstValueFrom } from 'rxjs';
 import { ICategory } from '../category.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseConfirmationService } from '../../../../../@fuse/services/confirmation';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
-  selector: 'first-level',
+  selector: 'third-level',
   imports: [
     FormsModule,
     FuseCardComponent,
@@ -20,17 +22,21 @@ import { FuseConfirmationService } from '../../../../../@fuse/services/confirmat
     MatInput,
     MatIcon,
     MatButton,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatOption,
+    MatSelect
   ],
-  templateUrl: './first-level.component.html'
+  templateUrl: './third-level.component.html'
 })
 
-export class FirstLevelComponent implements OnInit {
+export class ThirdLevelComponent implements OnInit {
   createForm: FormGroup = new FormGroup({
     nameUz: new FormControl(null, [ Validators.required ]),
     nameRu: new FormControl(null, [ Validators.required ]),
     nameEn: new FormControl(null, [ Validators.required ])
   });
+  parentCategoryId = signal<string>(null);
+  parentCategories = signal<ICategory[]>([]);
   categories = signal<ICategory[]>([]);
 
   private categoriesService =inject(CategoriesService);
@@ -38,14 +44,20 @@ export class FirstLevelComponent implements OnInit {
   private confirmation =inject(FuseConfirmationService);
 
   async ngOnInit() {
-    await this.getCategories();
+    this.categoriesService.midCategories$.subscribe(async res => {
+      if (res && res?.length) {
+        this.parentCategories.set(res);
+        this.parentCategoryId.set(res[0]?._id)
+        await this.getCategories();
+      }
+    })
   }
 
   async updateCategory(category: ICategory) {
     if (!category.nameUz?.trim() || !category.nameRu?.trim() || !category.nameEn?.trim()) {
       return;
     }
-    const response = await firstValueFrom(this.categoriesService.updateCategory('main', category));
+    const response = await firstValueFrom(this.categoriesService.updateCategory('sub', category));
     if (response.statusCode === 200) {
       this.snackbar.open(`O'zgarishlar muvaffaqiyatli saqlandi`, 'OK', {
         duration: 2000
@@ -62,7 +74,9 @@ export class FirstLevelComponent implements OnInit {
 
     const payload = form.getRawValue();
 
-    const res = await firstValueFrom(this.categoriesService.createCategory('main', payload));
+    const res = await firstValueFrom(
+      this.categoriesService.createCategory('sub', { parentId: this.parentCategoryId(), ...payload })
+    );
     if (res.statusCode === 201) {
       this.snackbar.open(`Yangi kategoriya qo'shildi`, 'OK', {
         duration: 2000
@@ -73,8 +87,10 @@ export class FirstLevelComponent implements OnInit {
   }
 
   async getCategories() {
-    const categories = await firstValueFrom(this.categoriesService.getCategoriesList('main'));
-    this.categories.set(categories);
+    const categories = await firstValueFrom(
+      this.categoriesService.getCategoriesList('sub', this.parentCategoryId())
+    );
+    this.categories.set(categories || []);
   }
 
   async deleteCategory(_id: string) {
@@ -94,7 +110,9 @@ export class FirstLevelComponent implements OnInit {
 
     if (confirm === 'cancelled' || !confirm) return;
 
-    const response = await firstValueFrom(this.categoriesService.deleteCategory('main', _id));
+    const response = await firstValueFrom(
+      this.categoriesService.deleteCategory('sub', _id)
+    );
     if (response.statusCode === 200) {
       this.snackbar.open(`Kategoriya o'chirildi`, 'OK', {
         duration: 2000

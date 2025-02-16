@@ -1,6 +1,16 @@
 <fuse-card class="flex-col p-6">
   <div class="flex flex-col gap-3">
-    <div class="font-semibold text-xl">Birinchi darajali kategoriyalar</div>
+    <div class="flex items-start justify-between">
+      <div class="font-semibold text-xl">Uchinchi darajali kategoriyalar</div>
+
+      <mat-form-field class="w-[400px] fuse-mat-dense">
+        <mat-select [(ngModel)]="parentCategoryId" (selectionChange)="getCategories()">
+          @for (mainCategory of parentCategories(); track mainCategory._id) {
+            <mat-option [value]="mainCategory._id">{{ mainCategory.nameUz }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+    </div>
 
     <table class="w-full">
       <thead>

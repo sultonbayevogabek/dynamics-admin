@@ -111,7 +111,7 @@ export class AuthService extends RequestService {
 
     return this.request<IUser>('user/get-user-by-token', {}).pipe(
       switchMap(user => {
-        if ([ 'admin', 'super_admin' ].includes(user.role)) {
+        if ([ 'admin', 'superAdmin' ].includes(user.role)) {
           this.authorized = true;
           this.currentUser$.next(user);
           return of(user);
@@ -131,7 +131,7 @@ export class AuthService extends RequestService {
   isAuthorized(): Observable<boolean> {
     return !this.token ? of(false) : this.getUserWithToken().pipe(
       map((user: IUser) => {
-        return user && [ 'admin', 'super_admin' ].includes(user?.role);
+        return user && [ 'admin', 'superAdmin' ].includes(user?.role);
       })
     );
   }
