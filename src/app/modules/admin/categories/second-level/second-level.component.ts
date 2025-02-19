@@ -57,7 +57,7 @@ export class SecondLevelComponent implements OnInit {
     if (!category.nameUz?.trim() || !category.nameRu?.trim() || !category.nameEn?.trim()) {
       return;
     }
-    const response = await firstValueFrom(this.categoriesService.updateCategory('main', category));
+    const response = await firstValueFrom(this.categoriesService.updateCategory('mid', category));
     if (response.statusCode === 200) {
       this.snackbar.open(`O'zgarishlar muvaffaqiyatli saqlandi`, 'OK', {
         duration: 2000
