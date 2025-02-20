@@ -14,6 +14,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:rectangle-group',
         link: '/categories'
+      },
+      {
+        id: 'admin.brands',
+        title: 'Brandlar',
+        type: 'basic',
+        icon: 'heroicons_outline:sparkles',
+        link: '/brands'
       }
     ]
   },

@@ -251,6 +251,10 @@ export const appRoutes: Route[] = [
         path: 'categories',
         loadChildren: () => import('app/modules/admin/categories/categories.routes')
       },
+      {
+        path: 'brands',
+        loadChildren: () => import('app/modules/admin/brands/brands.routes')
+      },
 
       // 404 & Catch all
       {

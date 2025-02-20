@@ -1,0 +1,118 @@
+<div class="flex flex-col gap-5 mx-auto w-full max-w-screen-xl p-8">
+  <div class="text-2xl font-semibold leading-8 tracking-tight">Brandlar</div>
+  <fuse-card class="flex-col p-6">
+    <table class="w-full">
+      <thead>
+      <tr>
+        <th class="font-medium p-0 w-12">
+          <div class="p-4 bg-gray-100 rounded-tl-lg text-center">№</div>
+        </th>
+        <th class="font-medium p-0 border-x">
+          <div class="p-4 bg-gray-100 text-center">O'zbekcha</div>
+        </th>
+        <th class="font-medium p-0 border-x">
+          <div class="p-4 bg-gray-100 text-center">Ruscha</div>
+        </th>
+        <th class="font-medium p-0 border-x">
+          <div class="p-4 bg-gray-100 text-center">Inglizcha</div>
+        </th>
+        <th class="font-medium p-0 border-x w-[300px]">
+          <div class="p-4 bg-gray-100 text-center">Logotip</div>
+        </th>
+        <th class="font-medium p-0 w-24">
+          <div class="p-4 bg-gray-100 rounded-tr-lg text-center">Amal</div>
+        </th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="border-y" [formGroup]="createForm" (ngSubmit)="createBrand()">
+        <td class="font-medium p-0 relative">
+          <div class="absolute inset-0 p-4 border-l h-full">#</div>
+        </td>
+        <td class="font-medium p-0 border-x">
+          <div class="p-4 pb-0">
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+              <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz">
+            </mat-form-field>
+          </div>
+        </td>
+        <td class="font-medium p-0 border-x">
+          <div class="p-4 pb-0">
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+              <input matInput type="text" placeholder="Ruscha" formControlName="nameRu">
+            </mat-form-field>
+          </div>
+        </td>
+        <td class="font-medium p-0 border-x">
+          <div class="p-4 pb-0">
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+              <input matInput type="text" placeholder="Inglizcha" formControlName="nameEn">
+            </mat-form-field>
+          </div>
+        </td>
+        <td class="font-medium p-0 border-x">
+          <div class="p-4">
+            <file-upload />
+          </div>
+        </td>
+        <td class="font-medium p-0 relative">
+          <div class="absolute inset-0 p-4 border-r h-full">
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="createForm.invalid || createForm.disabled"
+              (click)="createBrand()"
+            >
+              <mat-icon svgIcon="heroicons_outline:plus-circle"></mat-icon>
+            </button>
+          </div>
+        </td>
+      </tr>
+      @for (brand of brands(); track brand._id; let i = $index) {
+          <tr class="border-y">
+            <td class="font-medium p-0 relative">
+              <div class="absolute inset-0 p-4 border-l h-full">{{ i + 1 }}</div>
+            </td>
+            <td class="font-medium p-0 border-x">
+              <div class="p-4 pb-0">
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+                  <input matInput type="text" placeholder="O'zbekcha" [(ngModel)]="brand.nameUz"
+                         (keydown.enter)="updateBrand(brand)">
+                </mat-form-field>
+              </div>
+            </td>
+            <td class="font-medium p-0 border-x">
+              <div class="p-4 pb-0">
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+                  <input matInput type="text" placeholder="Ruscha" [(ngModel)]="brand.nameRu"
+                         (keydown.enter)="updateBrand(brand)">
+                </mat-form-field>
+              </div>
+            </td>
+            <td class="font-medium p-0 border-x">
+              <div class="p-4 pb-0">
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+                  <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="brand.nameEn"
+                         (keydown.enter)="updateBrand(brand)">
+                </mat-form-field>
+              </div>
+            </td>
+            <td class="font-medium p-0 relative">
+              <div class="absolute inset-0 p-4 border-r h-full">
+                <button
+                  mat-flat-button
+                  color="warn"
+                  (click)="deleteBrand(brand._id)"
+                >
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_outline:trash"></mat-icon>
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </fuse-card>
+</div>
+
