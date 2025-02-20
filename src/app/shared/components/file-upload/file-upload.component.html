@@ -1,0 +1,14 @@
+<button mat-stroked-button (click)="fileInput.click()">
+  <mat-icon [svgIcon]="'heroicons_solid:paper-clip'"/>
+
+  <span class="ml-2">Faylni yuklash ({{ maxSize() }}mb, {{ accept().join(', ') }})</span>
+</button>
+
+<input
+  #fileInput
+  class="cdk-visually-hidden"
+  type="file"
+  [multiple]="multiple()"
+  [accept]="accept().join(', ')"
+  (change)="onImagesSelected($event)"
+>
