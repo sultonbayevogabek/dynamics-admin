@@ -1,6 +1,6 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FirstLevelComponent } from './first-level/first-level.component';
+import { CategoriesCrudComponent } from './categories-crud/categories-crud.component';
 import { FuseCardComponent } from '../../../../@fuse/components/card';
 
 @Component({
@@ -8,7 +8,7 @@ import { FuseCardComponent } from '../../../../@fuse/components/card';
   templateUrl: './categories.component.html',
   imports: [
     FormsModule,
-    FirstLevelComponent,
+    CategoriesCrudComponent,
     FuseCardComponent
   ],
   standalone: true,

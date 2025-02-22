@@ -2,7 +2,7 @@
   <thead>
   <tr>
     <th class="font-medium p-0 w-[70px]">
-      <div class="p-4 bg-gray-100 rounded-tl-lg text-center">№</div>
+      <div class="p-4 bg-gray-100 text-center">№</div>
     </th>
     <th class="font-medium p-0 border-x">
       <div class="p-4 bg-gray-100 text-center">O'zbekcha</div>
@@ -14,7 +14,7 @@
       <div class="p-4 bg-gray-100 text-center">Inglizcha</div>
     </th>
     <th class="font-medium p-0 w-24">
-      <div class="p-4 bg-gray-100 rounded-tr-lg text-center">Amal</div>
+      <div class="p-4 bg-gray-100 text-center">Amal</div>
     </th>
   </tr>
   </thead>
@@ -63,8 +63,8 @@
       <tr class="border-y">
         <td class="font-medium p-0 relative">
           <div class="absolute inset-0 p-4 border-l h-full">
-            <div class="absolute top-1 left-2">{{ i + 1 }}</div>
-            <button mat-icon-button (click)="category.showChildren = !category.showChildren">
+            <div class="absolute top-1 left-2 text-[10px]">{{ i + 1 }}</div>
+            <button class="shadow" mat-icon-button (click)="category.showChildren = !category.showChildren">
               @if (category.showChildren) {
                 <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-down"></mat-icon>
               }
@@ -113,8 +113,10 @@
 
       @if (category.showChildren) {
         <tr>
-          <td class="py-4 pl-6 pr-0" colspan="5">
-            <first-level
+          <td class="py-4 pl-6 pr-0 relative" colspan="5">
+            <div class="w-3 h-20 absolute left-3 top-0 border-l border-b"></div>
+
+            <categories-crud
               [parentId]="category._id"
             />
           </td>

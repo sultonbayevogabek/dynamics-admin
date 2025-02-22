@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseConfirmationService } from '../../../../../@fuse/services/confirmation';
 
 @Component({
-  selector: 'first-level',
+  selector: 'categories-crud',
   imports: [
     FormsModule,
     FuseCardComponent,
@@ -23,11 +23,11 @@ import { FuseConfirmationService } from '../../../../../@fuse/services/confirmat
     ReactiveFormsModule,
     MatIconButton
   ],
-  templateUrl: './first-level.component.html',
+  templateUrl: './categories-crud.component.html',
   standalone: true
 })
 
-export class FirstLevelComponent implements OnInit {
+export class CategoriesCrudComponent implements OnInit {
   createForm: FormGroup = new FormGroup({
     nameUz: new FormControl(null, [ Validators.required ]),
     nameRu: new FormControl(null, [ Validators.required ]),
