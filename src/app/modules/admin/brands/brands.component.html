@@ -16,6 +16,9 @@
         <th class="font-medium p-0 border-x">
           <div class="p-4 bg-gray-100 text-center">Inglizcha</div>
         </th>
+        <th class="font-medium p-0 border-x">
+          <div class="p-4 bg-gray-100 text-center">Veb-sayt</div>
+        </th>
         <th class="font-medium p-0 border-x w-[300px]">
           <div class="p-4 bg-gray-100 text-center">Logotip</div>
         </th>
@@ -29,30 +32,47 @@
         <td class="font-medium p-0 relative">
           <div class="absolute inset-0 p-4 border-l h-full">#</div>
         </td>
-        <td class="font-medium p-0 border-x">
+        <td class="font-medium p-0 border-x align-top">
           <div class="p-4 pb-0">
             <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
               <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz">
             </mat-form-field>
           </div>
         </td>
-        <td class="font-medium p-0 border-x">
+        <td class="font-medium p-0 border-x align-top">
           <div class="p-4 pb-0">
             <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
               <input matInput type="text" placeholder="Ruscha" formControlName="nameRu">
             </mat-form-field>
           </div>
         </td>
-        <td class="font-medium p-0 border-x">
+        <td class="font-medium p-0 border-x align-top">
           <div class="p-4 pb-0">
             <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
               <input matInput type="text" placeholder="Inglizcha" formControlName="nameEn">
             </mat-form-field>
           </div>
         </td>
+        <td class="font-medium p-0 border-x align-top">
+          <div class="p-4 pb-0">
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+              <input matInput type="url" placeholder="Veb-sayt" formControlName="website">
+            </mat-form-field>
+          </div>
+        </td>
         <td class="font-medium p-0 border-x">
-          <div class="p-4">
-            <file-upload />
+          <div class="flex flex-col gap-3 p-4">
+            @if (!files.length) {
+              <file-upload
+                (onFilesUpload)="filesUploaded($event)"
+              />
+            }
+            @if (files.length) {
+              <file-list
+                [files]="files"
+                (filesChange)="onLogoRemoved()"
+              />
+            }
           </div>
         </td>
         <td class="font-medium p-0 relative">
@@ -69,7 +89,7 @@
           </div>
         </td>
       </tr>
-      @for (brand of brands(); track brand._id; let i = $index) {
+        @for (brand of brands(); track brand._id; let i = $index) {
           <tr class="border-y">
             <td class="font-medium p-0 relative">
               <div class="absolute inset-0 p-4 border-l h-full">{{ i + 1 }}</div>
@@ -98,14 +118,45 @@
                 </mat-form-field>
               </div>
             </td>
+            <td class="font-medium p-0 border-x">
+              <div class="p-4 pb-0">
+                <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+                  <input matInput type="text" placeholder="Veb-sayt" [(ngModel)]="brand.website"
+                         (keydown.enter)="updateBrand(brand)">
+                </mat-form-field>
+              </div>
+            </td>
+            <td class="font-medium p-0 border-x">
+              <div class="flex flex-col gap-3 p-4">
+                @if (brand.logo) {
+                  <file-list
+                    [files]="[{ path: brand.logo }]"
+                    (filesChange)="brand.logo = null"
+                  />
+                }
+                @if (!brand.logo) {
+                  <file-upload
+                    (onFilesUpload)="brand.logo = $event[0].path"
+                  />
+                }
+              </div>
+            </td>
             <td class="font-medium p-0 relative">
-              <div class="absolute inset-0 p-4 border-r h-full">
+              <div class="absolute flex inset-0 border-r h-full p-1">
                 <button
-                  mat-flat-button
+                  mat-icon-button
+                  color="primary"
+                  (click)="updateBrand(brand)"
+                >
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:pencil"></mat-icon>
+                </button>
+
+                <button
+                  mat-icon-button
                   color="warn"
                   (click)="deleteBrand(brand._id)"
                 >
-                  <mat-icon class="icon-size-5" svgIcon="heroicons_outline:trash"></mat-icon>
+                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:trash"></mat-icon>
                 </button>
               </div>
             </td>

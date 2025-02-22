@@ -3,4 +3,6 @@ export interface IBrand {
   nameUz: string;
   nameRu: string;
   nameEn: string;
+  website: string;
+  logo: string;
 }
