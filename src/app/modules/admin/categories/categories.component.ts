@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FirstLevelComponent } from './first-level/first-level.component';
-import { SecondLevelComponent } from './second-level/second-level.component';
-import { ThirdLevelComponent } from './third-level/third-level.component';
+import { FuseCardComponent } from '../../../../@fuse/components/card';
 
 @Component({
   selector: 'categories',
@@ -10,9 +9,10 @@ import { ThirdLevelComponent } from './third-level/third-level.component';
   imports: [
     FormsModule,
     FirstLevelComponent,
-    SecondLevelComponent,
-    ThirdLevelComponent
-  ]
+    FuseCardComponent
+  ],
+  standalone: true,
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 
 export class CategoriesComponent {}

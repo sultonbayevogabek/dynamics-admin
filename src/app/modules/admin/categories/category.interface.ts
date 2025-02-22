@@ -5,4 +5,6 @@ export interface ICategory {
   nameEn: string;
   parentId: string;
   images: string[];
+  children: ICategory[];
+  showChildren: boolean;
 }

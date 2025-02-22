@@ -19,7 +19,7 @@
         <th class="font-medium p-0 border-x">
           <div class="p-4 bg-gray-100 text-center">Veb-sayt</div>
         </th>
-        <th class="font-medium p-0 border-x w-[300px]">
+        <th class="font-medium p-0 border-x w-[205px]">
           <div class="p-4 bg-gray-100 text-center">Logotip</div>
         </th>
         <th class="font-medium p-0 w-24">
@@ -69,6 +69,7 @@
             }
             @if (files.length) {
               <file-list
+                [classes]="'grid-cols-3'"
                 [files]="files"
                 (filesChange)="onLogoRemoved()"
               />
@@ -132,6 +133,7 @@
                   <file-list
                     [files]="[{ path: brand.logo }]"
                     (filesChange)="brand.logo = null"
+                    classes="grid-cols-3"
                   />
                 }
                 @if (!brand.logo) {

@@ -1,9 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FuseCardComponent } from '../../../../../@fuse/components/card';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { CategoriesService } from '../categories.service';
 import { firstValueFrom } from 'rxjs';
@@ -20,9 +20,11 @@ import { FuseConfirmationService } from '../../../../../@fuse/services/confirmat
     MatInput,
     MatIcon,
     MatButton,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatIconButton
   ],
-  templateUrl: './first-level.component.html'
+  templateUrl: './first-level.component.html',
+  standalone: true
 })
 
 export class FirstLevelComponent implements OnInit {
@@ -32,10 +34,11 @@ export class FirstLevelComponent implements OnInit {
     nameEn: new FormControl(null, [ Validators.required ])
   });
   categories = signal<ICategory[]>([]);
+  parentId = input<string>(null);
 
-  private categoriesService =inject(CategoriesService);
-  private snackbar =inject(MatSnackBar);
-  private confirmation =inject(FuseConfirmationService);
+  private categoriesService = inject(CategoriesService);
+  private snackbar = inject(MatSnackBar);
+  private confirmation = inject(FuseConfirmationService);
 
   async ngOnInit() {
     await this.getCategories();
@@ -45,11 +48,13 @@ export class FirstLevelComponent implements OnInit {
     if (!category.nameUz?.trim() || !category.nameRu?.trim() || !category.nameEn?.trim()) {
       return;
     }
-    const response = await firstValueFrom(this.categoriesService.updateCategory('main', category));
+    const response = await firstValueFrom(
+      this.categoriesService.updateCategory(category)
+    );
     if (response.statusCode === 200) {
       this.snackbar.open(`O'zgarishlar muvaffaqiyatli saqlandi`, 'OK', {
         duration: 2000
-      })
+      });
     }
   }
 
@@ -60,20 +65,27 @@ export class FirstLevelComponent implements OnInit {
       return;
     }
 
-    const payload = form.getRawValue();
+    const payload = {
+      parentId: this.parentId(),
+      ...form.getRawValue()
+    };
 
-    const res = await firstValueFrom(this.categoriesService.createCategory('main', payload));
+    const res = await firstValueFrom(
+      this.categoriesService.createCategory(payload)
+    );
     if (res.statusCode === 201) {
       this.snackbar.open(`Yangi kategoriya qo'shildi`, 'OK', {
         duration: 2000
-      })
+      });
       this.createForm.reset();
       await this.getCategories();
     }
   }
 
   async getCategories() {
-    const categories = await firstValueFrom(this.categoriesService.getCategoriesList('main'));
+    const categories = await firstValueFrom(
+      this.categoriesService.getCategoriesList(this.parentId())
+    );
     this.categories.set(categories);
   }
 
@@ -87,23 +99,23 @@ export class FirstLevelComponent implements OnInit {
         },
         confirm: {
           label: `Ha`
-        },
+        }
       },
-      dismissible: true,
+      dismissible: true
     }).afterClosed());
 
     if (confirm === 'cancelled' || !confirm) return;
 
-    const response = await firstValueFrom(this.categoriesService.deleteCategory('main', _id));
+    const response = await firstValueFrom(this.categoriesService.deleteCategory(_id));
     if (response.statusCode === 200) {
       this.snackbar.open(`Kategoriya o'chirildi`, 'OK', {
         duration: 2000
-      })
+      });
       await this.getCategories();
     } else {
       this.snackbar.open(`O'chirishda xatolik sodir bo'ldi`, 'OK', {
         duration: 2000
-      })
+      });
     }
   }
 }

@@ -59,6 +59,7 @@ export class BrandsComponent implements OnInit {
     const response = await firstValueFrom(
       this.brandsService.updateBrand(brand)
     );
+    this.snackbar.open(`O'zgarishlar saqlandi`, 'OK', { duration: 2000 });
     await this.getCategories();
   }
 
