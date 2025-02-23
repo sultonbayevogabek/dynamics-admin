@@ -1,9 +1,8 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FuseCardComponent } from '../../../../../@fuse/components/card';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { CategoriesService } from '../categories.service';
 import { firstValueFrom } from 'rxjs';
@@ -15,11 +14,9 @@ import { FuseConfirmationService } from '../../../../../@fuse/services/confirmat
   selector: 'categories-crud',
   imports: [
     FormsModule,
-    FuseCardComponent,
     MatFormField,
     MatInput,
     MatIcon,
-    MatButton,
     ReactiveFormsModule,
     MatIconButton
   ],

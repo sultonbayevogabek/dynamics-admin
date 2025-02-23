@@ -5,7 +5,7 @@ export function loggingInterceptor(req: HttpRequest<unknown>, next: HttpHandlerF
   return next(req)
     .pipe(
       tap(event => {
-        if (event.type === HttpEventType.Response && !req.url.includes('/api') && req.method === 'POST') {
+        if (event.type === HttpEventType.Response && req.method === 'POST') {
           console.log(req.method, req.url, req.body || '-', event.body);
         }
       })

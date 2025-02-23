@@ -1,13 +1,27 @@
-<div class="grid {{ classes() }} gap-3">
-  @for (file of files(); track file) {
-    <div class="aspect-square border rounded grid place-items-center overflow-hidden relative">
-      <img class="w-3/5" [src]="host + file.path" [alt]="file.originalname">
+@if (viewType() === 'grid') {
+  <div class="grid {{ classes() }} gap-3">
+    @for (file of files(); track file) {
+      <div class="aspect-square border rounded grid place-items-center overflow-hidden relative">
+        <img class="w-3/5" [src]="host + file.path" [alt]="file.originalname">
 
-      <div
-        (click)="removeFile(file)"
-        class="absolute inset-0 grid place-content-center bg-black bg-opacity-35 cursor-pointer opacity-0 hover:opacity-100">
-        <mat-icon class="text-white" svgIcon="heroicons_outline:trash"></mat-icon>
+        <div
+          (click)="removeFile(file)"
+          class="absolute inset-0 grid place-content-center bg-black bg-opacity-35 cursor-pointer opacity-0 hover:opacity-100">
+          <mat-icon class="text-white" svgIcon="heroicons_outline:trash"></mat-icon>
+        </div>
       </div>
-    </div>
-  }
-</div>
+    }
+  </div>
+}
+
+@if (viewType() === 'label') {
+  <div class="flex gap-2 flex-wrap">
+    @for (file of files(); track file) {
+      <div class="flex items-center gap-2 h-10 pl-3 rounded-full bg-gray-50 grow">
+        <mat-icon class="icon-size-5" svgIcon="heroicons_outline:photo"></mat-icon>
+
+
+      </div>
+    }
+  </div>
+}

@@ -1,107 +1,105 @@
 <table class="w-full">
   <thead>
-  <tr>
-    <th class="font-medium p-0 w-[70px]">
-      <div class="p-4 bg-gray-100 text-center">№</div>
+  <tr class="bg-gray-100">
+    <th class="font-medium p-4 w-[56px] border">
+      №
     </th>
-    <th class="font-medium p-0 border-x">
-      <div class="p-4 bg-gray-100 text-center">O'zbekcha</div>
+    <th class="font-medium p-4 border">
+      O'zbekcha
     </th>
-    <th class="font-medium p-0 border-x">
-      <div class="p-4 bg-gray-100 text-center">Ruscha</div>
+    <th class="font-medium p-4 border">
+      Ruscha
     </th>
-    <th class="font-medium p-0 border-x">
-      <div class="p-4 bg-gray-100 text-center">Inglizcha</div>
+    <th class="font-medium p-4 border">
+      Inglizcha
     </th>
-    <th class="font-medium p-0 w-24">
-      <div class="p-4 bg-gray-100 text-center">Amal</div>
+    <th class="font-medium p-4 border w-[56px]">
     </th>
   </tr>
   </thead>
   <tbody>
   <tr class="border-y" [formGroup]="createForm" (ngSubmit)="createCategory()">
-    <td class="font-medium p-0 relative">
-      <div class="absolute inset-0 p-4 border-l h-full"></div>
+    <td class="font-medium p-0 relative border">
+      <div class="absolute inset-0 p-2 h-full font-medium grid place-content-center">#</div>
     </td>
-    <td class="font-medium p-0 border-x">
-      <div class="p-4 pb-0">
+    <td class="font-medium p-0 border">
+      <div class="p-2">
         <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
           <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz">
         </mat-form-field>
       </div>
     </td>
-    <td class="font-medium p-0 border-x">
-      <div class="p-4 pb-0">
+    <td class="font-medium p-0 border">
+      <div class="p-2">
         <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
           <input matInput type="text" placeholder="Ruscha" formControlName="nameRu">
         </mat-form-field>
       </div>
     </td>
-    <td class="font-medium p-0 border-x">
-      <div class="p-4 pb-0">
+    <td class="font-medium p-0 border">
+      <div class="p-2">
         <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
           <input matInput type="text" placeholder="Inglizcha" formControlName="nameEn">
         </mat-form-field>
       </div>
     </td>
-    <td class="font-medium p-0 relative">
-      <div class="absolute inset-0 p-4 border-r h-full">
+    <td class="font-medium p-0 relative border">
+      <div class="absolute inset-0 p-2 h-full">
         <button
-          mat-flat-button
-          color="primary"
-          type="submit"
-          [disabled]="createForm.invalid || createForm.disabled"
+          class="bg-primary-50"
+          mat-icon-button
           (click)="createCategory()"
         >
-          <mat-icon svgIcon="heroicons_outline:plus-circle"></mat-icon>
+          <mat-icon class="text-primary" svgIcon="heroicons_outline:plus-circle"></mat-icon>
         </button>
       </div>
     </td>
   </tr>
 
     @for (category of categories(); track category._id; let i = $index) {
-      <tr class="border-y">
-        <td class="font-medium p-0 relative">
-          <div class="absolute inset-0 p-4 border-l h-full">
-            <div class="absolute top-1 left-2 text-[10px]">{{ i + 1 }}</div>
-            <button class="shadow" mat-icon-button (click)="category.showChildren = !category.showChildren">
+      <tr>
+        <td class="font-medium p-0 border relative">
+          <div class="absolute inset-0 p-2 h-full">
+            <div class="absolute top-0.5 left-1 text-[10px]">{{ i + 1 }}</div>
+            <button class="bg-gray-50" color="accent" mat-icon-button (click)="category.showChildren = !category.showChildren">
               @if (category.showChildren) {
-                <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-down"></mat-icon>
+                <mat-icon class="icon-size-4.5" svgIcon="heroicons_solid:chevron-down"></mat-icon>
               }
               @if (!category.showChildren) {
-                <mat-icon class="icon-size-5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
+                <mat-icon class="icon-size-4.5" svgIcon="heroicons_solid:chevron-right"></mat-icon>
               }
             </button>
           </div>
         </td>
-        <td class="font-medium p-0 border-x">
-          <div class="p-4 pb-0">
+        <td class="font-medium p-0 border">
+          <div class="p-2">
             <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
               <input matInput type="text" placeholder="O'zbekcha" [(ngModel)]="category.nameUz"
                      (keydown.enter)="updateCategory(category)">
             </mat-form-field>
           </div>
         </td>
-        <td class="font-medium p-0 border-x">
-          <div class="p-4 pb-0">
+        <td class="font-medium p-0 border">
+          <div class="p-2">
             <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
               <input matInput type="text" placeholder="Ruscha" [(ngModel)]="category.nameRu"
                      (keydown.enter)="updateCategory(category)">
             </mat-form-field>
           </div>
         </td>
-        <td class="font-medium p-0 border-x">
-          <div class="p-4 pb-0">
+        <td class="font-medium p-0 border">
+          <div class="p-2">
             <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
               <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="category.nameEn"
                      (keydown.enter)="updateCategory(category)">
             </mat-form-field>
           </div>
         </td>
-        <td class="font-medium p-0 relative">
-          <div class="absolute inset-0 p-4 border-r h-full">
+        <td class="font-medium p-0 border relative">
+          <div class="absolute inset-0 p-2 h-full">
             <button
-              mat-flat-button
+              class="bg-red-50"
+              mat-icon-button
               color="warn"
               (click)="deleteCategory(category._id)"
             >
@@ -114,7 +112,7 @@
       @if (category.showChildren) {
         <tr>
           <td class="py-4 pl-6 pr-0 relative" colspan="5">
-            <div class="w-3 h-20 absolute left-3 top-0 border-l border-b"></div>
+            <div class="w-3 h-20 absolute left-3 top-0 border-b border-l"></div>
 
             <categories-crud
               [parentId]="category._id"

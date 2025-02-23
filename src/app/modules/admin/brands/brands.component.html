@@ -1,166 +1,142 @@
 <div class="flex flex-col gap-5 mx-auto w-full max-w-screen-xl p-8">
   <div class="text-2xl font-semibold leading-8 tracking-tight">Brandlar</div>
-  <fuse-card class="flex-col p-6">
+  <fuse-card class="flex-col p-6 rounded-none">
     <table class="w-full">
       <thead>
-      <tr>
-        <th class="font-medium p-0 w-12">
-          <div class="p-4 bg-gray-100 rounded-tl-lg text-center">№</div>
+      <tr class="bg-gray-100">
+        <th class="font-medium p-4 border w-12">
+          №
         </th>
-        <th class="font-medium p-0 border-x">
-          <div class="p-4 bg-gray-100 text-center">O'zbekcha</div>
+        <th class="font-medium p-4 border">
+          O'zbekcha
         </th>
-        <th class="font-medium p-0 border-x">
-          <div class="p-4 bg-gray-100 text-center">Ruscha</div>
+        <th class="font-medium p-4 border">
+          Ruscha
         </th>
-        <th class="font-medium p-0 border-x">
-          <div class="p-4 bg-gray-100 text-center">Inglizcha</div>
+        <th class="font-medium p-4 border">
+          Inglizcha
         </th>
-        <th class="font-medium p-0 border-x">
-          <div class="p-4 bg-gray-100 text-center">Veb-sayt</div>
+        <th class="font-medium p-4 border">
+          Veb-sayt
         </th>
-        <th class="font-medium p-0 border-x w-[205px]">
-          <div class="p-4 bg-gray-100 text-center">Logotip</div>
+        <th class="font-medium p-4 border w-[205px]">
+          Logotip
         </th>
-        <th class="font-medium p-0 w-24">
-          <div class="p-4 bg-gray-100 rounded-tr-lg text-center">Amal</div>
+        <th class="font-medium p-4 border w-[100px]">
         </th>
       </tr>
       </thead>
       <tbody>
       <tr class="border-y" [formGroup]="createForm" (ngSubmit)="createBrand()">
-        <td class="font-medium p-0 relative">
-          <div class="absolute inset-0 p-4 border-l h-full">#</div>
+        <td class="p-2 border text-center">
+          #
         </td>
-        <td class="font-medium p-0 border-x align-top">
-          <div class="p-4 pb-0">
-            <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-              <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz">
-            </mat-form-field>
-          </div>
+        <td class="p-2 border align-top">
+          <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+            <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz">
+          </mat-form-field>
         </td>
-        <td class="font-medium p-0 border-x align-top">
-          <div class="p-4 pb-0">
-            <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-              <input matInput type="text" placeholder="Ruscha" formControlName="nameRu">
-            </mat-form-field>
-          </div>
+        <td class="p-2 border align-top">
+          <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+            <input matInput type="text" placeholder="Ruscha" formControlName="nameRu">
+          </mat-form-field>
         </td>
-        <td class="font-medium p-0 border-x align-top">
-          <div class="p-4 pb-0">
-            <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-              <input matInput type="text" placeholder="Inglizcha" formControlName="nameEn">
-            </mat-form-field>
-          </div>
+        <td class="p-2 border align-top">
+          <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+            <input matInput type="text" placeholder="Inglizcha" formControlName="nameEn">
+          </mat-form-field>
         </td>
-        <td class="font-medium p-0 border-x align-top">
-          <div class="p-4 pb-0">
-            <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-              <input matInput type="url" placeholder="Veb-sayt" formControlName="website">
-            </mat-form-field>
-          </div>
+        <td class="p-2 border align-top">
+          <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+            <input matInput type="url" placeholder="Veb-sayt" formControlName="website">
+          </mat-form-field>
         </td>
-        <td class="font-medium p-0 border-x">
-          <div class="flex flex-col gap-3 p-4">
-            @if (!files.length) {
-              <file-upload
-                (onFilesUpload)="filesUploaded($event)"
-              />
-            }
-            @if (files.length) {
-              <file-list
-                [classes]="'grid-cols-3'"
-                [files]="files"
-                (filesChange)="onLogoRemoved()"
-              />
-            }
-          </div>
+        <td class="p-2 border align-top">
+          @if (!files.length) {
+            <file-upload
+              (onFilesUpload)="filesUploaded($event)"
+            />
+          }
+          @if (files.length) {
+            <file-list
+              [classes]="'grid-cols-3'"
+              [files]="files"
+              (filesChange)="onLogoRemoved()"
+            />
+          }
         </td>
-        <td class="font-medium p-0 relative">
-          <div class="absolute inset-0 p-4 border-r h-full">
-            <button
-              mat-flat-button
-              color="primary"
-              type="submit"
-              [disabled]="createForm.invalid || createForm.disabled"
-              (click)="createBrand()"
-            >
-              <mat-icon svgIcon="heroicons_outline:plus-circle"></mat-icon>
-            </button>
-          </div>
+        <td class="p-2 border">
+          <button
+            class="bg-primary-50 cursor-pointer"
+            mat-icon-button
+            color="primary"
+            (click)="createBrand()"
+          >
+            <mat-icon class="icon-size-5" svgIcon="heroicons_outline:plus-circle"></mat-icon>
+          </button>
         </td>
       </tr>
         @for (brand of brands(); track brand._id; let i = $index) {
-          <tr class="border-y">
-            <td class="font-medium p-0 relative">
-              <div class="absolute inset-0 p-4 border-l h-full">{{ i + 1 }}</div>
+          <tr>
+            <td class="border text-center p-2 align-center">
+              {{ i + 1 }}
             </td>
-            <td class="font-medium p-0 border-x">
-              <div class="p-4 pb-0">
-                <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-                  <input matInput type="text" placeholder="O'zbekcha" [(ngModel)]="brand.nameUz"
-                         (keydown.enter)="updateBrand(brand)">
-                </mat-form-field>
-              </div>
+            <td class="p-2 border align-top">
+              <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+                <input matInput type="text" placeholder="O'zbekcha" [(ngModel)]="brand.nameUz"
+                       (keydown.enter)="updateBrand(brand)">
+              </mat-form-field>
             </td>
-            <td class="font-medium p-0 border-x">
-              <div class="p-4 pb-0">
-                <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-                  <input matInput type="text" placeholder="Ruscha" [(ngModel)]="brand.nameRu"
-                         (keydown.enter)="updateBrand(brand)">
-                </mat-form-field>
-              </div>
+            <td class="p-2 border align-top">
+              <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+                <input matInput type="text" placeholder="Ruscha" [(ngModel)]="brand.nameRu"
+                       (keydown.enter)="updateBrand(brand)">
+              </mat-form-field>
             </td>
-            <td class="font-medium p-0 border-x">
-              <div class="p-4 pb-0">
-                <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-                  <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="brand.nameEn"
-                         (keydown.enter)="updateBrand(brand)">
-                </mat-form-field>
-              </div>
+            <td class="p-2 border align-top">
+              <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+                <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="brand.nameEn"
+                       (keydown.enter)="updateBrand(brand)">
+              </mat-form-field>
             </td>
-            <td class="font-medium p-0 border-x">
-              <div class="p-4 pb-0">
-                <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-                  <input matInput type="text" placeholder="Veb-sayt" [(ngModel)]="brand.website"
-                         (keydown.enter)="updateBrand(brand)">
-                </mat-form-field>
-              </div>
+            <td class="p-2 border align-top">
+              <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+                <input matInput type="text" placeholder="Veb-sayt" [(ngModel)]="brand.website"
+                       (keydown.enter)="updateBrand(brand)">
+              </mat-form-field>
             </td>
-            <td class="font-medium p-0 border-x">
-              <div class="flex flex-col gap-3 p-4">
-                @if (brand.logo) {
-                  <file-list
-                    [files]="[{ path: brand.logo }]"
-                    (filesChange)="brand.logo = null"
-                    classes="grid-cols-3"
-                  />
-                }
-                @if (!brand.logo) {
-                  <file-upload
-                    (onFilesUpload)="brand.logo = $event[0].path"
-                  />
-                }
-              </div>
+            <td class="p-2 border align-top">
+              @if (brand.logo) {
+                <file-list
+                  [files]="[{ path: brand.logo }]"
+                  (filesChange)="brand.logo = null"
+                  classes="grid-cols-3"
+                />
+              }
+              @if (!brand.logo) {
+                <file-upload
+                  (onFilesUpload)="brand.logo = $event[0].path"
+                />
+              }
             </td>
-            <td class="font-medium p-0 relative">
-              <div class="absolute flex inset-0 border-r h-full p-1">
-                <button
-                  mat-icon-button
-                  color="primary"
-                  (click)="updateBrand(brand)"
-                >
-                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:pencil"></mat-icon>
-                </button>
+            <td class="p-2 border">
+              <button
+                mat-icon-button
+                color="primary"
+                class="bg-primary-50"
+                (click)="updateBrand(brand)"
+              >
+                <mat-icon class="icon-size-4" svgIcon="heroicons_outline:pencil"></mat-icon>
+              </button>
 
-                <button
-                  mat-icon-button
-                  color="warn"
-                  (click)="deleteBrand(brand._id)"
-                >
-                  <mat-icon class="icon-size-5" svgIcon="heroicons_solid:trash"></mat-icon>
-                </button>
-              </div>
+              <button
+                class="bg-red-50 ml-[2px]"
+                mat-icon-button
+                color="warn"
+                (click)="deleteBrand(brand._id)"
+              >
+                <mat-icon class="icon-size-4" svgIcon="heroicons_outline:trash"></mat-icon>
+              </button>
             </td>
           </tr>
         }

@@ -7,6 +7,6 @@ export const environment = {
     scope: 'email profile openid',
     nonce: '123456789'
   },
-  host: 'https://dynamics-market-437742f0667d.herokuapp.com/',
+  host: 'https://api.farruhzoirov.uz/',
   // host: 'http://localhost:4000/'
 };

@@ -72,13 +72,15 @@ export class BrandsComponent implements OnInit {
 
     const payload = form.getRawValue();
 
-    const response = await firstValueFrom(
+    const response: any = await firstValueFrom(
       this.brandsService.createBrand(payload)
     );
 
-    this.files = [];
-    this.createForm.reset();
-    await this.getCategories();
+    if (!response?.errorCode) {
+      this.files = [];
+      this.createForm.reset();
+      await this.getCategories();
+    }
   }
 
   async getCategories() {

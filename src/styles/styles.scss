@@ -5,3 +5,11 @@
 .align-top {
   vertical-align: top;
 }
+
+.align-center {
+  vertical-align: center;
+}
+
+.fuse-mat-no-header .mat-mdc-form-field-subscript-wrapper {
+  height: 0 !important;
+}
