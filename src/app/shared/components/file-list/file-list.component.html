@@ -17,11 +17,19 @@
 @if (viewType() === 'label') {
   <div class="flex gap-2 flex-wrap">
     @for (file of files(); track file) {
-      <div class="flex items-center gap-2 h-10 pl-3 rounded-full bg-gray-50 grow">
-        <mat-icon class="icon-size-5" svgIcon="heroicons_outline:photo"></mat-icon>
+      <div class="flex items-center gap-4 border h-10 pl-5 pr-3 rounded-full cursor-pointer" (click)="openFileView(file)">
+        <span>{{ file.filename| shortenFilename }}</span>
 
-
+        <button  mat-icon-button (click)="removeFile(file)">
+          <mat-icon class="icon-size-5" svgIcon="heroicons_outline:x-mark"></mat-icon>
+        </button>
       </div>
     }
+  </div>
+}
+
+@if (openedFile()) {
+  <div (click)="openedFile.set(null)" class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-9999">
+    <img class="w-1/4" [src]="host + openedFile().path" alt="">
   </div>
 }

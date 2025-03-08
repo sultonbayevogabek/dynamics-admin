@@ -52,15 +52,15 @@
           </mat-form-field>
         </td>
         <td class="p-2 border align-top">
-          @if (!files.length) {
+          @if (!createForm.get('logo').value) {
             <file-upload
               (onFilesUpload)="filesUploaded($event)"
             />
           }
-          @if (files.length) {
+          @if (createForm.get('logo').value) {
             <file-list
               [classes]="'grid-cols-3'"
-              [files]="files"
+              [files]="[createForm.get('logo').value]"
               (filesChange)="onLogoRemoved()"
             />
           }
@@ -108,14 +108,14 @@
             <td class="p-2 border align-top">
               @if (brand.logo) {
                 <file-list
-                  [files]="[{ path: brand.logo }]"
+                  [files]="[brand.logo]"
                   (filesChange)="brand.logo = null"
                   classes="grid-cols-3"
                 />
               }
               @if (!brand.logo) {
                 <file-upload
-                  (onFilesUpload)="brand.logo = $event[0].path"
+                  (onFilesUpload)="brand.logo = $event[0]"
                 />
               }
             </td>
@@ -126,7 +126,7 @@
                 class="bg-primary-50"
                 (click)="updateBrand(brand)"
               >
-                <mat-icon class="icon-size-4" svgIcon="heroicons_outline:pencil"></mat-icon>
+                <mat-icon class="icon-size-4" svgIcon="heroicons_outline:check"></mat-icon>
               </button>
 
               <button

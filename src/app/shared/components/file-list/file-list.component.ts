@@ -1,18 +1,16 @@
-import { Component, input, model, output } from '@angular/core';
+import { Component, input, model, output, signal } from '@angular/core';
 import { IFile } from '../../interfaces/file.interface';
 import { environment } from '../../../../environments/environment';
 import { MatIcon } from '@angular/material/icon';
+import { ShortenFilenamePipe } from '../../pipes/shorten-file-name.pipe';
 import { MatIconButton } from '@angular/material/button';
-import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'file-list',
   imports: [
     MatIcon,
-    MatIconButton,
-    MatMenu,
-    MatMenuItem,
-    MatMenuTrigger
+    ShortenFilenamePipe,
+    MatIconButton
   ],
   templateUrl: './file-list.component.html',
   standalone: true
@@ -21,6 +19,8 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 export class FileListComponent {
   filesChange = output<IFile[]>();
   host = environment.host;
+  openedFile = signal<IFile>(null);
+
   viewType = input<'grid' | 'label'>('label');
 
   classes = input<string>('grid-cols-4');
@@ -29,5 +29,9 @@ export class FileListComponent {
   removeFile(file: IFile) {
     this.files.update(oldValue => oldValue.filter(i => i.path !== file.path));
     this.filesChange.emit(this.files());
+  }
+
+  openFileView(file: IFile) {
+    this.openedFile.set(file)
   }
 }

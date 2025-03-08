@@ -2,7 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { MatButton, MatIconButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { firstValueFrom } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -21,7 +21,6 @@ import { FileListComponent } from '../../../shared/components/file-list/file-lis
     MatFormField,
     MatInput,
     MatIcon,
-    MatButton,
     ReactiveFormsModule,
     FileUploadComponent,
     FuseCardComponent,
@@ -37,11 +36,10 @@ export class BrandsComponent implements OnInit {
     nameUz: new FormControl<string>(null, [ Validators.required ]),
     nameRu: new FormControl<string>(null, [ Validators.required ]),
     nameEn: new FormControl<string>(null, [ Validators.required ]),
-    logo: new FormControl<string>(null, [ Validators.required ]),
+    logo: new FormControl<IFile>(null, [ Validators.required ]),
     website: new FormControl<string>(null, [ Validators.required ])
   });
   brands = signal<IBrand[]>([]);
-  files: IFile[] = [];
 
   private brandsService = inject(BrandsService);
   private snackbar = inject(MatSnackBar);
@@ -77,7 +75,6 @@ export class BrandsComponent implements OnInit {
     );
 
     if (!response?.errorCode) {
-      this.files = [];
       this.createForm.reset();
       await this.getCategories();
     }
@@ -110,12 +107,11 @@ export class BrandsComponent implements OnInit {
   }
 
   filesUploaded(files: IFile[]) {
-    this.files = files;
-    this.createForm.get('logo').setValue(files[0].path);
+    this.createForm.get('logo').setValue(files[0]);
+    console.log(this.createForm.getRawValue());
   }
 
   onLogoRemoved() {
-    this.files = [];
     this.createForm.get('logo').setValue(null);
   }
 }
