@@ -1,0 +1,14 @@
+<div class="flex flex-col gap-5 mx-auto w-full max-w-screen-xl p-8">
+  <div class="text-2xl font-semibold leading-8 tracking-tight">Yangi tovar qo'shish</div>
+
+  <form class="bg-white p-6 grid grid-cols-3 gap-4">
+    <searchable-multiselect
+      label="Kategoriya"
+      optionTextKey="nameUz"
+      optionValueKey="_id"
+      selectBoxPlaceholder="Kategoriyani tanlang"
+      [options]="categories()"
+      [multiple]="false"
+    />
+  </form>
+</div>
