@@ -28,7 +28,8 @@ export class CategoriesCrudComponent implements OnInit {
   createForm: FormGroup = new FormGroup({
     nameUz: new FormControl(null, [ Validators.required ]),
     nameRu: new FormControl(null, [ Validators.required ]),
-    nameEn: new FormControl(null, [ Validators.required ])
+    nameEn: new FormControl(null, [ Validators.required ]),
+    images: new FormControl(null),
   });
   categories = signal<ICategory[]>([]);
   parentId = input<string>(null);

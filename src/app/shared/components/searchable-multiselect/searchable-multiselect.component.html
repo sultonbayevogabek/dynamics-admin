@@ -1,0 +1,52 @@
+<mat-form-field [class]="classes" [floatLabel]="'always'">
+	<mat-label *ngIf="label">{{ label }}</mat-label>
+	<mat-select
+		class="{{ textSizeClass }}"
+		[(ngModel)]="matSelectValue"
+		[multiple]="multiple"
+		[required]="required"
+		[disabled]="disabled"
+		[placeholder]="selectBoxPlaceholder"
+		(selectionChange)="selectionChange($event)"
+		(opened)="onMatSelectOpened()"
+		(closed)="onMatSelectClosed()"
+	>
+		<mat-option class="search sticky top-0 z-10 h-12 bg-card opacity-100">
+			<input
+				class="relative z-20 w-full h-full px-4 bg-transparent text-secondary {{ textSizeClass }}"
+				type="text"
+				matInput
+				[placeholder]="'Qidirish'"
+				#searchInput="matInput"
+				(click)="$event.stopImmediatePropagation()"
+				(keydown.space)="$event.stopImmediatePropagation()"
+				(keydown.enter)="$event.stopImmediatePropagation(); onEnterClicked()"
+			/>
+			<mat-icon
+				*ngIf="searchInput?.value?.length"
+				class="absolute z-30 right-4 top-[14px] mr-0 cursor-pointer icon-size-5"
+				svgIcon="heroicons_outline:x"
+				(click)="clearSearchInput()"
+			></mat-icon>
+
+			<span class="absolute inset-0 z-10 bg-card px-4 leading-[48px] text-secondary">
+				{{ searchInput.value?.length ? null : (searchInputPlaceHolder) }}
+			</span>
+		</mat-option>
+		<mat-option class="{{ textSizeClass }}" *ngIf="emptyOption && !multiple" [value]="null"
+			>{{ 'Belgilanmagan' }}
+		</mat-option>
+		<mat-option
+			class="{{ textSizeClass }} aria-disabled:text-gray-400"
+			*ngFor="let option of options| search : searchInput.value"
+			[value]="optionValueType === 'id' ? option[optionValueKey] : option"
+			[class.hidden]="option?.hidden"
+			[title]="showTitle ? option[optionTextKey] : ''"
+			[disabled]="option?.disabled"
+			>{{ option[optionTextKey] }}
+		</mat-option>
+	</mat-select>
+	<mat-error class="line-clamp-1" [title]="errorMessage" *ngIf="showErrorMessage && errorMessage"
+		>{{ errorMessage }}
+	</mat-error>
+</mat-form-field>

@@ -25,21 +25,21 @@
     <td class="font-medium p-0 border">
       <div class="p-2">
         <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-          <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz">
+          <input (keydown.enter)="createCategory()" matInput type="text" placeholder="O'zbekcha" formControlName="nameUz">
         </mat-form-field>
       </div>
     </td>
     <td class="font-medium p-0 border">
       <div class="p-2">
         <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-          <input matInput type="text" placeholder="Ruscha" formControlName="nameRu">
+          <input (keydown.enter)="createCategory()" matInput type="text" placeholder="Ruscha" formControlName="nameRu">
         </mat-form-field>
       </div>
     </td>
     <td class="font-medium p-0 border">
       <div class="p-2">
         <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-          <input matInput type="text" placeholder="Inglizcha" formControlName="nameEn">
+          <input (keydown.enter)="createCategory()" matInput type="text" placeholder="Inglizcha" formControlName="nameEn">
         </mat-form-field>
       </div>
     </td>

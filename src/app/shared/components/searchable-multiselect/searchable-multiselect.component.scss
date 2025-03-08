@@ -1,0 +1,17 @@
+.mat-mdc-option.search .mat-pseudo-checkbox-full {
+	display: none !important;
+}
+
+.mat-mdc-option.search {
+	padding: 0 !important;
+
+	.mdc-list-item__primary-text {
+		display: block !important;
+		width: 100% !important;
+		height: 48px !important;
+	}
+}
+
+.mat-option.hidden {
+	display: none;
+}

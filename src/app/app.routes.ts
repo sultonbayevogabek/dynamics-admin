@@ -256,6 +256,11 @@ export const appRoutes: Route[] = [
         loadChildren: () => import('app/modules/admin/brands/brands.routes')
       },
 
+      {
+        path: 'products',
+        loadChildren: () => import('app/modules/admin/products/products.routes')
+      },
+
       // 404 & Catch all
       {
         path: '404-not-found',
