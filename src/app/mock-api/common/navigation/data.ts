@@ -11,22 +11,9 @@ export const defaultNavigation: FuseNavigationItem[] = [
       {
         id: 'products',
         title: 'Tovarlar',
-        type: 'collapsable',
         icon: 'heroicons_solid:cube-transparent',
-        children: [
-          {
-            id: 'products.create',
-            title: `Tovar qo'shish`,
-            type: 'basic',
-            link: '/products/create'
-          },
-          {
-            id: 'products.list',
-            title: `Tovarlar ro'yxati`,
-            type: 'basic',
-            link: '/products/list'
-          }
-        ]
+        type: 'basic',
+        link: '/products'
       },
       {
         id: 'admin.categories',

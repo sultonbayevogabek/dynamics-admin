@@ -6,16 +6,6 @@ import { ProductsListComponent } from './products-list/products-list.component';
 export default [
   {
     path: '',
-    component: ProductsComponent,
-    children: [
-      {
-        path: 'create',
-        component: ProductCreateComponent
-      },
-      {
-        path: 'list',
-        component: ProductsListComponent
-      }
-    ]
+    component: ProductsComponent
   }
 ] as Routes;

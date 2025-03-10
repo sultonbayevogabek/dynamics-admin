@@ -10,6 +10,13 @@
   vertical-align: center;
 }
 
-.fuse-mat-no-header .mat-mdc-form-field-subscript-wrapper {
-  height: 0 !important;
+.fuse-mat-no-header {
+  .mat-mdc-form-field-subscript-wrapper {
+    height: 0 !important;
+  }
+
+  .mat-mdc-form-field.mat-form-field-appearance-fill .mat-mdc-form-field-subscript-wrapper {
+    display: none !important;
+  }
 }
+

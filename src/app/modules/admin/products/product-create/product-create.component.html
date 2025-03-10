@@ -1,14 +1,86 @@
-<div class="flex flex-col gap-5 mx-auto w-full max-w-screen-xl p-8">
-  <div class="text-2xl font-semibold leading-8 tracking-tight">Yangi tovar qo'shish</div>
+<mat-dialog-content class="flex flex-col gap-7 p-1">
+  <div class="text-xl font-medium text-gray-700">Yangi tovar qo'shish</div>
 
-  <form class="bg-white p-6 grid grid-cols-3 gap-4">
-    <searchable-multiselect
-      label="Kategoriya"
-      optionTextKey="nameUz"
-      optionValueKey="_id"
-      selectBoxPlaceholder="Kategoriyani tanlang"
-      [options]="categories()"
-      [multiple]="false"
-    />
+  <form class="flex flex-col gap-5" [formGroup]="productForm">
+    <fieldset class="border p-3 rounded-lg">
+      <legend class="text-gray-900 font-medium text-[16px]">Tovar kategoriyasi</legend>
+
+      <div class="grid grid-cols-3 gap-5">
+        <searchable-multiselect
+          label="Asosiy kategoriya"
+          optionTextKey="nameUz"
+          optionValueKey="_id"
+          selectBoxPlaceholder="Kategoriyani tanlang"
+          classes="fuse-mat-dense fuse-mat-no-header w-full"
+          [options]="categories.main"
+          [multiple]="false"
+          [defaultValue]="productForm.get('details.mainCategoryId').value"
+          (selectionChangeEvent)="selectCategory('main', $event)"
+          [required]="true"
+          errorMessage="Majburiy maydon"
+          [showErrorMessage]="!!productForm.get('details.mainCategoryId').errors"
+        />
+
+        <searchable-multiselect
+          label="Ichki kategoriya"
+          optionTextKey="nameUz"
+          optionValueKey="_id"
+          selectBoxPlaceholder="Kategoriyani tanlang"
+          classes="fuse-mat-dense w-full"
+          [options]="categories.middle"
+          [multiple]="false"
+          [defaultValue]="productForm.get('details.middleCategoryId').value"
+          (selectionChangeEvent)="selectCategory('middle', $event)"
+          [required]="true"
+          errorMessage="Majburiy maydon"
+          [showErrorMessage]="!!productForm.get('details.middleCategoryId').errors"
+        />
+
+        <searchable-multiselect
+          label="Kategoriya"
+          optionTextKey="nameUz"
+          optionValueKey="_id"
+          selectBoxPlaceholder="Kategoriyani tanlang"
+          classes="fuse-mat-dense w-full"
+          [options]="categories.sub"
+          [multiple]="false"
+          [defaultValue]="productForm.get('categoryId').value"
+          (selectionChangeEvent)="selectCategory('sub', $event)"
+          [required]="true"
+          errorMessage="Majburiy maydon"
+          [showErrorMessage]="!!productForm.get('categoryId').errors"
+        />
+      </div>
+    </fieldset>
+
+    <fieldset class="border p-3 rounded-lg">
+      <legend class="text-gray-900 font-medium text-[16px]">Tovar nomi</legend>
+
+      <div class="grid grid-cols-3 gap-5">
+        <mat-form-field class="fuse-mat-dense">
+          <mat-label>O'zbekcha</mat-label>
+          <input matInput type="text" placeholder="O'zbekcha nomi">
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense" floatLabel="always">
+          <mat-label>Ruscha</mat-label>
+          <input matInput type="text" placeholder="Ruscha nomi">
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-dense" floatLabel="always">
+          <mat-label>Inglizcha</mat-label>
+          <input matInput type="text" placeholder="Inglizcha nomi">
+        </mat-form-field>
+      </div>
+    </fieldset>
+
+    <div class="col-span-3 flex justify-end gap-4">
+      <button mat-stroked-button mat-dialog-close color="warn">
+        <mat-icon svgIcon="heroicons_outline:x-circle"/>
+        <span class="ml-2">Bekor qilish</span>
+      </button>
+      <button mat-flat-button color="primary" [disabled]="productForm.invalid || productForm.disabled">
+        <mat-icon svgIcon="heroicons_solid:check-circle"/>
+        <span class="ml-2">Saqlash</span>
+      </button>
+    </div>
   </form>
-</div>
+</mat-dialog-content>
