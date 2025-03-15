@@ -47,6 +47,13 @@ export class BrandsComponent implements OnInit {
 
   async ngOnInit() {
     await this.getCategories();
+
+    this.createForm.get('nameUz')
+      .valueChanges
+      .subscribe(value => {
+        this.createForm.get('nameRu').setValue(value);
+        this.createForm.get('nameEn').setValue(value);
+      })
   }
 
   async updateBrand(brand: IBrand) {

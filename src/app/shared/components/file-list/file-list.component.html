@@ -2,7 +2,7 @@
   <div class="grid {{ classes() }} gap-3">
     @for (file of files(); track file) {
       <div class="aspect-square border rounded grid place-items-center overflow-hidden relative">
-        <img class="w-3/5" [src]="host + file.path" [alt]="file.originalname">
+        <img class="object-cover object-center" [src]="host + file.path" [alt]="file.originalname">
 
         <div
           (click)="removeFile(file)"

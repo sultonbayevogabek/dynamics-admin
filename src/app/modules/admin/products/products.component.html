@@ -1,11 +1,222 @@
-<div class="flex flex-col gap-5 mx-auto w-full max-w-screen-2xl p-8">
-  <div class="flex items-center justify-between">
-    <div class="text-2xl font-semibold leading-8 tracking-tight">Yangi tovar qo'shish</div>
-    <button mat-flat-button color="primary" (click)="openAddProductDialog()">
-      <mat-icon svgIcon="heroicons_outline:plus-circle"/>
-      <span class="ml-2">Yangi tovar qo'shish</span>
-    </button>
+<div
+  class="bg-card flex min-w-0 flex-auto flex-col dark:bg-transparent sm:absolute sm:inset-0 sm:overflow-hidden"
+>
+  <!-- Header -->
+  <div
+    class="flex flex-col px-6 py-8 gap-4"
+  >
+    <div class="flex items-center justify-between">
+      <div class="text-4xl font-extrabold tracking-tight">Tovarlar ro'yxati</div>
+
+      <button
+        mat-flat-button
+        [color]="'primary'"
+        (click)="openAddProductDialog()"
+      >
+        <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+        <span class="ml-2 mr-1">Yangi tovar</span>
+      </button>
+    </div>
+    <!-- Title -->
+
+    <div class="grid grid-cols-5 gap-5">
+      <searchable-multiselect
+        optionTextKey="nameUz"
+        optionValueKey="_id"
+        selectBoxPlaceholder="Asosiy kategoriya"
+        classes="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
+        [emptyOption]="true"
+        [options]="categories.main"
+        [multiple]="false"
+        [defaultValue]="params.mainCategoryId"
+        (selectionChangeEvent)="selectCategory('main', $event)"
+      />
+
+      <searchable-multiselect
+        optionTextKey="nameUz"
+        optionValueKey="_id"
+        selectBoxPlaceholder="Ichki kategoriya"
+        classes="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
+        [emptyOption]="true"
+        [options]="categories.middle"
+        [multiple]="false"
+        [defaultValue]="params.middleCategoryId"
+        (selectionChangeEvent)="selectCategory('middle', $event)"
+      />
+
+      <searchable-multiselect
+        optionTextKey="nameUz"
+        optionValueKey="_id"
+        selectBoxPlaceholder="Kategoriya"
+        classes="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
+        [emptyOption]="true"
+        [options]="categories.sub"
+        [multiple]="false"
+        [defaultValue]="params.subCategoryId"
+        (selectionChangeEvent)="selectCategory('sub', $event)"
+      />
+
+      <searchable-multiselect
+        optionTextKey="nameUz"
+        optionValueKey="_id"
+        selectBoxPlaceholder="Brend"
+        classes="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
+        [emptyOption]="true"
+        [options]="brands"
+        [multiple]="false"
+        [defaultValue]="params.brandId"
+        (selectionChangeEvent)="selectBrand($event)"
+      />
+
+      <mat-form-field
+        class="fuse-mat-dense fuse-mat-rounded"
+        [subscriptSizing]="'dynamic'"
+      >
+        <mat-icon
+          class="icon-size-5"
+          matPrefix
+          [svgIcon]="'heroicons_solid:magnifying-glass'"
+        ></mat-icon>
+        <input
+          matInput
+          [placeholder]="'Tovarlarni qidirish'"
+          [(ngModel)]="params.search"
+          (keydown.enter)="searchProduct()"
+        />
+      </mat-form-field>
+    </div>
   </div>
 
-  <div class="bg-white rounded p-6"></div>
+  <!-- Main -->
+  <div class="flex flex-auto overflow-hidden">
+    <!-- Products list -->
+    <div
+      class="flex flex-auto flex-col overflow-hidden sm:mb-18 sm:overflow-y-auto"
+    >
+      @if (products.length > 0) {
+        <div class="grid">
+          <!-- Header -->
+          <div
+            class="inventory-grid text-secondary sticky top-0 z-10 grid gap-4 bg-gray-50 px-6 py-4 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5 md:px-8"
+          >
+            <div>Rasmi</div>
+            <div
+              class="hidden md:block"
+            >
+              SKU
+            </div>
+            <div>Tovar nomi</div>
+            <div>Kategoriya</div>
+            <div
+              class="hidden sm:block"
+            >
+              Tovar narxi
+            </div>
+            <div
+              class="hidden lg:block"
+            >
+              Miqdori
+            </div>
+            <div
+              class="hidden lg:block"
+            >
+              Aktiv
+            </div>
+            <div class="block"></div>
+          </div>
+          <!-- Rows -->
+
+          @for (product of products; track product) {
+            <div
+              class="inventory-grid grid items-center gap-4 border-b px-6 py-3 md:px-8 cursor-pointer hover:bg-slate-50"
+              matRipple
+              (click)="openProductDetails(product.slugUz)"
+            >
+              <!-- Image -->
+              <div class="flex items-center">
+                <div
+                  class="relative mr-6 flex h-12 w-12 flex-0 items-center justify-center overflow-hidden rounded border"
+                >
+                  <img
+                    class="object-cover object-center"
+                    [alt]="'Product thumbnail image'"
+                    [src]="host + product.images[0].path"
+                  />
+                </div>
+              </div>
+
+              <!-- SKU -->
+              <div class="hidden truncate md:block">
+                {{ product.sku }}
+              </div>
+
+              <!-- Name -->
+              <div class="line-clamp-3">
+                {{ product.nameUz }}
+              </div>
+
+              <div class="line-clamp-3">
+                {{ product.nameUz }}
+              </div>
+
+              <!-- Price -->
+              <div class="hidden sm:block">
+                @if (product.oldPrice) {
+                  <del class="text-red-500">
+                    {{
+                      product.oldPrice| currency: 'USD': 'symbol': '1.2-2'
+                    }}
+                  </del>
+                }
+
+                {{
+                  product.currentPrice
+                    | currency
+                    : 'USD'
+                      : 'symbol'
+                      : '1.2-2'
+                }}
+              </div>
+
+              <!-- Stock -->
+              <div class="hidden items-center lg:flex">
+                <div class="min-w-4">
+                  {{ product.quantity}}
+                </div>
+              </div>
+
+              <div (click)="$event.stopPropagation()">
+                <mat-slide-toggle
+                  color="primary"
+                  [checked]="product.status === 1"
+                  (change)="productStatusChange($event, product)"
+                />
+              </div>
+
+              <!-- Details button -->
+              <div>
+                <button
+                  class="h-7 min-h-7 min-w-10 px-2 leading-6"
+                  mat-stroked-button
+                  color="warn"
+                  (click)="$event.stopPropagation(); deleteProduct(product._id)"
+                >
+                  <mat-icon class="icon-size-4" svgIcon="heroicons_outline:trash"></mat-icon>
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+
+        <mat-paginator
+          class="z-10 border-b bg-gray-50 dark:bg-transparent sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-b-0 sm:border-t"
+          [length]="params.total"
+          [pageIndex]="params.page"
+          [pageSize]="params.limit"
+          [showFirstLastButtons]="true"
+          (page)="pageChange($event)"
+        ></mat-paginator>
+      }
+    </div>
+  </div>
 </div>

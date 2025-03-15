@@ -32,23 +32,23 @@
           #
         </td>
         <td class="p-2 border align-top">
-          <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-            <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz">
+          <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
+            <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz" (keydown.enter)="createBrand()">
           </mat-form-field>
         </td>
         <td class="p-2 border align-top">
-          <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-            <input matInput type="text" placeholder="Ruscha" formControlName="nameRu">
+          <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
+            <input matInput type="text" placeholder="Ruscha" formControlName="nameRu" (keydown.enter)="createBrand()">
           </mat-form-field>
         </td>
         <td class="p-2 border align-top">
-          <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-            <input matInput type="text" placeholder="Inglizcha" formControlName="nameEn">
+          <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
+            <input matInput type="text" placeholder="Inglizcha" formControlName="nameEn" (keydown.enter)="createBrand()">
           </mat-form-field>
         </td>
         <td class="p-2 border align-top">
-          <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
-            <input matInput type="url" placeholder="Veb-sayt" formControlName="website">
+          <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
+            <input matInput type="url" placeholder="Veb-sayt" formControlName="website" (keydown.enter)="createBrand()">
           </mat-form-field>
         </td>
         <td class="p-2 border align-top">
@@ -82,25 +82,25 @@
               {{ i + 1 }}
             </td>
             <td class="p-2 border align-top">
-              <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+              <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
                 <input matInput type="text" placeholder="O'zbekcha" [(ngModel)]="brand.nameUz"
                        (keydown.enter)="updateBrand(brand)">
               </mat-form-field>
             </td>
             <td class="p-2 border align-top">
-              <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+              <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
                 <input matInput type="text" placeholder="Ruscha" [(ngModel)]="brand.nameRu"
                        (keydown.enter)="updateBrand(brand)">
               </mat-form-field>
             </td>
             <td class="p-2 border align-top">
-              <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+              <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
                 <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="brand.nameEn"
                        (keydown.enter)="updateBrand(brand)">
               </mat-form-field>
             </td>
             <td class="p-2 border align-top">
-              <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+              <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
                 <input matInput type="text" placeholder="Veb-sayt" [(ngModel)]="brand.website"
                        (keydown.enter)="updateBrand(brand)">
               </mat-form-field>

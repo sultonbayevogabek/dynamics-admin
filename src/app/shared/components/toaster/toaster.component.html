@@ -1,0 +1,42 @@
+<div class="toaster">
+  <div class="toaster-inner">
+    <div [class]="'toaster-decoration ' + data.type"></div>
+
+    @switch (data.type) {
+      @case ('success') {
+        <mat-icon class="icon-size-7 text-[#06BB54]" [svgIcon]="'heroicons_solid:check-circle'"/>
+      }
+      @case ('warning') {
+        <mat-icon class="icon-size-7 text-[#b45309]" [svgIcon]="'heroicons_solid:exclamation-circle'"/>
+      }
+      @case ('info') {
+        <mat-icon class="icon-size-7 text-[#1d4ed8]" [svgIcon]="'heroicons_solid:information-circle'"/>
+      }
+
+      @case ('error') {
+        <mat-icon class="icon-size-7 text-[#b91c1c]" [svgIcon]="'heroicons_solid:x-circle'"/>
+      }
+    }
+
+    <div class="toaster-body">
+      @if (data.title) {
+        <div class="toaster-title">{{ data.title }}</div>
+      }
+
+      <p class="toaster-text">{{ data.message }}</p>
+    </div>
+
+    @if (data.showCloseButton) {
+    <mat-icon
+      class="cursor-pointer"
+      (click)="dismissSnackbar()"
+      [svgIcon]="'heroicons_outline:x-mark'"/>
+    }
+  </div>
+
+  @if (data.showProgressBar) {
+    <div
+      [class]="'toaster-progress ' + data.type + (data.dismissible ? ' progress-' + data.duration / 1000 : '')"
+    ></div>
+  }
+</div>

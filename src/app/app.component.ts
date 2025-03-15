@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -9,7 +9,11 @@ import { RouterOutlet } from '@angular/router';
 })
 
 export class AppComponent {
-  constructor() {
+  static injector: Injector;
+  constructor(
+    injector: Injector
+  ) {
+    AppComponent.injector = injector;
   }
 
   method<T>(response: T): T {

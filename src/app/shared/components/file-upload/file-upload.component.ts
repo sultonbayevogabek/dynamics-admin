@@ -19,7 +19,7 @@ export class FileUploadComponent {
   fileInput = viewChild<HTMLInputElement>('fileInput');
   onFilesUpload = output<IFile[]>();
 
-  accept = input<string[]>([ '.jpeg', '.jpg', '.png' ]);
+  accept = input<string[]>([ '.jpeg', '.jpg', '.png', '.svg' ]);
   multiple = input(true);
   maxSize = input(3);
 

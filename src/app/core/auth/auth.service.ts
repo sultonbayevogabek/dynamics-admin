@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
-import { RequestService } from '../../shared/services/request.service';
-import { environment } from '../../../environments/environment';
-import { IUser } from '../../shared/interfaces/user.interface';
+import { RequestService } from '@shared/services/request.service';
+import { environment } from '@env/environment';
+import { IUser } from '@shared/interfaces/user.interface';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClient } from '@angular/common/http';
@@ -109,7 +109,7 @@ export class AuthService extends RequestService {
       return of(this.currentUser$.value);
     }
 
-    return this.request<IUser>('user/get-user-by-token', {}).pipe(
+    return this.request<IUser>('user/get-user', {}).pipe(
       switchMap(user => {
         if ([ 'admin', 'superAdmin' ].includes(user.role)) {
           this.authorized = true;

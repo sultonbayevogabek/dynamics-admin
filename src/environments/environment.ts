@@ -7,6 +7,6 @@ export const environment = {
     scope: 'email profile openid',
     nonce: '123456789'
   },
-  host: 'https://api.farruhzoirov.uz/',
-  // host: '192.168.45.18:5000/'
+  // host: 'https://api.farruhzoirov.uz/',
+  host: 'http://192.168.45.18:5000/'
 };
