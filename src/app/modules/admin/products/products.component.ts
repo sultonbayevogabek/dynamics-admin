@@ -92,9 +92,11 @@ export class ProductsComponent implements OnInit {
   }
 
   async getBrands() {
-    this.brands = await firstValueFrom(
+    const response = await firstValueFrom(
       this.brandsService.getBrandsList()
     );
+
+    this.brands = response?.data || [];
   }
 
   async getProducts() {

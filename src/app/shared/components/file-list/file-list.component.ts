@@ -2,14 +2,12 @@ import { Component, input, model, output, signal } from '@angular/core';
 import { IFile } from '../../interfaces/file.interface';
 import { environment } from '@env/environment';
 import { MatIcon } from '@angular/material/icon';
-import { ShortenFilenamePipe } from '../../pipes/shorten-file-name.pipe';
 import { MatIconButton } from '@angular/material/button';
 
 @Component({
   selector: 'file-list',
   imports: [
     MatIcon,
-    ShortenFilenamePipe,
     MatIconButton
   ],
   templateUrl: './file-list.component.html',

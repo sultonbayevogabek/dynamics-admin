@@ -243,9 +243,10 @@ export class ProductCreateComponent implements OnInit {
   }
 
   async getBrands() {
-    this.brands = await firstValueFrom(
+    const response = await firstValueFrom(
       this.brandsService.getBrandsList()
     );
+    this.brands = response?.data || [];
   }
 
   async selectCategory(type: 'main' | 'middle' | 'sub', $event: string) {

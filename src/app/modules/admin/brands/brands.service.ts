@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RequestService } from '../../../shared/services/request.service';
 import { IBrand } from './brands.interface';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -9,21 +9,21 @@ import { map, Observable } from 'rxjs';
 
 export class BrandsService extends RequestService {
   createBrand(brand: IBrand) {
-    return this.request('brand/add', brand)
+    return this.request('brand/add', brand);
   }
+
   updateBrand(brand: IBrand) {
-    return this.request('brand/update', brand)
+    return this.request('brand/update', brand);
   }
+
   deleteBrand(_id: string) {
-    return this.request('brand/delete', { _id })
+    return this.request('brand/delete', { _id });
   }
-  getBrandsList(): Observable<IBrand[]> {
-    return this.request<{
-      total: number;
-      data: IBrand[]
-    }>('brand/get-list')
-      .pipe(map((res) => {
-        return res.data;
-      }))
+
+  getBrandsList(params: any = {}): Observable<{
+    total: number;
+    data: IBrand[]
+  }> {
+    return this.request('brand/get-list', params);
   }
 }

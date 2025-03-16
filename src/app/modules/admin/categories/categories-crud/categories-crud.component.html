@@ -1,44 +1,44 @@
 <table class="w-full">
   <thead>
   <tr class="bg-gray-100">
-    <th class="font-medium p-4 w-[56px] border">
+    <th class="w-14 py-4 text-md text-center font-semibold text-secondary">
       №
     </th>
-    <th class="font-medium p-4 border">
+    <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
       O'zbekcha
     </th>
-    <th class="font-medium p-4 border">
+    <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
       Ruscha
     </th>
-    <th class="font-medium p-4 border">
+    <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
       Inglizcha
     </th>
-    <th class="font-medium p-4 border w-[56px]">
+    <th class="px-2 py-4 text-md font-semibold text-secondary text-left w-[56px]">
     </th>
   </tr>
   </thead>
   <tbody>
-  <tr class="border-y" [formGroup]="createForm" (ngSubmit)="createCategory()">
-    <td class="font-medium p-0 relative border">
+  <tr class="border-b" [formGroup]="createForm" (ngSubmit)="createCategory()">
+    <td class="py-3 px-1 text-center border relative">
       <div class="absolute inset-0 p-2 h-full font-medium grid place-content-center">#</div>
     </td>
     <td class="font-medium p-0 border">
       <div class="p-2">
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+        <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
           <input (keydown.enter)="createCategory()" matInput type="text" placeholder="O'zbekcha" formControlName="nameUz">
         </mat-form-field>
       </div>
     </td>
     <td class="font-medium p-0 border">
       <div class="p-2">
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+        <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
           <input (keydown.enter)="createCategory()" matInput type="text" placeholder="Ruscha" formControlName="nameRu">
         </mat-form-field>
       </div>
     </td>
     <td class="font-medium p-0 border">
       <div class="p-2">
-        <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+        <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
           <input (keydown.enter)="createCategory()" matInput type="text" placeholder="Inglizcha" formControlName="nameEn">
         </mat-form-field>
       </div>
@@ -50,7 +50,7 @@
           mat-icon-button
           (click)="createCategory()"
         >
-          <mat-icon class="text-primary" svgIcon="heroicons_outline:plus-circle"></mat-icon>
+          <mat-icon class="text-primary icon-size-5" svgIcon="heroicons_outline:plus-circle"></mat-icon>
         </button>
       </div>
     </td>
@@ -73,7 +73,7 @@
         </td>
         <td class="font-medium p-0 border">
           <div class="p-2">
-            <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+            <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
               <input matInput type="text" placeholder="O'zbekcha" [(ngModel)]="category.nameUz"
                      (keydown.enter)="updateCategory(category)">
             </mat-form-field>
@@ -81,7 +81,7 @@
         </td>
         <td class="font-medium p-0 border">
           <div class="p-2">
-            <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+            <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
               <input matInput type="text" placeholder="Ruscha" [(ngModel)]="category.nameRu"
                      (keydown.enter)="updateCategory(category)">
             </mat-form-field>
@@ -89,7 +89,7 @@
         </td>
         <td class="font-medium p-0 border">
           <div class="p-2">
-            <mat-form-field class="fuse-mat-dense fuse-mat-no-header w-full" floatLabel="always">
+            <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
               <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="category.nameEn"
                      (keydown.enter)="updateCategory(category)">
             </mat-form-field>
@@ -103,7 +103,7 @@
               color="warn"
               (click)="deleteCategory(category._id)"
             >
-              <mat-icon class="icon-size-5" svgIcon="heroicons_outline:trash"></mat-icon>
+              <mat-icon class="icon-size-4.5" svgIcon="heroicons_outline:trash"></mat-icon>
             </button>
           </div>
         </td>

@@ -1,147 +1,185 @@
-<div class="flex flex-col gap-5 mx-auto w-full max-w-screen-xl p-8">
-  <div class="text-2xl font-semibold leading-8 tracking-tight">Brandlar</div>
-  <fuse-card class="flex-col p-6 rounded-none">
-    <table class="w-full">
-      <thead>
-      <tr class="bg-gray-100">
-        <th class="font-medium p-4 border w-12">
-          №
-        </th>
-        <th class="font-medium p-4 border">
-          O'zbekcha
-        </th>
-        <th class="font-medium p-4 border">
-          Ruscha
-        </th>
-        <th class="font-medium p-4 border">
-          Inglizcha
-        </th>
-        <th class="font-medium p-4 border">
-          Veb-sayt
-        </th>
-        <th class="font-medium p-4 border w-[205px]">
-          Logotip
-        </th>
-        <th class="font-medium p-4 border w-[100px]">
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr class="border-y" [formGroup]="createForm" (ngSubmit)="createBrand()">
-        <td class="p-2 border text-center">
-          #
-        </td>
-        <td class="p-2 border align-top">
-          <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
-            <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz" (keydown.enter)="createBrand()">
-          </mat-form-field>
-        </td>
-        <td class="p-2 border align-top">
-          <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
-            <input matInput type="text" placeholder="Ruscha" formControlName="nameRu" (keydown.enter)="createBrand()">
-          </mat-form-field>
-        </td>
-        <td class="p-2 border align-top">
-          <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
-            <input matInput type="text" placeholder="Inglizcha" formControlName="nameEn" (keydown.enter)="createBrand()">
-          </mat-form-field>
-        </td>
-        <td class="p-2 border align-top">
-          <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
-            <input matInput type="url" placeholder="Veb-sayt" formControlName="website" (keydown.enter)="createBrand()">
-          </mat-form-field>
-        </td>
-        <td class="p-2 border align-top">
-          @if (!createForm.get('logo').value) {
-            <file-upload
-              (onFilesUpload)="filesUploaded($event)"
-            />
-          }
-          @if (createForm.get('logo').value) {
-            <file-list
-              [classes]="'grid-cols-3'"
-              [files]="[createForm.get('logo').value]"
-              (filesChange)="onLogoRemoved()"
-            />
-          }
-        </td>
-        <td class="p-2 border">
-          <button
-            class="bg-primary-50 cursor-pointer"
-            mat-icon-button
-            color="primary"
-            (click)="createBrand()"
-          >
-            <mat-icon class="icon-size-5" svgIcon="heroicons_outline:plus-circle"></mat-icon>
-          </button>
-        </td>
-      </tr>
-        @for (brand of brands(); track brand._id; let i = $index) {
-          <tr>
-            <td class="border text-center p-2 align-center">
-              {{ i + 1 }}
-            </td>
-            <td class="p-2 border align-top">
-              <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
-                <input matInput type="text" placeholder="O'zbekcha" [(ngModel)]="brand.nameUz"
-                       (keydown.enter)="updateBrand(brand)">
-              </mat-form-field>
-            </td>
-            <td class="p-2 border align-top">
-              <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
-                <input matInput type="text" placeholder="Ruscha" [(ngModel)]="brand.nameRu"
-                       (keydown.enter)="updateBrand(brand)">
-              </mat-form-field>
-            </td>
-            <td class="p-2 border align-top">
-              <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
-                <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="brand.nameEn"
-                       (keydown.enter)="updateBrand(brand)">
-              </mat-form-field>
-            </td>
-            <td class="p-2 border align-top">
-              <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
-                <input matInput type="text" placeholder="Veb-sayt" [(ngModel)]="brand.website"
-                       (keydown.enter)="updateBrand(brand)">
-              </mat-form-field>
-            </td>
-            <td class="p-2 border align-top">
-              @if (brand.logo) {
-                <file-list
-                  [files]="[brand.logo]"
-                  (filesChange)="brand.logo = null"
-                  classes="grid-cols-3"
-                />
-              }
-              @if (!brand.logo) {
-                <file-upload
-                  (onFilesUpload)="brand.logo = $event[0]"
-                />
-              }
-            </td>
-            <td class="p-2 border">
-              <button
-                mat-icon-button
-                color="primary"
-                class="bg-primary-50"
-                (click)="updateBrand(brand)"
-              >
-                <mat-icon class="icon-size-4" svgIcon="heroicons_outline:check"></mat-icon>
-              </button>
+<div
+  class="bg-card flex min-w-0 flex-auto flex-col dark:bg-transparent sm:absolute sm:inset-0 sm:overflow-hidden"
+>
+  <div
+    class="flex flex-col px-6 py-8 gap-4"
+  >
+    <div class="flex items-center justify-between">
+      <div class="text-4xl font-extrabold tracking-tight">Brandlar ro'yxati</div>
 
-              <button
-                class="bg-red-50 ml-[2px]"
-                mat-icon-button
-                color="warn"
-                (click)="deleteBrand(brand._id)"
-              >
-                <mat-icon class="icon-size-4" svgIcon="heroicons_outline:trash"></mat-icon>
-              </button>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </fuse-card>
+      <mat-form-field
+        class="fuse-mat-dense fuse-mat-rounded min-w-80"
+        [subscriptSizing]="'dynamic'"
+      >
+        <mat-icon
+          class="icon-size-5"
+          matPrefix
+          [svgIcon]="'heroicons_solid:magnifying-glass'"
+        ></mat-icon>
+        <input
+          matInput
+          [placeholder]="'Brandni qidirish'"
+          [(ngModel)]="params.search"
+          (keydown.enter)="searchBrand()"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <div class="flex flex-auto overflow-hidden">
+    <!-- Products list -->
+    <div
+      class="flex flex-auto flex-col overflow-hidden sm:mb-18 sm:overflow-y-auto">
+      <table class="w-full">
+        <thead>
+        <tr class="bg-gray-100">
+          <th class="w-12 px-8 py-4 text-md font-semibold text-secondary">
+            №
+          </th>
+          <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
+            O'zbekcha
+          </th>
+          <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
+            Ruscha
+          </th>
+          <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
+            Inglizcha
+          </th>
+          <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
+            Veb-sayt
+          </th>
+          <th class="px-2 py-4 text-md font-semibold text-secondary text-left w-[205px]">
+            Logotip
+          </th>
+          <th class="px-2 py-4 text-md font-semibold text-secondary text-left w-[100px]">
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="border-b" [formGroup]="createForm" (ngSubmit)="createBrand()">
+          <td class="py-3 px-1 text-center">
+            #
+          </td>
+          <td class="py-3 px-1 align-top">
+            <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+              <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz" (keydown.enter)="createBrand()">
+            </mat-form-field>
+          </td>
+          <td class="py-3 px-1 align-top">
+            <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+              <input matInput type="text" placeholder="Ruscha" formControlName="nameRu" (keydown.enter)="createBrand()">
+            </mat-form-field>
+          </td>
+          <td class="py-3 px-1 align-top">
+            <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+              <input matInput type="text" placeholder="Inglizcha" formControlName="nameEn" (keydown.enter)="createBrand()">
+            </mat-form-field>
+          </td>
+          <td class="py-3 px-1 align-top">
+            <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+              <input matInput type="url" placeholder="Veb-sayt" formControlName="website" (keydown.enter)="createBrand()">
+            </mat-form-field>
+          </td>
+          <td class="py-3 px-1 align-top">
+            @if (!createForm.get('logo').value) {
+              <file-upload
+                (onFilesUpload)="filesUploaded($event)"
+              />
+            }
+            @if (createForm.get('logo').value) {
+              <file-list
+                [classes]="'grid-cols-3'"
+                [files]="[createForm.get('logo').value]"
+                (filesChange)="onLogoRemoved()"
+              />
+            }
+          </td>
+          <td class="py-3 px-8">
+            <button
+              class="bg-primary-50 cursor-pointer"
+              mat-icon-button
+              color="primary"
+              (click)="createBrand()"
+            >
+              <mat-icon class="icon-size-5" svgIcon="heroicons_outline:plus-circle"></mat-icon>
+            </button>
+          </td>
+        </tr>
+          @for (brand of brands(); track brand._id; let i = $index) {
+            <tr class="border-b">
+              <td class="py-3 px-1 text-center align-center">
+                {{ i + 1 }}
+              </td>
+              <td class="py-3 px-1 align-top">
+                <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+                  <input matInput type="text" placeholder="O'zbekcha" [(ngModel)]="brand.nameUz"
+                         (keydown.enter)="updateBrand(brand)">
+                </mat-form-field>
+              </td>
+              <td class="py-3 px-1 align-top">
+                <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+                  <input matInput type="text" placeholder="Ruscha" [(ngModel)]="brand.nameRu"
+                         (keydown.enter)="updateBrand(brand)">
+                </mat-form-field>
+              </td>
+              <td class="py-3 px-1 align-top">
+                <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+                  <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="brand.nameEn"
+                         (keydown.enter)="updateBrand(brand)">
+                </mat-form-field>
+              </td>
+              <td class="py-3 px-1 align-top">
+                <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+                  <input matInput type="text" placeholder="Veb-sayt" [(ngModel)]="brand.website"
+                         (keydown.enter)="updateBrand(brand)">
+                </mat-form-field>
+              </td>
+              <td class="py-3 px-1 align-top">
+                @if (brand.logo) {
+                  <file-list
+                    [files]="[brand.logo]"
+                    (filesChange)="brand.logo = null"
+                    classes="grid-cols-3"
+                  />
+                }
+                @if (!brand.logo) {
+                  <file-upload
+                    (onFilesUpload)="brand.logo = $event[0]"
+                  />
+                }
+              </td>
+              <td class="py-3 px-1">
+                <button
+                  mat-icon-button
+                  color="primary"
+                  class="bg-primary-50"
+                  (click)="updateBrand(brand)"
+                >
+                  <mat-icon class="icon-size-4" svgIcon="heroicons_outline:check"></mat-icon>
+                </button>
+
+                <button
+                  class="bg-red-50 ml-[2px]"
+                  mat-icon-button
+                  color="warn"
+                  (click)="deleteBrand(brand._id)"
+                >
+                  <mat-icon class="icon-size-4" svgIcon="heroicons_outline:trash"></mat-icon>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <mat-paginator
+        class="z-10 border-b bg-gray-50 dark:bg-transparent sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-b-0 sm:border-t"
+        [length]="params.total"
+        [pageIndex]="params.page"
+        [pageSize]="params.limit"
+        [showFirstLastButtons]="true"
+        (page)="pageChange($event)"
+      ></mat-paginator>
+    </div>
 </div>
 

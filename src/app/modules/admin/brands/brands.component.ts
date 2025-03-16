@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormField } from '@angular/material/form-field';
+import { MatFormField, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
@@ -9,10 +9,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { BrandsService } from './brands.service';
 import { FuseConfirmationService } from '../../../../@fuse/services/confirmation';
 import { IBrand } from './brands.interface';
-import { FileUploadComponent } from '../../../shared/components/file-upload/file-upload.component';
-import { IFile } from '../../../shared/interfaces/file.interface';
-import { FuseCardComponent } from '../../../../@fuse/components/card';
-import { FileListComponent } from '../../../shared/components/file-list/file-list.component';
+import { FileUploadComponent } from '@shared/components/file-upload/file-upload.component';
+import { IFile } from '@shared/interfaces/file.interface';
+import { FileListComponent } from '@shared/components/file-list/file-list.component';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'brands',
@@ -23,9 +23,10 @@ import { FileListComponent } from '../../../shared/components/file-list/file-lis
     MatIcon,
     ReactiveFormsModule,
     FileUploadComponent,
-    FuseCardComponent,
     FileListComponent,
-    MatIconButton
+    MatIconButton,
+    MatPaginator,
+    MatPrefix
   ],
   templateUrl: './brands.component.html',
   standalone: true
@@ -40,13 +41,19 @@ export class BrandsComponent implements OnInit {
     website: new FormControl<string>(null, [ Validators.required ])
   });
   brands = signal<IBrand[]>([]);
+  params = {
+    page: 0,
+    limit: 10,
+    total: 0,
+    search: ''
+  };
 
   private brandsService = inject(BrandsService);
   private snackbar = inject(MatSnackBar);
   private confirmation = inject(FuseConfirmationService);
 
   async ngOnInit() {
-    await this.getCategories();
+    await this.getBrands();
 
     this.createForm.get('nameUz')
       .valueChanges
@@ -65,7 +72,7 @@ export class BrandsComponent implements OnInit {
       this.brandsService.updateBrand(brand)
     );
     this.snackbar.open(`O'zgarishlar saqlandi`, 'OK', { duration: 2000 });
-    await this.getCategories();
+    await this.searchBrand();
   }
 
   async createBrand(): Promise<void> {
@@ -83,13 +90,29 @@ export class BrandsComponent implements OnInit {
 
     if (!response?.errorCode) {
       this.createForm.reset();
-      await this.getCategories();
+      await this.searchBrand();
     }
   }
 
-  async getCategories() {
-    const brands = await firstValueFrom(this.brandsService.getBrandsList());
-    this.brands.set(brands);
+  async getBrands() {
+    const response = await firstValueFrom(
+      this.brandsService.getBrandsList({
+        ...this.params,
+        page: this.params.page + 1
+      })
+    );
+    this.params.total = response?.total;
+    this.brands.set(response?.data || []);
+  }
+
+  async searchBrand() {
+    this.params.page = 0;
+    await this.getBrands();
+  }
+
+  async pageChange($event: PageEvent) {
+    this.params.page = $event.pageIndex;
+    await this.getBrands();
   }
 
   async deleteBrand(_id: string) {
@@ -110,7 +133,7 @@ export class BrandsComponent implements OnInit {
     if (confirm === 'cancelled' || !confirm) return;
 
     const response = await firstValueFrom(this.brandsService.deleteBrand(_id));
-    await this.getCategories();
+    await this.searchBrand();
   }
 
   filesUploaded(files: IFile[]) {
