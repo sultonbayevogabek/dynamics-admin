@@ -45,7 +45,7 @@ import { BrandsService } from '../brands/brands.service';
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   styles: [ `
     .inventory-grid {
-      grid-template-columns: 48px 96px auto auto 100px 100px 100px 40px;
+      grid-template-columns: 48px 96px 25% 25% 100px 100px 100px 40px;
     }
   `
   ]
@@ -55,7 +55,7 @@ export class ProductsComponent implements OnInit {
   host = environment.host;
   params = {
     page: 0,
-    limit: 2,
+    limit: 15,
     total: 0,
     search: '',
     categoryId: null,

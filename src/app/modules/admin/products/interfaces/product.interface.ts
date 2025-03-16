@@ -26,7 +26,7 @@ export interface IProduct {
   createdAt: string;
   updatedAt: string;
   hierarchy: ProductHierarchy[];
-  keywords: string
+  keywords: string;
 }
 
 export interface Attribute {
@@ -43,6 +43,11 @@ export interface Details {
 
 export interface ProductHierarchy {
   categoryId: string;
-  categorySlug: string;
-  categoryName: string;
+  categorySlugUz: string;
+  categorySlugRu: string;
+  categorySlugEn: string;
+  categoryNameUz: string;
+  categoryNameRu: string;
+  categoryNameEn: string;
+  _id: string;
 }

@@ -156,7 +156,13 @@
               </div>
 
               <div class="line-clamp-3">
-                {{ product.nameUz }}
+                @for (hierarchy of product.hierarchy; track hierarchy; let lastItem = $last) {
+                  <span>{{ hierarchy.categoryNameUz }}</span>
+
+                  @if (!lastItem) {
+                    <span> / </span>
+                  }
+                }
               </div>
 
               <!-- Price -->
@@ -181,7 +187,7 @@
               <!-- Stock -->
               <div class="hidden items-center lg:flex">
                 <div class="min-w-4">
-                  {{ product.quantity}}
+                  {{ product.quantity }}
                 </div>
               </div>
 
