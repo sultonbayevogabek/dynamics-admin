@@ -46,6 +46,7 @@ export interface ProductHierarchy {
   categorySlugUz: string;
   categorySlugRu: string;
   categorySlugEn: string;
+  categoryName: string;
   categoryNameUz: string;
   categoryNameRu: string;
   categoryNameEn: string;

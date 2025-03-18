@@ -12,7 +12,6 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ProductsService } from './products.service';
 import { IProduct } from './interfaces/product.interface';
 import { environment } from '@env/environment';
-import { MatRipple } from '@angular/material/core';
 import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Confirmable } from '../../../core/decorators/confirmation-decorator';
 import { ToasterService } from '@shared/services/toaster.service';
@@ -36,7 +35,6 @@ import { BrandsService } from '../brands/brands.service';
     MatInput,
     MatPaginator,
     MatPrefix,
-    MatRipple,
     MatSlideToggle,
     SearchableMultiselectComponent
   ],

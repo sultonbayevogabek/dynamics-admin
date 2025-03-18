@@ -1,67 +1,61 @@
 <table class="w-full">
-  <thead>
-  <tr class="bg-gray-100">
-    <th class="w-14 py-4 text-md text-center font-semibold text-secondary">
+  <thead
+    class="bg-gray-50 text-secondary sticky top-0 z-10 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5">
+  <tr>
+    <th class="py-4 border w-14">
       №
     </th>
-    <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
+    <th class="px-6 py-4 border">
       O'zbekcha
     </th>
-    <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
+    <th class="px-6 py-4 border">
       Ruscha
     </th>
-    <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
+    <th class="px-6 py-4 border">
       Inglizcha
     </th>
-    <th class="px-2 py-4 text-md font-semibold text-secondary text-left w-[56px]">
+    <th class="px-6 py-4 border">
     </th>
   </tr>
   </thead>
   <tbody>
-  <tr class="border-b" [formGroup]="createForm" (ngSubmit)="createCategory()">
-    <td class="py-3 px-1 text-center border relative">
-      <div class="absolute inset-0 p-2 h-full font-medium grid place-content-center">#</div>
+  <tr class="hover:bg-slate-50 cursor-pointer" [formGroup]="createForm" (ngSubmit)="createCategory()">
+    <td class="border p-3 text-center">
+      #
     </td>
-    <td class="font-medium p-0 border">
-      <div class="p-2">
-        <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
-          <input (keydown.enter)="createCategory()" matInput type="text" placeholder="O'zbekcha" formControlName="nameUz">
-        </mat-form-field>
-      </div>
+    <td class="border p-3">
+      <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+        <input (keydown.enter)="createCategory()" matInput type="text" placeholder="O'zbekcha" formControlName="nameUz">
+      </mat-form-field>
     </td>
-    <td class="font-medium p-0 border">
-      <div class="p-2">
-        <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
-          <input (keydown.enter)="createCategory()" matInput type="text" placeholder="Ruscha" formControlName="nameRu">
-        </mat-form-field>
-      </div>
+    <td class="border p-3">
+      <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+        <input (keydown.enter)="createCategory()" matInput type="text" placeholder="Ruscha" formControlName="nameRu">
+      </mat-form-field>
     </td>
-    <td class="font-medium p-0 border">
-      <div class="p-2">
-        <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
-          <input (keydown.enter)="createCategory()" matInput type="text" placeholder="Inglizcha" formControlName="nameEn">
-        </mat-form-field>
-      </div>
+    <td class="border p-3">
+      <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+        <input (keydown.enter)="createCategory()" matInput type="text" placeholder="Inglizcha" formControlName="nameEn">
+      </mat-form-field>
     </td>
-    <td class="font-medium p-0 relative border">
-      <div class="absolute inset-0 p-2 h-full">
-        <button
-          class="bg-primary-50"
-          mat-icon-button
-          (click)="createCategory()"
-        >
-          <mat-icon class="text-primary icon-size-5" svgIcon="heroicons_outline:plus-circle"></mat-icon>
-        </button>
-      </div>
+    <td class="border p-3">
+      <button
+        class="bg-primary-50"
+        mat-icon-button
+        (click)="createCategory()"
+      >
+        <mat-icon class="text-primary icon-size-5" svgIcon="heroicons_outline:plus-circle"></mat-icon>
+      </button>
     </td>
   </tr>
 
     @for (category of categories(); track category._id; let i = $index) {
-      <tr>
-        <td class="font-medium p-0 border relative">
+      <tr class="hover:bg-slate-50 cursor-pointer">
+        <td class="border p-3 relative">
           <div class="absolute inset-0 p-2 h-full">
             <div class="absolute top-0.5 left-1 text-[10px]">{{ i + 1 }}</div>
-            <button class="bg-gray-50" color="accent" mat-icon-button (click)="category.showChildren = !category.showChildren">
+            <button class="bg-gray-50" color="accent" mat-icon-button
+                    (click)="category.showChildren = !category.showChildren">
               @if (category.showChildren) {
                 <mat-icon class="icon-size-4.5" svgIcon="heroicons_solid:chevron-down"></mat-icon>
               }
@@ -71,41 +65,33 @@
             </button>
           </div>
         </td>
-        <td class="font-medium p-0 border">
-          <div class="p-2">
-            <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
-              <input matInput type="text" placeholder="O'zbekcha" [(ngModel)]="category.nameUz"
-                     (keydown.enter)="updateCategory(category)">
-            </mat-form-field>
-          </div>
+        <td class="border p-3">
+          <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+            <input matInput type="text" placeholder="O'zbekcha" [(ngModel)]="category.nameUz"
+                   (keydown.enter)="updateCategory(category)">
+          </mat-form-field>
         </td>
-        <td class="font-medium p-0 border">
-          <div class="p-2">
-            <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
-              <input matInput type="text" placeholder="Ruscha" [(ngModel)]="category.nameRu"
-                     (keydown.enter)="updateCategory(category)">
-            </mat-form-field>
-          </div>
+        <td class="border p-3">
+          <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+            <input matInput type="text" placeholder="Ruscha" [(ngModel)]="category.nameRu"
+                   (keydown.enter)="updateCategory(category)">
+          </mat-form-field>
         </td>
-        <td class="font-medium p-0 border">
-          <div class="p-2">
-            <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
-              <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="category.nameEn"
-                     (keydown.enter)="updateCategory(category)">
-            </mat-form-field>
-          </div>
+        <td class="border p-3">
+          <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+            <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="category.nameEn"
+                   (keydown.enter)="updateCategory(category)">
+          </mat-form-field>
         </td>
-        <td class="font-medium p-0 border relative">
-          <div class="absolute inset-0 p-2 h-full">
-            <button
-              class="bg-red-50"
-              mat-icon-button
-              color="warn"
-              (click)="deleteCategory(category._id)"
-            >
-              <mat-icon class="icon-size-4.5" svgIcon="heroicons_outline:trash"></mat-icon>
-            </button>
-          </div>
+        <td class="border p-3">
+          <button
+            class="bg-red-50"
+            mat-icon-button
+            color="warn"
+            (click)="deleteCategory(category._id)"
+          >
+            <mat-icon class="icon-size-4.5" svgIcon="heroicons_outline:trash"></mat-icon>
+          </button>
         </td>
       </tr>
 

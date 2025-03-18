@@ -31,56 +31,56 @@
     <div
       class="flex flex-auto flex-col overflow-hidden sm:mb-18 sm:overflow-y-auto">
       <table class="w-full">
-        <thead>
+        <thead class="bg-gray-50 text-secondary sticky top-0 z-10 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5">
         <tr class="bg-gray-100">
-          <th class="w-12 px-8 py-4 text-md font-semibold text-secondary">
+          <th class="px-6 py-4 border text-center">
             №
           </th>
-          <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
+          <th class="px-6 py-4 border">
             O'zbekcha
           </th>
-          <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
+          <th class="px-6 py-4 border">
             Ruscha
           </th>
-          <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
+          <th class="px-6 py-4 border">
             Inglizcha
           </th>
-          <th class="px-2 py-4 text-md font-semibold text-secondary text-left">
+          <th class="px-6 py-4 border">
             Veb-sayt
           </th>
-          <th class="px-2 py-4 text-md font-semibold text-secondary text-left w-[205px]">
+          <th class="w-[170px] px-6 py-4 border">
             Logotip
           </th>
-          <th class="px-2 py-4 text-md font-semibold text-secondary text-left w-[100px]">
+          <th class="w-[120px] px-6 py-4 border">
           </th>
         </tr>
         </thead>
         <tbody>
-        <tr class="border-b" [formGroup]="createForm" (ngSubmit)="createBrand()">
-          <td class="py-3 px-1 text-center">
+        <tr class="hover:bg-slate-50 cursor-pointer" [formGroup]="createForm" (ngSubmit)="createBrand()">
+          <td class="border p-3 text-center">
             #
           </td>
-          <td class="py-3 px-1 align-top">
+          <td class="border p-3">
             <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
               <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz" (keydown.enter)="createBrand()">
             </mat-form-field>
           </td>
-          <td class="py-3 px-1 align-top">
+          <td class="border p-3">
             <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
               <input matInput type="text" placeholder="Ruscha" formControlName="nameRu" (keydown.enter)="createBrand()">
             </mat-form-field>
           </td>
-          <td class="py-3 px-1 align-top">
+          <td class="border p-3">
             <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
               <input matInput type="text" placeholder="Inglizcha" formControlName="nameEn" (keydown.enter)="createBrand()">
             </mat-form-field>
           </td>
-          <td class="py-3 px-1 align-top">
+          <td class="border p-3">
             <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
               <input matInput type="url" placeholder="Veb-sayt" formControlName="website" (keydown.enter)="createBrand()">
             </mat-form-field>
           </td>
-          <td class="py-3 px-1 align-top">
+          <td class="border p-3">
             @if (!createForm.get('logo').value) {
               <file-upload
                 (onFilesUpload)="filesUploaded($event)"
@@ -94,7 +94,7 @@
               />
             }
           </td>
-          <td class="py-3 px-8">
+          <td class="border p-3">
             <button
               class="bg-primary-50 cursor-pointer"
               mat-icon-button
@@ -106,35 +106,35 @@
           </td>
         </tr>
           @for (brand of brands(); track brand._id; let i = $index) {
-            <tr class="border-b">
-              <td class="py-3 px-1 text-center align-center">
+            <tr class="hover:bg-slate-50 cursor-pointer">
+              <td class="border p-3 text-center">
                 {{ i + 1 }}
               </td>
-              <td class="py-3 px-1 align-top">
+              <td class="border p-3">
                 <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
                   <input matInput type="text" placeholder="O'zbekcha" [(ngModel)]="brand.nameUz"
                          (keydown.enter)="updateBrand(brand)">
                 </mat-form-field>
               </td>
-              <td class="py-3 px-1 align-top">
+              <td class="border p-3">
                 <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
                   <input matInput type="text" placeholder="Ruscha" [(ngModel)]="brand.nameRu"
                          (keydown.enter)="updateBrand(brand)">
                 </mat-form-field>
               </td>
-              <td class="py-3 px-1 align-top">
+              <td class="border p-3">
                 <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
                   <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="brand.nameEn"
                          (keydown.enter)="updateBrand(brand)">
                 </mat-form-field>
               </td>
-              <td class="py-3 px-1 align-top">
+              <td class="border p-3">
                 <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
                   <input matInput type="text" placeholder="Veb-sayt" [(ngModel)]="brand.website"
                          (keydown.enter)="updateBrand(brand)">
                 </mat-form-field>
               </td>
-              <td class="py-3 px-1 align-top">
+              <td class="border p-3">
                 @if (brand.logo) {
                   <file-list
                     [files]="[brand.logo]"
@@ -148,7 +148,7 @@
                   />
                 }
               </td>
-              <td class="py-3 px-1">
+              <td class="border p-3">
                 <button
                   mat-icon-button
                   color="primary"
