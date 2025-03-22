@@ -6,86 +6,16 @@
     class="flex flex-col px-6 py-8 gap-4"
   >
     <div class="flex items-center justify-between">
-      <div class="text-4xl font-extrabold tracking-tight">Tovarlar ro'yxati</div>
+      <div class="text-4xl font-extrabold tracking-tight">Bannerlar</div>
 
       <button
         mat-flat-button
         [color]="'primary'"
-        (click)="openAddProductDialog()"
+        (click)="openAddBannerDialog()"
       >
         <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-        <span class="ml-2 mr-1">Yangi tovar</span>
+        <span class="ml-2 mr-1">Yangi banner</span>
       </button>
-    </div>
-    <!-- Title -->
-
-    <div class="grid grid-cols-5 gap-5">
-      <searchable-multiselect
-        optionTextKey="nameUz"
-        optionValueKey="_id"
-        selectBoxPlaceholder="Asosiy kategoriya"
-        classes="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
-        [emptyOption]="true"
-        [options]="categories.main"
-        [multiple]="false"
-        [defaultValue]="params.mainCategoryId"
-        (selectionChangeEvent)="selectCategory('main', $event)"
-      />
-
-      <searchable-multiselect
-        optionTextKey="nameUz"
-        optionValueKey="_id"
-        selectBoxPlaceholder="Ichki kategoriya"
-        classes="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
-        [hidden]="!categories.middle.length"
-        [emptyOption]="true"
-        [options]="categories.middle"
-        [multiple]="false"
-        [defaultValue]="params.middleCategoryId"
-        (selectionChangeEvent)="selectCategory('middle', $event)"
-      />
-
-      <searchable-multiselect
-        optionTextKey="nameUz"
-        optionValueKey="_id"
-        selectBoxPlaceholder="Kategoriya"
-        classes="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
-        [hidden]="!categories.sub.length"
-        [emptyOption]="true"
-        [options]="categories.sub"
-        [multiple]="false"
-        [defaultValue]="params.subCategoryId"
-        (selectionChangeEvent)="selectCategory('sub', $event)"
-      />
-
-      <searchable-multiselect
-        optionTextKey="nameUz"
-        optionValueKey="_id"
-        selectBoxPlaceholder="Brend"
-        classes="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
-        [emptyOption]="true"
-        [options]="brands"
-        [multiple]="false"
-        [defaultValue]="params.brandId"
-        (selectionChangeEvent)="selectBrand($event)"
-      />
-
-      <mat-form-field
-        class="fuse-mat-dense fuse-mat-rounded"
-        [subscriptSizing]="'dynamic'"
-      >
-        <mat-icon
-          class="icon-size-5"
-          matPrefix
-          [svgIcon]="'heroicons_solid:magnifying-glass'"
-        ></mat-icon>
-        <input
-          matInput
-          [placeholder]="'Tovarlarni qidirish'"
-          [(ngModel)]="params.search"
-          (keydown.enter)="searchProduct()"
-        />
-      </mat-form-field>
     </div>
   </div>
 
@@ -162,16 +92,6 @@
             }
           </tbody>
         </table>
-
-
-        <mat-paginator
-          class="z-10 border-b bg-gray-50 dark:bg-transparent sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-b-0 sm:border-t"
-          [length]="params.total"
-          [pageIndex]="params.page"
-          [pageSize]="params.limit"
-          [showFirstLastButtons]="true"
-          (page)="pageChange($event)"
-        ></mat-paginator>
       }
     </div>
   </div>

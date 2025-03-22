@@ -49,7 +49,7 @@ export class SearchableMultiselectComponent {
 		this.matSelectValue = value;
 	}
 
-	@Output() selectionChangeEvent = new EventEmitter<string>();
+	@Output() selectionChangeEvent = new EventEmitter<string | string[]>();
 	@Output() enterEvent = new EventEmitter<string>();
 	@Output() closedEvent = new EventEmitter<void>();
 	matSelectValue: valueType;

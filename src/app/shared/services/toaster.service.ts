@@ -16,7 +16,7 @@ export class ToasterService {
          dismissible = true,
          duration = 5000,
          verticalPosition = 'top',
-         horizontalPosition = 'right',
+         horizontalPosition = 'center',
          showProgressBar = true,
          showCloseButton = true,
        }: {

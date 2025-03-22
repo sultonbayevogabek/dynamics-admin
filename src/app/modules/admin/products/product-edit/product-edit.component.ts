@@ -22,7 +22,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { IProduct } from '../interfaces/product.interface';
 
 @Component({
-  selector: 'product-edit',
+  selector: 'banner-edit',
   imports: [
     ReactiveFormsModule,
     SearchableMultiselectComponent,

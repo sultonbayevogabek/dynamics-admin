@@ -1,4 +1,4 @@
-import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
+import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, Inject, inject, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategoriesService } from '../../categories/categories.service';
 import { firstValueFrom } from 'rxjs';
@@ -6,7 +6,7 @@ import { ICategory } from '../../categories/category.interface';
 import {
   SearchableMultiselectComponent
 } from '@shared/components/searchable-multiselect/searchable-multiselect.component';
-import { MatDialogClose, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogClose, MatDialogRef } from '@angular/material/dialog';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatError, MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
@@ -17,11 +17,12 @@ import { BrandsService } from '../../brands/brands.service';
 import { FileUploadComponent } from '@shared/components/file-upload/file-upload.component';
 import { IFile } from '@shared/interfaces/file.interface';
 import { FileListComponent } from '@shared/components/file-list/file-list.component';
-import { ProductsService } from '../products.service';
+import { BannersService } from '../banners.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { IBanner } from '../interfaces/banner.interface';
 
 @Component({
-  selector: 'banner-create',
+  selector: 'banner-edit',
   imports: [
     ReactiveFormsModule,
     SearchableMultiselectComponent,
@@ -39,7 +40,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     FileUploadComponent,
     FileListComponent
   ],
-  templateUrl: './product-create.component.html',
+  templateUrl: './banner-edit.component.html',
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   standalone: true,
   providers: [
@@ -48,82 +49,28 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 
 
-export class ProductCreateComponent implements OnInit {
+export class BannerEditComponent implements OnInit {
   productForm = new FormGroup({
     details: new FormGroup({
       mainCategoryId: new FormControl<string>(null, Validators.required),
       middleCategoryId: new FormControl<string>(null, Validators.required)
     }),
+    _id: new FormControl(null, [Validators.required]),
     categoryId: new FormControl<string>(null, [ Validators.required ]),
-    nameUz: new FormControl<string>('Elektr arra, Philips 890/10X', [ Validators.required ]),
-    nameRu: new FormControl<string>('Электропила Philips 890/10X', [ Validators.required ]),
-    nameEn: new FormControl<string>('Electric saw, Philips 890/10X', [ Validators.required ]),
-    descriptionUz: new FormControl<string>(`Elektr arra Philips 890/10X –
-    bu yuqori samarali va bardoshli elektr arra bo‘lib, yog‘och,
-    plastmassa va metall materiallarni kesish uchun mo‘ljallangan.
-    Quvvatli dvigatel, aniq kesish mexanizmi va ergonomik dizayni bilan u uy va
-    professional ustaxonalarda foydalanish uchun ideal tanlovdir.
-     Xavfsizlik tizimi va qulay qo‘l ushlagichi bilan ishlash yanada oson va xavfsiz.`, [ Validators.required ]),
-    descriptionRu: new FormControl<string>(`Электрическая пила Philips 890/10X – это мощная
-    и надежная электрическая пила, предназначенная для резки дерева, пластика и металла.
-    Оснащена высокопроизводительным двигателем, точным механизмом резки и эргономичным
-    дизайном, что делает её идеальным выбором как для домашнего использования, так и для профессиональных
-     мастерских. Система безопасности и удобная рукоятка обеспечивают комфорт и безопасность во время работы.`, [ Validators.required ]),
-    descriptionEn: new FormControl<string>(`Electric Saw Philips 890/10X is a high-performance
-    and durable electric saw designed for cutting wood, plastic, and metal materials. Equipped with a powerful
-    motor, precise cutting mechanism, and ergonomic design, it is an ideal choice for both home and professional
-    workshops. The safety system and comfortable handle ensure ease of use and enhanced safety during operation.`, [ Validators.required ]),
-    oldPrice: new FormControl<number>(1099),
-    currentPrice: new FormControl<number>(990, [ Validators.required ]),
-    quantity: new FormControl<number>(22, [ Validators.required ]),
-    brandId: new FormControl<string>('67d5246564e989204561e7be', [ Validators.required ]),
-    images: new FormControl<IFile[]>([
-      {
-        "fieldname": "file",
-        "originalname": "product-2.jpg",
-        "encoding": "7bit",
-        "mimetype": "image/jpeg",
-        "destination": "uploads",
-        "filename": "1742669705230-243513238-product-2.jpg",
-        "path": "uploads/1742669705230-243513238-product-2.jpg",
-        "size": 0.117,
-        "extension": "jpg"
-      },
-      {
-        "fieldname": "file",
-        "originalname": "product-3.jpg",
-        "encoding": "7bit",
-        "mimetype": "image/jpeg",
-        "destination": "uploads",
-        "filename": "1742669705235-664174433-product-3.jpg",
-        "path": "uploads/1742669705235-664174433-product-3.jpg",
-        "size": 0.098,
-        "extension": "jpg"
-      },
-      {
-        "fieldname": "file",
-        "originalname": "product-4.jpg",
-        "encoding": "7bit",
-        "mimetype": "image/jpeg",
-        "destination": "uploads",
-        "filename": "1742669705237-178916660-product-4.jpg",
-        "path": "uploads/1742669705237-178916660-product-4.jpg",
-        "size": 0.078,
-        "extension": "jpg"
-      }
-    ], [ Validators.required ]),
-    attributes: new FormArray<FormGroup>([
-        new FormGroup({
-          nameUz: new FormControl<string>('Ishlab chiqaruvchi', [ Validators.required ]),
-          nameRu: new FormControl<string>('Производитель', [ Validators.required ]),
-          nameEn: new FormControl<string>('Manufacturer', [ Validators.required ]),
-          valueUz: new FormControl<string>('Fubag', [ Validators.required ]),
-          valueRu: new FormControl<string>('Fubag', [ Validators.required ]),
-          valueEn: new FormControl<string>('Fubag', [ Validators.required ])
-        })
-      ], [ Validators.required ]
+    nameUz: new FormControl<string>(null, [ Validators.required ]),
+    nameRu: new FormControl<string>(null, [ Validators.required ]),
+    nameEn: new FormControl<string>(null, [ Validators.required ]),
+    descriptionUz: new FormControl<string>(null, [ Validators.required ]),
+    descriptionRu: new FormControl<string>(null, [ Validators.required ]),
+    descriptionEn: new FormControl<string>(null, [ Validators.required ]),
+    oldPrice: new FormControl<number>(null),
+    currentPrice: new FormControl<number>(null, [ Validators.required ]),
+    quantity: new FormControl<number>(null, [ Validators.required ]),
+    brandId: new FormControl<string>(null, [ Validators.required ]),
+    images: new FormControl<IFile[]>([], [ Validators.required ]),
+    attributes: new FormArray<FormGroup>([], [ Validators.required ]
     ),
-    keywords: new FormControl<string>('elektr qurilma, apparat, elektr arra, randa, bichqi')
+    keywords: new FormControl<string>('')
   });
   attributes = computed(() => {
     return this.productForm.get('attributes') as FormArray<FormGroup>;
@@ -226,14 +173,51 @@ export class ProductCreateComponent implements OnInit {
   brands: IBrand[] = [];
 
   private categoriesService = inject(CategoriesService);
-  private productsService = inject(ProductsService);
+  private productsService = inject(BannersService);
   private brandsService = inject(BrandsService);
   private snackbar = inject(MatSnackBar);
   private dialogRef = inject(MatDialogRef);
+  @Inject(MAT_DIALOG_DATA) data: IBanner = inject(MAT_DIALOG_DATA);
 
   async ngOnInit() {
     this.categories.main = await this.getCategories();
     await this.getBrands();
+
+    await this.setProductData();
+  }
+
+  async setProductData() {
+    this.productForm.patchValue({
+      _id: this.data._id,
+      nameUz: this.data.nameUz,
+      nameRu: this.data.nameRu,
+      nameEn: this.data.nameEn,
+      descriptionUz: this.data.descriptionUz,
+      descriptionRu: this.data.descriptionRu,
+      descriptionEn: this.data.descriptionEn,
+      oldPrice: this.data.oldPrice || null,
+      currentPrice: this.data.currentPrice,
+      quantity: this.data.quantity,
+      brandId: this.data.brandId,
+      images: this.data.images,
+      keywords: this.data.keywords
+    });
+
+    this.data.attributes.forEach(attribute => {
+      const formGroup = new FormGroup({});
+      const controls = (this.productForm.get('attributes') as FormArray<FormGroup>).controls;
+
+      for (const attributeKey in attribute) {
+        const formControl = new FormControl(attribute[attributeKey], [ Validators.required ]);
+        formGroup.setControl(attributeKey, formControl);
+      }
+
+      (this.productForm.get('attributes') as FormArray<FormGroup>).push(formGroup);
+    })
+
+    await this.selectCategory('main', this.data.details.mainCategoryId);
+    await this.selectCategory('middle', this.data.details.middleCategoryId);
+    await this.selectCategory('sub', this.data.categoryId);
   }
 
   async getCategories(parentCategoryId?: string) {
@@ -316,21 +300,22 @@ export class ProductCreateComponent implements OnInit {
 
     try {
       const response = await firstValueFrom(
-        this.productsService.createProduct({
+        this.productsService.editProduct({
           ...form.getRawValue(),
           oldPrice: form.getRawValue().oldPrice || null
         })
       );
-      if (response && response.statusCode === 201) {
-        this.snackbar.open(`Tovar muvaffaqiyatli yaratildi`, 'OK', {
+      if (response && response.statusCode === 200) {
+        this.snackbar.open(`Tovar muvaffaqiyatli o'zgartirildi`, 'OK', {
           duration: 3000,
           horizontalPosition: 'center',
           verticalPosition: 'top'
         });
-        form.enable();
+
+        this.dialogRef.close('edited');
       }
     } catch (error) {
-      this.snackbar.open(`Tovarni yaratishda xatolik sodir bo'ldi`, 'OK', {
+      this.snackbar.open(`Tovar ma'lumotlarini tahrirlashda xatolik sodir bo'ldi`, 'OK', {
         duration: 3000,
         horizontalPosition: 'center',
         verticalPosition: 'top'

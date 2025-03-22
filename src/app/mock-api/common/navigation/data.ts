@@ -28,6 +28,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:sparkles',
         link: '/brands'
+      },
+      {
+        id: 'admin.banners',
+        title: 'Banner',
+        type: 'basic',
+        icon: 'heroicons_outline:view-columns',
+        link: '/banners'
       }
     ]
   },
