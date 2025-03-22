@@ -88,7 +88,10 @@ export class BannersComponent implements OnInit {
 
   async openAddBannerDialog() {
     this.matDialog.open(BannerCreateComponent, {
-      width: '80vw',
+      width: '100vw',
+      height: '100vh',
+      maxHeight: '100vh',
+      maxWidth: '100vw'
     })
   }
 

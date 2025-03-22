@@ -65,7 +65,30 @@ export class BannerCreateComponent implements OnInit {
     textEn: new FormControl<string>(`Electric Saw Philips 890/10X is a high-performance
     and durable electric saw designed for cutting wood, plastic, and metal materials`, [ Validators.required ]),
     brandIds: new FormControl<string[]>([ '67d5246564e989204561e7be' ], [ Validators.required ]),
-    images: new FormControl<IFile[]>([], [ Validators.required ])
+    images: new FormControl<IFile[]>([
+      {
+        "fieldname": "file",
+        "originalname": "slide-3.jpg",
+        "encoding": "7bit",
+        "mimetype": "image/jpeg",
+        "destination": "uploads",
+        "filename": "1742670202921-781193048-slide-3.jpg",
+        "path": "uploads/1742670202921-781193048-slide-3.jpg",
+        "size": 0.069,
+        "extension": "jpg"
+      },
+      {
+        "fieldname": "file",
+        "originalname": "slide-1-mobile.jpg",
+        "encoding": "7bit",
+        "mimetype": "image/jpeg",
+        "destination": "uploads",
+        "filename": "1742670202923-126466488-slide-1-mobile.jpg",
+        "path": "uploads/1742670202923-126466488-slide-1-mobile.jpg",
+        "size": 0.024,
+        "extension": "jpg"
+      }
+    ], [ Validators.required ])
   });
   categories: { [key: string]: ICategory[] } = {
     main: [],
