@@ -6,7 +6,7 @@ import { ICategory } from '../../categories/category.interface';
 import {
   SearchableMultiselectComponent
 } from '@shared/components/searchable-multiselect/searchable-multiselect.component';
-import { MatDialogClose, MatDialogContent, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogClose, MatDialogRef } from '@angular/material/dialog';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
@@ -20,6 +20,8 @@ import { FileListComponent } from '@shared/components/file-list/file-list.compon
 import { BannersService } from '../banners.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ToasterService } from '@shared/services/toaster.service';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'banner-create',
@@ -37,7 +39,11 @@ import { ToasterService } from '@shared/services/toaster.service';
     MatError,
     FileUploadComponent,
     FileListComponent,
-    MatDialogContent
+    MatRadioGroup,
+    MatRadioButton,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption
   ],
   templateUrl: './banner-create.component.html',
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
@@ -50,11 +56,13 @@ import { ToasterService } from '@shared/services/toaster.service';
 
 export class BannerCreateComponent implements OnInit {
   bannerForm = new FormGroup({
-    details: new FormGroup({
-      mainCategoryId: new FormControl<string>(null),
-      middleCategoryId: new FormControl<string>(null)
-    }),
+    mainCategoryId: new FormControl<string>(null),
+    middleCategoryId: new FormControl<string>(null),
+    subCategoryId: new FormControl<string>(null),
     categoryId: new FormControl<string>(null),
+    brandIds: new FormControl<string[]>([]),
+    productId: new FormControl<string>(null),
+
     titleUz: new FormControl<string>('Santexnika mahsulotlarining katta tanlovi', [ Validators.required ]),
     titleRu: new FormControl<string>('Большой выбор сантехнических товаров', [ Validators.required ]),
     titleEn: new FormControl<string>('Big choice of Plumbing products', [ Validators.required ]),
@@ -64,31 +72,31 @@ export class BannerCreateComponent implements OnInit {
     и надежная электрическая пила, предназначенная для резки дерева`, [ Validators.required ]),
     textEn: new FormControl<string>(`Electric Saw Philips 890/10X is a high-performance
     and durable electric saw designed for cutting wood, plastic, and metal materials`, [ Validators.required ]),
-    brandIds: new FormControl<string[]>([ '67d5246564e989204561e7be' ], [ Validators.required ]),
     images: new FormControl<IFile[]>([
       {
-        "fieldname": "file",
-        "originalname": "slide-3.jpg",
-        "encoding": "7bit",
-        "mimetype": "image/jpeg",
-        "destination": "uploads",
-        "filename": "1742670202921-781193048-slide-3.jpg",
-        "path": "uploads/1742670202921-781193048-slide-3.jpg",
-        "size": 0.069,
-        "extension": "jpg"
+        'fieldname': 'file',
+        'originalname': 'slide-3.jpg',
+        'encoding': '7bit',
+        'mimetype': 'image/jpeg',
+        'destination': 'uploads',
+        'filename': '1742670202921-781193048-slide-3.jpg',
+        'path': 'uploads/1742670202921-781193048-slide-3.jpg',
+        'size': 0.069,
+        'extension': 'jpg'
       },
       {
-        "fieldname": "file",
-        "originalname": "slide-1-mobile.jpg",
-        "encoding": "7bit",
-        "mimetype": "image/jpeg",
-        "destination": "uploads",
-        "filename": "1742670202923-126466488-slide-1-mobile.jpg",
-        "path": "uploads/1742670202923-126466488-slide-1-mobile.jpg",
-        "size": 0.024,
-        "extension": "jpg"
+        'fieldname': 'file',
+        'originalname': 'slide-1-mobile.jpg',
+        'encoding': '7bit',
+        'mimetype': 'image/jpeg',
+        'destination': 'uploads',
+        'filename': '1742670202923-126466488-slide-1-mobile.jpg',
+        'path': 'uploads/1742670202923-126466488-slide-1-mobile.jpg',
+        'size': 0.024,
+        'extension': 'jpg'
       }
-    ], [ Validators.required ])
+    ], [ Validators.required ]),
+    type: new FormControl<'product' | 'filter'>('filter')
   });
   categories: { [key: string]: ICategory[] } = {
     main: [],
@@ -123,25 +131,51 @@ export class BannerCreateComponent implements OnInit {
   }
 
   async selectCategory(type: 'main' | 'middle' | 'sub', $event: string) {
+    setTimeout(() => {
+      console.log(this.bannerForm.getRawValue(), 'banner');
+    }, 1000)
     if (type === 'main') {
-      this.bannerForm.get('details.mainCategoryId').setValue($event);
-      this.bannerForm.get('details.middleCategoryId').setValue(null);
-      this.bannerForm.get('categoryId').setValue(null);
-
-      this.categories.middle = await this.getCategories($event);
+      if ($event) {
+        this.categories.middle = await this.getCategories($event);
+      } else {
+        this.categories.middle = [];
+      }
       this.categories.sub = [];
+      this.bannerForm.get('mainCategoryId').setValue($event);
+      this.bannerForm.get('middleCategoryId').setValue(null);
+      this.bannerForm.get('subCategoryId').setValue(null);
     }
 
     if (type === 'middle') {
-      this.bannerForm.get('details.middleCategoryId').setValue($event);
-      this.bannerForm.get('categoryId').setValue(null);
-
-      this.categories.sub = await this.getCategories($event);
+      if ($event) {
+        this.categories.sub = await this.getCategories($event);
+      } else {
+        this.categories.sub = [];
+      }
+      this.bannerForm.get('middleCategoryId').setValue($event);
+      this.bannerForm.get('subCategoryId').setValue(null);
     }
 
     if (type === 'sub') {
-      this.bannerForm.get('categoryId').setValue($event);
+      this.bannerForm.get('subCategoryId').setValue($event);
     }
+
+    if (this.bannerForm.get('subCategoryId').value) {
+      this.bannerForm.get('categoryId').setValue(this.bannerForm.get('subCategoryId').value);
+      return;
+    }
+
+    if (this.bannerForm.get('middleCategoryId').value) {
+      this.bannerForm.get('categoryId').setValue(this.bannerForm.get('middleCategoryId').value);
+      return;
+    }
+
+    if (this.bannerForm.get('mainCategoryId').value) {
+      this.bannerForm.get('categoryId').setValue(this.bannerForm.get('mainCategoryId').value);
+      return;
+    }
+
+    this.bannerForm.get('categoryId').setValue(null);
   }
 
   onFilesUpload(files: IFile[]) {
@@ -156,7 +190,7 @@ export class BannerCreateComponent implements OnInit {
     if (form.invalid) {
       this.toaster.open({
         message: `Majburiy maydonlarni to'ldiring`,
-        type: 'warning',
+        type: 'warning'
       });
       return;
     }
@@ -174,14 +208,14 @@ export class BannerCreateComponent implements OnInit {
       if (response && response.statusCode === 201) {
         this.toaster.open({
           message: `Tovar muvaffaqiyatli yaratildi`,
-          type: 'warning',
+          type: 'warning'
         });
         form.enable();
       }
     } catch (error) {
       this.toaster.open({
         message: `Tovarni yaratishda xatolik sodir bo'ldi`,
-        type: 'warning',
+        type: 'warning'
       });
       form.enable();
     }

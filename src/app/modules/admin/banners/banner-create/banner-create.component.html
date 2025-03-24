@@ -70,6 +70,20 @@
       </fieldset>
 
       <fieldset class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
+        <legend class="text-gray-900 font-medium text-[16px]">Banner turi</legend>
+
+        <mat-radio-group class="flex gap-10" formControlName="type">
+          <mat-radio-button value="filter">Kategoriya va brand (bunda bannerdagi tugmani bosilganda tanlangan kategoriya
+            va brendlar bo'yicha tovarlar filterlab ko'rsatiladi)
+          </mat-radio-button>
+          <mat-radio-button value="product">Tovar (bannerdagi tugma bosilsa aynan bitta tovar sahifasi ochiladi)
+          </mat-radio-button>
+        </mat-radio-group>
+      </fieldset>
+
+      <fieldset
+        [hidden]="bannerForm.get('type').value === 'product'"
+        class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
         <legend class="text-gray-900 font-medium text-[16px]">Kategoriya va brend</legend>
 
         <div class="grid grid-cols-4 gap-5">
@@ -79,9 +93,10 @@
             optionValueKey="_id"
             selectBoxPlaceholder="Kategoriyani tanlang"
             classes="fuse-mat-dense fuse-mat-no-header w-full"
+            [emptyOption]="true"
             [options]="categories.main"
             [multiple]="false"
-            [defaultValue]="bannerForm.get('details.mainCategoryId').value"
+            [defaultValue]="bannerForm.get('mainCategoryId').value"
             (selectionChangeEvent)="selectCategory('main', $event)"
             [disabled]="bannerForm.disabled"
           />
@@ -92,9 +107,11 @@
             optionValueKey="_id"
             selectBoxPlaceholder="Kategoriyani tanlang"
             classes="fuse-mat-dense w-full"
+            [hidden]="!categories.middle.length"
+            [emptyOption]="true"
             [options]="categories.middle"
             [multiple]="false"
-            [defaultValue]="bannerForm.get('details.middleCategoryId').value"
+            [defaultValue]="bannerForm.get('middleCategoryId').value"
             (selectionChangeEvent)="selectCategory('middle', $event)"
             [disabled]="bannerForm.disabled"
           />
@@ -105,9 +122,11 @@
             optionValueKey="_id"
             selectBoxPlaceholder="Kategoriyani tanlang"
             classes="fuse-mat-dense w-full"
+            [hidden]="!categories.sub.length"
+            [emptyOption]="true"
             [options]="categories.sub"
             [multiple]="false"
-            [defaultValue]="bannerForm.get('categoryId').value"
+            [defaultValue]="bannerForm.get('subCategoryId').value"
             (selectionChangeEvent)="selectCategory('sub', $event)"
             [disabled]="bannerForm.disabled"
           />
@@ -123,6 +142,28 @@
             [defaultValue]="bannerForm.get('brandIds').value"
             (selectionChangeEvent)="bannerForm.get('brandIds').setValue($event)"
           />
+        </div>
+      </fieldset>
+
+      <fieldset
+        [hidden]="bannerForm.get('type').value === 'product'"
+        class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
+        <legend class="text-gray-900 font-medium text-[16px]">Kategoriya va brend</legend>
+
+        <div class="grid grid-cols-2 gap-5">
+          <mat-form-field class="fuse-mat-dense" floatLabel="always">
+            <input
+              type="text"
+              placeholder="Tovarni qidirish (SKU yoki nomi bo'yicha)"
+              matInput
+              formControlName="productId"
+              [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete">
+              @for (option of filteredOptions | async; track option) {
+                <mat-option [value]="option">{{ option }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
       </fieldset>
     </form>

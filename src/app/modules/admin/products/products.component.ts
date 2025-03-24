@@ -164,7 +164,6 @@ export class ProductsComponent implements OnInit {
   }
 
   async selectCategory(type: 'main' | 'middle' | 'sub', $event: string) {
-    console.log(this.params);
     if (type === 'main') {
       if ($event) {
         this.categories.middle = await this.getCategories($event);
