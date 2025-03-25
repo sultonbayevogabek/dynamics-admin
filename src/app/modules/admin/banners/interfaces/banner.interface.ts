@@ -31,6 +31,7 @@ interface Hierarchy {
 
 interface Product {
   _id: string;
+  productId: string;
   slug: string;
   slugRu: string;
   slugEn: string;

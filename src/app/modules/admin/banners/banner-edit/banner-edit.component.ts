@@ -126,11 +126,12 @@ export class BannerEditComponent implements OnInit {
 
       const response = await firstValueFrom(
         this.productsService.getProduct({
-          _id: this.data.product._id
+          _id: this.data.product.productId
         })
       );
 
       this.products = [ response ];
+      this.productSearchInput().nativeElement.value = response.nameUz
     }
 
     if (this.data.hierarchy.length) {
