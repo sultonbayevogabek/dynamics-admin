@@ -1,6 +1,6 @@
 <div class="fixed inset-0 flex flex-col gap-5 p-6 bg-white">
   <div class="flex items-center justify-between">
-    <div class="text-xl font-medium text-gray-700">Tovar ma'lumotlarini tahrirlash</div>
+    <div class="text-xl font-medium text-gray-700">Banner ma'lumotlarini tahrirlash</div>
 
     <button mat-icon-button mat-dialog-close class="bg-gray-50">
       <mat-icon svgIcon="heroicons_outline:x-mark"></mat-icon>
@@ -8,10 +8,83 @@
   </div>
 
   <div class="grow relative">
-    <form class="absolute inset-0 overflow-auto flex flex-col gap-2" [formGroup]="productForm"
-          (ngSubmit)="createProduct()">
+    <form class="absolute inset-0 overflow-auto flex flex-col gap-2" [formGroup]="bannerForm"
+          (ngSubmit)="editBanner()">
       <fieldset class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
-        <legend class="text-gray-900 font-medium text-[16px]">Tovar kategoriyasi va brendi</legend>
+        <legend class="text-gray-900 font-medium text-[16px]">Banner sarlavhasi</legend>
+
+        <div class="grid grid-cols-3 gap-5">
+          <mat-form-field class="fuse-mat-dense" floatLabel="always">
+            <mat-label>O'zbekcha</mat-label>
+            <input formControlName="titleUz" matInput type="text" placeholder="O'zbekcha sarlavha">
+            <mat-error>Majburiy maydon</mat-error>
+          </mat-form-field>
+          <mat-form-field class="fuse-mat-dense" floatLabel="always">
+            <mat-label>Ruscha</mat-label>
+            <input formControlName="titleRu" matInput type="text" placeholder="Ruscha sarlavha">
+            <mat-error>Majburiy maydon</mat-error>
+          </mat-form-field>
+          <mat-form-field class="fuse-mat-dense" floatLabel="always">
+            <mat-label>Inglizcha</mat-label>
+            <input formControlName="titleEn" matInput type="text" placeholder="Inglizcha sarlavha">
+            <mat-error>Majburiy maydon</mat-error>
+          </mat-form-field>
+        </div>
+      </fieldset>
+
+      <fieldset class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
+        <legend class="text-gray-900 font-medium text-[16px]">Banner matni</legend>
+
+        <div class="grid grid-cols-3 gap-5">
+          <mat-form-field class="fuse-mat-dense" floatLabel="always">
+            <mat-label>O'zbekcha</mat-label>
+            <textarea formControlName="textUz" matInput type="text" placeholder="O'zbekcha matn"></textarea>
+            <mat-error>Majburiy maydon</mat-error>
+          </mat-form-field>
+          <mat-form-field class="fuse-mat-dense" floatLabel="always">
+            <mat-label>Ruscha</mat-label>
+            <textarea formControlName="textRu" matInput type="text" placeholder="Ruscha matn"></textarea>
+            <mat-error>Majburiy maydon</mat-error>
+          </mat-form-field>
+          <mat-form-field class="fuse-mat-dense" floatLabel="always">
+            <mat-label>Inglizcha</mat-label>
+            <textarea formControlName="textEn" matInput type="text" placeholder="Inglizcha matn"></textarea>
+            <mat-error>Majburiy maydon</mat-error>
+          </mat-form-field>
+        </div>
+      </fieldset>
+
+      <fieldset class="border px-3 py-2 rounded-lg bg-slate-50">
+        <legend class="text-gray-900 font-medium text-[16px]">Banner rasmlari (840 x 395 o'lchamli bitta va 510 x 395
+          o'lchamli bitta rasm yuklang)
+        </legend>
+        <file-upload
+          (onFilesUpload)="onFilesUpload($event)"
+        />
+        <file-list
+          classes="grid grid-cols-10 gap-3 mt-3"
+          [files]="bannerForm.get('images').value"
+          (filesChange)="bannerForm.get('images').setValue($event)"
+          [viewType]="'grid'"
+        />
+      </fieldset>
+
+      <fieldset class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
+        <legend class="text-gray-900 font-medium text-[16px]">Banner turi</legend>
+
+        <mat-radio-group class="flex gap-10" formControlName="type" (change)="onBannerTypeChange()">
+          <mat-radio-button value="filter">Kategoriya va brand (bunda bannerdagi tugmani bosilganda tanlangan kategoriya
+            va brendlar bo'yicha tovarlar filterlab ko'rsatiladi)
+          </mat-radio-button>
+          <mat-radio-button value="product">Tovar (bannerdagi tugma bosilsa aynan bitta tovar sahifasi ochiladi)
+          </mat-radio-button>
+        </mat-radio-group>
+      </fieldset>
+
+      <fieldset
+        [hidden]="bannerForm.get('type').value === 'product'"
+        class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
+        <legend class="text-gray-900 font-medium text-[16px]">Kategoriya va brend</legend>
 
         <div class="grid grid-cols-4 gap-5">
           <searchable-multiselect
@@ -20,14 +93,12 @@
             optionValueKey="_id"
             selectBoxPlaceholder="Kategoriyani tanlang"
             classes="fuse-mat-dense fuse-mat-no-header w-full"
+            [emptyOption]="true"
             [options]="categories.main"
             [multiple]="false"
-            [defaultValue]="productForm.get('details.mainCategoryId').value"
+            [defaultValue]="bannerForm.get('mainCategoryId').value"
             (selectionChangeEvent)="selectCategory('main', $event)"
-            [required]="true"
-            errorMessage="Majburiy maydon"
-            [showErrorMessage]="!!productForm.get('details.mainCategoryId').errors"
-            [disabled]="productForm.disabled"
+            [disabled]="bannerForm.disabled"
           />
 
           <searchable-multiselect
@@ -36,14 +107,13 @@
             optionValueKey="_id"
             selectBoxPlaceholder="Kategoriyani tanlang"
             classes="fuse-mat-dense w-full"
+            [hidden]="!categories.middle.length"
+            [emptyOption]="true"
             [options]="categories.middle"
             [multiple]="false"
-            [defaultValue]="productForm.get('details.middleCategoryId').value"
+            [defaultValue]="bannerForm.get('middleCategoryId').value"
             (selectionChangeEvent)="selectCategory('middle', $event)"
-            [required]="true"
-            errorMessage="Majburiy maydon"
-            [showErrorMessage]="!!productForm.get('details.middleCategoryId').errors"
-            [disabled]="productForm.disabled"
+            [disabled]="bannerForm.disabled"
           />
 
           <searchable-multiselect
@@ -52,14 +122,13 @@
             optionValueKey="_id"
             selectBoxPlaceholder="Kategoriyani tanlang"
             classes="fuse-mat-dense w-full"
+            [hidden]="!categories.sub.length"
+            [emptyOption]="true"
             [options]="categories.sub"
             [multiple]="false"
-            [defaultValue]="productForm.get('categoryId').value"
+            [defaultValue]="bannerForm.get('subCategoryId').value"
             (selectionChangeEvent)="selectCategory('sub', $event)"
-            [required]="true"
-            errorMessage="Majburiy maydon"
-            [showErrorMessage]="!!productForm.get('categoryId').errors"
-            [disabled]="productForm.disabled"
+            [disabled]="bannerForm.disabled"
           />
 
           <searchable-multiselect
@@ -69,180 +138,39 @@
             selectBoxPlaceholder="Brendni tanlang"
             classes="fuse-mat-dense w-full"
             [options]="brands"
-            [multiple]="false"
-            [defaultValue]="productForm.get('brandId').value"
-            (selectionChangeEvent)="productForm.get('brandId').setValue($event)"
-            [required]="true"
-            errorMessage="Majburiy maydon"
-            [showErrorMessage]="!!productForm.get('brandId').errors"
-            [disabled]="productForm.disabled"
+            [multiple]="true"
+            [defaultValue]="bannerForm.get('brandIds').value"
+            (selectionChangeEvent)="bannerForm.get('brandIds').setValue($event)"
           />
         </div>
       </fieldset>
 
-      <fieldset class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
-        <legend class="text-gray-900 font-medium text-[16px]">Tovar nomi</legend>
+      <fieldset
+        [hidden]="bannerForm.get('type').value === 'filter'"
+        class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
+        <legend class="text-gray-900 font-medium text-[16px]">Tovar</legend>
 
-        <div class="grid grid-cols-3 gap-5">
+        <div class="grid grid-cols-2 gap-5">
           <mat-form-field class="fuse-mat-dense" floatLabel="always">
-            <mat-label>O'zbekcha</mat-label>
-            <input formControlName="nameUz" matInput type="text" placeholder="O'zbekcha nomi">
-            <mat-error>Majburiy maydon</mat-error>
-          </mat-form-field>
-          <mat-form-field class="fuse-mat-dense" floatLabel="always">
-            <mat-label>Ruscha</mat-label>
-            <input formControlName="nameRu" matInput type="text" placeholder="Ruscha nomi">
-            <mat-error>Majburiy maydon</mat-error>
-          </mat-form-field>
-          <mat-form-field class="fuse-mat-dense" floatLabel="always">
-            <mat-label>Inglizcha</mat-label>
-            <input formControlName="nameEn" matInput type="text" placeholder="Inglizcha nomi">
-            <mat-error>Majburiy maydon</mat-error>
-          </mat-form-field>
-        </div>
-      </fieldset>
-
-      <fieldset class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
-        <legend class="text-gray-900 font-medium text-[16px]">Tovar tavsifi</legend>
-
-        <div class="flex flex-col">
-          <mat-form-field class="fuse-mat-dense" floatLabel="always">
-            <mat-label>O'zbekcha</mat-label>
-            <textarea formControlName="descriptionUz" matInput type="text" placeholder="O'zbekcha tavsifi"></textarea>
-            <mat-error>Majburiy maydon</mat-error>
-          </mat-form-field>
-          <mat-form-field class="fuse-mat-dense" floatLabel="always">
-            <mat-label>Ruscha</mat-label>
-            <textarea formControlName="descriptionRu" matInput type="text" placeholder="Ruscha tavsifi"></textarea>
-            <mat-error>Majburiy maydon</mat-error>
-          </mat-form-field>
-          <mat-form-field class="fuse-mat-dense" floatLabel="always">
-            <mat-label>Inglizcha</mat-label>
-            <textarea formControlName="descriptionEn" matInput type="text" placeholder="Inglizcha tavsifi"></textarea>
-            <mat-error>Majburiy maydon</mat-error>
-          </mat-form-field>
-        </div>
-      </fieldset>
-
-      <fieldset class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
-        <legend class="text-gray-900 font-medium text-[16px]">Tovar narxi va miqdori</legend>
-
-        <div class="grid grid-cols-3 gap-5">
-          <mat-form-field class="fuse-mat-dense" floatLabel="always">
-            <mat-label>Hozirgi narxi</mat-label>
             <input
-              [mask]="'separator'"
-              [thousandSeparator]="' '"
-              formControlName="currentPrice"
-              matInput
               type="text"
-              placeholder="Hozirgi narxi"
+              placeholder="Tovarni qidirish (SKU yoki nomi bo'yicha)"
+              matInput
+              #productSearchInput
+              (keydown.enter)="searchProduct()"
+              [matAutocomplete]="auto"
             >
-            <span matSuffix>USD</span>
-            <mat-error>Majburiy maydon</mat-error>
-          </mat-form-field>
-          <mat-form-field class="fuse-mat-dense" floatLabel="always">
-            <mat-label>Eski narxi (ixtiyoriy maydon)</mat-label>
-            <input
-              [mask]="'separator'"
-              [thousandSeparator]="' '"
-              [validation]="false"
-              formControlName="oldPrice"
-              matInput type="text"
-              placeholder="Eski narxi"
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="onProductSelected($event)"
+              [displayWith]="displayFn"
             >
-            <span matSuffix>USD</span>
-          </mat-form-field>
-          <mat-form-field class="fuse-mat-dense" floatLabel="always">
-            <mat-label>Miqdori</mat-label>
-            <input
-              [mask]="'separator'"
-              [thousandSeparator]="' '"
-              formControlName="quantity"
-              matInput type="text"
-              placeholder="Miqdori"
-            >
-            <span matSuffix>dona</span>
-            <mat-error>Majburiy maydon</mat-error>
-          </mat-form-field>
-        </div>
-      </fieldset>
-
-      <fieldset class="border px-3 py-2 rounded-lg bg-slate-50">
-        <legend class="text-gray-900 font-medium text-[16px]">Tovar rasmlari</legend>
-        <file-upload
-          (onFilesUpload)="onFilesUpload($event)"
-        />
-        <file-list
-          classes="grid grid-cols-10 gap-3 mt-3"
-          [files]="productForm.get('images').value"
-          (filesChange)="productForm.get('images').setValue($event)"
-          [viewType]="'grid'"
-        />
-      </fieldset>
-
-      <fieldset class="border px-3 py-2 rounded-lg bg-slate-50">
-        <legend class="text-gray-900 font-medium text-[16px]">Tovar xususiyatlari</legend>
-
-        <div formArrayName="attributes">
-          @for (attribute of attributes().controls; track attribute; let i = $index; let lastItem = $last) {
-            <div class="grid grid-cols-3 gap-5 relative" [formGroupName]="i">
-              <div class="flex flex-col gap-2">
-                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
-                  <mat-label>O'zbekcha</mat-label>
-                  <input matInput type="text" formControlName="nameUz" placeholder="Xususiyat nomi">
-                </mat-form-field>
-                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
-                  <input matInput type="text" formControlName="valueUz" placeholder="Xususiyat qiymati">
-                </mat-form-field>
-              </div>
-              <div class="flex flex-col gap-2">
-                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
-                  <mat-label>Ruscha</mat-label>
-                  <input matInput type="text" formControlName="nameRu" placeholder="Xususiyat nomi">
-                </mat-form-field>
-                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
-                  <input matInput type="text" formControlName="valueRu" placeholder="Xususiyat qiymati">
-                </mat-form-field>
-              </div>
-              <div class="flex flex-col gap-2">
-                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
-                  <mat-label>Inglizcha</mat-label>
-                  <input matInput type="text" formControlName="nameEn" placeholder="Xususiyat nomi">
-                </mat-form-field>
-                <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
-                  <input matInput type="text" formControlName="valueEn" placeholder="Xususiyat qiymati">
-                </mat-form-field>
-              </div>
-
-              @if (i !== 0) {
-                <button type="button" (click)="deleteAttribute(i)" mat-icon-button
-                        class="absolute top-0 right-0 bg-red-50"
-                        color="warn">
-                  <mat-icon class="icon-size-5" svgIcon="heroicons_outline:trash"/>
-                </button>
+              @for (product of products; track product._id) {
+                <mat-option [value]="product">{{ product?.nameUz }}</mat-option>
               }
-            </div>
-            @if (!lastItem) {
-              <div class="border-t mt-5 mb-4"></div>
-            }
-          }
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
-
-        <div class="flex justify-end pt-5">
-          <button type="button" (click)="addNewAttribute()" mat-icon-button class="bg-primary-50" color="primary">
-            <mat-icon svgIcon="heroicons_outline:plus-circle"/>
-          </button>
-        </div>
-      </fieldset>
-
-      <fieldset class="border px-3 py-2 rounded-lg bg-slate-50">
-        <legend class="text-gray-900 font-medium text-[16px]">SEO uchun kalit so'zlar</legend>
-
-        <mat-form-field class="fuse-mat-dense w-full" floatLabel="always">
-          <mat-label>Kalit so'zlarni vergul bilan ajratib yozing</mat-label>
-          <textarea matInput formControlName="keywords" placeholder="Kalit so'zlars"></textarea>
-        </mat-form-field>
       </fieldset>
     </form>
   </div>
@@ -253,8 +181,8 @@
       <mat-icon svgIcon="heroicons_outline:x-circle"/>
       <span class="ml-2">Bekor qilish</span>
     </button>
-    <button (click)="createProduct()" mat-flat-button color="primary"
-            [disabled]="productForm.invalid || productForm.disabled">
+    <button (click)="editBanner()" mat-flat-button color="primary"
+            [disabled]="bannerForm.invalid || bannerForm.disabled">
       <mat-icon svgIcon="heroicons_solid:check-circle"/>
       <span class="ml-2">O'zgarishlarni saqlash</span>
     </button>

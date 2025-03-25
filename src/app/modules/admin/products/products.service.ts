@@ -20,8 +20,8 @@ export class ProductsService extends RequestService {
     return this.request<{ total: number; data: IProduct[] }>('product/get-list', params);
   }
 
-  getProduct(slug: string): Observable<IProduct> {
-    return this.request('product/get-product', { slug });
+  getProduct(params: { slug?: string; _id?: string }): Observable<IProduct> {
+    return this.request('product/get-product', params);
   }
 
   deleteProduct(_id: string): Observable<any> {

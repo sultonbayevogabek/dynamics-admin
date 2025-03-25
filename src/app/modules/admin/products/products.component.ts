@@ -119,7 +119,7 @@ export class ProductsComponent implements OnInit {
 
   async openProductDetails(slugUz: string) {
     const data = await firstValueFrom(
-      this.productsService.getProduct(slugUz)
+      this.productsService.getProduct({ slug: slugUz })
     );
     const result = await firstValueFrom(
       this.matDialog.open(ProductEditComponent, {

@@ -1,5 +1,5 @@
-import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, Inject, inject, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, Inject, inject, OnInit, viewChild } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategoriesService } from '../../categories/categories.service';
 import { firstValueFrom } from 'rxjs';
 import { ICategory } from '../../categories/category.interface';
@@ -9,16 +9,25 @@ import {
 import { MAT_DIALOG_DATA, MatDialogClose, MatDialogRef } from '@angular/material/dialog';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { MatError, MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
+import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
-import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
+import { provideNgxMask } from 'ngx-mask';
 import { IBrand } from '../../brands/brands.interface';
 import { BrandsService } from '../../brands/brands.service';
 import { FileUploadComponent } from '@shared/components/file-upload/file-upload.component';
 import { IFile } from '@shared/interfaces/file.interface';
 import { FileListComponent } from '@shared/components/file-list/file-list.component';
 import { BannersService } from '../banners.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { ToasterService } from '@shared/services/toaster.service';
+import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+  MatAutocompleteTrigger,
+  MatOption
+} from '@angular/material/autocomplete';
+import { ProductsService } from '../../products/products.service';
+import { IProduct } from '../../products/interfaces/product.interface';
 import { IBanner } from '../interfaces/banner.interface';
 
 @Component({
@@ -35,10 +44,13 @@ import { IBanner } from '../interfaces/banner.interface';
     MatIconButton,
     MatLabel,
     MatError,
-    MatSuffix,
-    NgxMaskDirective,
     FileUploadComponent,
-    FileListComponent
+    FileListComponent,
+    MatRadioGroup,
+    MatRadioButton,
+    MatAutocompleteTrigger,
+    MatAutocomplete,
+    MatOption
   ],
   templateUrl: './banner-edit.component.html',
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
@@ -50,174 +62,89 @@ import { IBanner } from '../interfaces/banner.interface';
 
 
 export class BannerEditComponent implements OnInit {
-  productForm = new FormGroup({
-    details: new FormGroup({
-      mainCategoryId: new FormControl<string>(null, Validators.required),
-      middleCategoryId: new FormControl<string>(null, Validators.required)
-    }),
-    _id: new FormControl(null, [Validators.required]),
-    categoryId: new FormControl<string>(null, [ Validators.required ]),
-    nameUz: new FormControl<string>(null, [ Validators.required ]),
-    nameRu: new FormControl<string>(null, [ Validators.required ]),
-    nameEn: new FormControl<string>(null, [ Validators.required ]),
-    descriptionUz: new FormControl<string>(null, [ Validators.required ]),
-    descriptionRu: new FormControl<string>(null, [ Validators.required ]),
-    descriptionEn: new FormControl<string>(null, [ Validators.required ]),
-    oldPrice: new FormControl<number>(null),
-    currentPrice: new FormControl<number>(null, [ Validators.required ]),
-    quantity: new FormControl<number>(null, [ Validators.required ]),
-    brandId: new FormControl<string>(null, [ Validators.required ]),
+  productSearchInput = viewChild<ElementRef<HTMLInputElement>>('productSearchInput');
+
+  bannerForm = new FormGroup({
+
+    mainCategoryId: new FormControl<string>(null),
+    middleCategoryId: new FormControl<string>(null),
+    subCategoryId: new FormControl<string>(null),
+    categoryId: new FormControl<string>(null),
+    brandIds: new FormControl<string[]>([]),
+    productId: new FormControl<string>(null),
+
+    _id: new FormControl<string>(null, [ Validators.required ]),
+    titleUz: new FormControl<string>(null, [ Validators.required ]),
+    titleRu: new FormControl<string>(null, [ Validators.required ]),
+    titleEn: new FormControl<string>(null, [ Validators.required ]),
+    textUz: new FormControl<string>(null, [ Validators.required ]),
+    textRu: new FormControl<string>(null, [ Validators.required ]),
+    textEn: new FormControl<string>(null, [ Validators.required ]),
     images: new FormControl<IFile[]>([], [ Validators.required ]),
-    attributes: new FormArray<FormGroup>([], [ Validators.required ]
-    ),
-    keywords: new FormControl<string>('')
+    type: new FormControl<string>(null)
   });
-  attributes = computed(() => {
-    return this.productForm.get('attributes') as FormArray<FormGroup>;
-  });
-  dummyAttributes = [
-    {
-      nameUz: 'Ishlab chiqaruvchi',
-      nameRu: 'Производитель',
-      nameEn: 'Manufacturer',
-      valueUz: 'Fubag',
-      valueRu: 'Fubag',
-      valueEn: 'Fubag'
-    },
-    {
-      nameUz: 'Quvvat',
-      nameRu: 'Мощность',
-      nameEn: 'Power',
-      valueUz: '1200 Vt',
-      valueRu: '1200 Вт',
-      valueEn: '1200 W'
-    },
-    {
-      nameUz: 'Pichoq diametri',
-      nameRu: 'Диаметр диска',
-      nameEn: 'Blade Diameter',
-      valueUz: '185 mm',
-      valueRu: '185 мм',
-      valueEn: '185 mm'
-    },
-    {
-      nameUz: 'Kesish burchagi',
-      nameRu: 'Угол резки',
-      nameEn: 'Cutting Angle',
-      valueUz: '0-45°',
-      valueRu: '0-45°',
-      valueEn: '0-45°'
-    },
-    {
-      nameUz: 'Aylanish tezligi',
-      nameRu: 'Скорость вращения',
-      nameEn: 'Rotation Speed',
-      valueUz: '5000 ayl/min',
-      valueRu: '5000 об/мин',
-      valueEn: '5000 RPM'
-    },
-    {
-      nameUz: 'Og‘irligi',
-      nameRu: 'Вес',
-      nameEn: 'Weight',
-      valueUz: '3.5 kg',
-      valueRu: '3.5 кг',
-      valueEn: '3.5 kg'
-    },
-    {
-      nameUz: 'Korpus materiali',
-      nameRu: 'Материал корпуса',
-      nameEn: 'Body Material',
-      valueUz: 'Metall va plastmassa',
-      valueRu: 'Металл и пластик',
-      valueEn: 'Metal and Plastic'
-    },
-    {
-      nameUz: 'Chang yutish tizimi',
-      nameRu: 'Система удаления пыли',
-      nameEn: 'Dust Extraction System',
-      valueUz: 'Mavjud',
-      valueRu: 'Есть',
-      valueEn: 'Available'
-    },
-    {
-      nameUz: 'Kabel uzunligi',
-      nameRu: 'Длина кабеля',
-      nameEn: 'Cable Length',
-      valueUz: '2 m',
-      valueRu: '2 м',
-      valueEn: '2 m'
-    },
-    {
-      nameUz: 'Quvvat manbai',
-      nameRu: 'Источник питания',
-      nameEn: 'Power Source',
-      valueUz: 'Elektr tarmog‘i',
-      valueRu: 'Электросеть',
-      valueEn: 'Electric Grid'
-    },
-    {
-      nameUz: 'Xavfsizlik himoyasi',
-      nameRu: 'Защита безопасности',
-      nameEn: 'Safety Protection',
-      valueUz: 'Mavjud',
-      valueRu: 'Есть',
-      valueEn: 'Available'
-    }
-  ];
   categories: { [key: string]: ICategory[] } = {
     main: [],
     middle: [],
     sub: []
   };
   brands: IBrand[] = [];
+  products: IProduct[] = [];
 
   private categoriesService = inject(CategoriesService);
-  private productsService = inject(BannersService);
+  private bannersService = inject(BannersService);
+  private productsService = inject(ProductsService);
   private brandsService = inject(BrandsService);
-  private snackbar = inject(MatSnackBar);
+  private toaster = inject(ToasterService);
   private dialogRef = inject(MatDialogRef);
-  @Inject(MAT_DIALOG_DATA) data: IBanner = inject(MAT_DIALOG_DATA);
+  @Inject(MAT_DIALOG_DATA) private data: IBanner = inject(MAT_DIALOG_DATA);
 
   async ngOnInit() {
     this.categories.main = await this.getCategories();
     await this.getBrands();
-
-    await this.setProductData();
+    await this.setBannerData();
   }
 
-  async setProductData() {
-    this.productForm.patchValue({
+  async setBannerData() {
+    console.log('Data ====>', this.data);
+
+    this.bannerForm.patchValue({
       _id: this.data._id,
-      nameUz: this.data.nameUz,
-      nameRu: this.data.nameRu,
-      nameEn: this.data.nameEn,
-      descriptionUz: this.data.descriptionUz,
-      descriptionRu: this.data.descriptionRu,
-      descriptionEn: this.data.descriptionEn,
-      oldPrice: this.data.oldPrice || null,
-      currentPrice: this.data.currentPrice,
-      quantity: this.data.quantity,
-      brandId: this.data.brandId,
+      titleUz: this.data.titleUz,
+      titleRu: this.data.titleRu,
+      titleEn: this.data.titleEn,
+      textUz: this.data.textUz,
+      textRu: this.data.textRu,
+      textEn: this.data.textEn,
       images: this.data.images,
-      keywords: this.data.keywords
+      type: this.data.type,
+      brandIds: this.data.brandIds || []
     });
 
-    this.data.attributes.forEach(attribute => {
-      const formGroup = new FormGroup({});
-      const controls = (this.productForm.get('attributes') as FormArray<FormGroup>).controls;
+    if (this.data.product) {
+      this.bannerForm.get('productId').setValue(this.data.product._id);
 
-      for (const attributeKey in attribute) {
-        const formControl = new FormControl(attribute[attributeKey], [ Validators.required ]);
-        formGroup.setControl(attributeKey, formControl);
+      const response = await firstValueFrom(
+        this.productsService.getProduct({
+          _id: this.data.product._id
+        })
+      );
+
+      this.products = [ response ];
+    }
+
+    if (this.data.hierarchy.length) {
+      const hierarchy = this.data.hierarchy;
+      if (hierarchy[0]) {
+        await this.selectCategory('main', hierarchy[0].categoryId);
       }
-
-      (this.productForm.get('attributes') as FormArray<FormGroup>).push(formGroup);
-    })
-
-    await this.selectCategory('main', this.data.details.mainCategoryId);
-    await this.selectCategory('middle', this.data.details.middleCategoryId);
-    await this.selectCategory('sub', this.data.categoryId);
+      if (hierarchy[1]) {
+        await this.selectCategory('middle', hierarchy[1].categoryId);
+      }
+      if (hierarchy[2]) {
+        await this.selectCategory('sub', hierarchy[2].categoryId);
+      }
+    }
   }
 
   async getCategories(parentCategoryId?: string) {
@@ -235,59 +162,103 @@ export class BannerEditComponent implements OnInit {
 
   async selectCategory(type: 'main' | 'middle' | 'sub', $event: string) {
     if (type === 'main') {
-      this.productForm.get('details.mainCategoryId').setValue($event);
-      this.productForm.get('details.middleCategoryId').setValue(null);
-      this.productForm.get('categoryId').setValue(null);
-
-      this.categories.middle = await this.getCategories($event);
+      if ($event) {
+        this.categories.middle = await this.getCategories($event);
+      } else {
+        this.categories.middle = [];
+      }
       this.categories.sub = [];
+      this.bannerForm.get('mainCategoryId').setValue($event);
+      this.bannerForm.get('middleCategoryId').setValue(null);
+      this.bannerForm.get('subCategoryId').setValue(null);
     }
 
     if (type === 'middle') {
-      this.productForm.get('details.middleCategoryId').setValue($event);
-      this.productForm.get('categoryId').setValue(null);
-
-      this.categories.sub = await this.getCategories($event);
+      if ($event) {
+        this.categories.sub = await this.getCategories($event);
+      } else {
+        this.categories.sub = [];
+      }
+      this.bannerForm.get('middleCategoryId').setValue($event);
+      this.bannerForm.get('subCategoryId').setValue(null);
     }
 
     if (type === 'sub') {
-      this.productForm.get('categoryId').setValue($event);
+      this.bannerForm.get('subCategoryId').setValue($event);
     }
+
+    if (this.bannerForm.get('subCategoryId').value) {
+      this.bannerForm.get('categoryId').setValue(this.bannerForm.get('subCategoryId').value);
+      return;
+    }
+
+    if (this.bannerForm.get('middleCategoryId').value) {
+      this.bannerForm.get('categoryId').setValue(this.bannerForm.get('middleCategoryId').value);
+      return;
+    }
+
+    if (this.bannerForm.get('mainCategoryId').value) {
+      this.bannerForm.get('categoryId').setValue(this.bannerForm.get('mainCategoryId').value);
+      return;
+    }
+
+    this.bannerForm.get('categoryId').setValue(null);
   }
 
   onFilesUpload(files: IFile[]) {
-    const images = this.productForm.get('images').value;
-    images.push(...files);
-    this.productForm.get('images').setValue(images);
+    const currentFiles = this.bannerForm.get('images').value;
+    currentFiles.push(...files);
+    this.bannerForm.get('images').setValue(currentFiles);
   }
 
-  addNewAttribute() {
-    const formGroup = new FormGroup({});
-    const controls = (this.productForm.get('attributes') as FormArray<FormGroup>).controls;
-    const dummyAttribute = this.dummyAttributes[controls.length];
-
-    for (const dummyAttributeKey in dummyAttribute) {
-      const formControl = new FormControl(dummyAttribute[dummyAttributeKey], [ Validators.required ]);
-      formGroup.setControl(dummyAttributeKey, formControl);
+  onBannerTypeChange() {
+    if (this.bannerForm.get('type').value === 'product') {
+      this.bannerForm.get('categoryId').setValue(null);
+      this.bannerForm.get('mainCategoryId').setValue(null);
+      this.bannerForm.get('middleCategoryId').setValue(null);
+      this.bannerForm.get('subCategoryId').setValue(null);
+      this.bannerForm.get('brandIds').setValue([]);
+      this.categories.middle = [];
+      this.categories.sub = [];
+      return;
     }
 
-    (this.productForm.get('attributes') as FormArray<FormGroup>).push(formGroup);
+    this.products = [];
+    this.bannerForm.get('productId').setValue(null);
+    this.productSearchInput().nativeElement.value = '';
   }
 
-  deleteAttribute(i: number) {
-    const controls = (this.productForm.get('attributes') as FormArray<FormGroup>).controls;
-    controls.splice(i, 1);
-    this.productForm.get('attributes').updateValueAndValidity();
+  async searchProduct() {
+    const search = this.productSearchInput().nativeElement.value;
+    this.products = [];
+    this.bannerForm.get('productId').setValue(null);
+
+    if (search?.trim()) {
+      const response = await firstValueFrom(
+        this.productsService.getProductsList({
+          search
+        })
+      );
+
+      this.products = response?.data || [];
+    }
   }
 
-  async createProduct() {
-    const form = this.productForm;
+  onProductSelected($event: MatAutocompleteSelectedEvent) {
+    this.bannerForm.get('productId').setValue($event.option.value._id);
+  }
+
+  displayFn(product: IProduct): string {
+    return product?.nameUz;
+  }
+
+  async editBanner() {
+    const form = this.bannerForm;
 
     if (form.invalid) {
-      this.snackbar.open(`Majburiy maydonlarni to'ldiring`, 'OK', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
+      this.toaster.open({
+        message: `Majburiy maydonlarni to'ldiring`,
+        type: 'warning'
       });
       return;
     }
@@ -296,29 +267,48 @@ export class BannerEditComponent implements OnInit {
       return;
     }
 
+    const bannerType = this.bannerForm.get('type').value;
+
+    if (bannerType === 'product' && !form.get('productId').value) {
+      this.toaster.open({
+        type: 'warning',
+        title: 'Diqqat!',
+        message: `Banner turida tovarni belgilagansiz. Bannerdagi tugmani bosganda qaysi tovar ochilishi kerakligini belgilang!`
+      });
+      return;
+    }
+
+    if (bannerType === 'filter' && !form.get('categoryId').value && !form.get('brandIds')?.value?.length) {
+      this.toaster.open({
+        type: 'warning',
+        title: 'Diqqat!',
+        message: `Banner turida filterni belgilagansiz. Bannerdagi tugmani bosganda qaysi kategoriya va brandlar bo'yicha tovarlar ko'rsatilishi kerakligini ko'rsating!`
+      });
+      return;
+    }
+
     form.disable();
 
     try {
       const response = await firstValueFrom(
-        this.productsService.editProduct({
-          ...form.getRawValue(),
-          oldPrice: form.getRawValue().oldPrice || null
-        })
+        this.bannersService.editBanner(form.getRawValue())
       );
       if (response && response.statusCode === 200) {
-        this.snackbar.open(`Tovar muvaffaqiyatli o'zgartirildi`, 'OK', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
+        this.toaster.open({
+          message: `Banner muvaffaqiyatli yaratildi`
         });
-
         this.dialogRef.close('edited');
+      } else {
+        this.toaster.open({
+          message: `Bannerni yaratishda xatolik sodir bo'ldi`,
+          type: 'warning'
+        });
+        form.enable();
       }
     } catch (error) {
-      this.snackbar.open(`Tovar ma'lumotlarini tahrirlashda xatolik sodir bo'ldi`, 'OK', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
+      this.toaster.open({
+        message: `Bannerni yaratishda xatolik sodir bo'ldi`,
+        type: 'warning'
       });
       form.enable();
     }

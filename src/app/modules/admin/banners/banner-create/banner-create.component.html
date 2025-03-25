@@ -9,7 +9,7 @@
 
   <div class="grow relative">
     <form class="absolute inset-0 overflow-auto flex flex-col gap-2" [formGroup]="bannerForm"
-          (ngSubmit)="createProduct()">
+          (ngSubmit)="createBanner()">
       <fieldset class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
         <legend class="text-gray-900 font-medium text-[16px]">Banner sarlavhasi</legend>
 
@@ -72,7 +72,7 @@
       <fieldset class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
         <legend class="text-gray-900 font-medium text-[16px]">Banner turi</legend>
 
-        <mat-radio-group class="flex gap-10" formControlName="type">
+        <mat-radio-group class="flex gap-10" formControlName="type" (change)="onBannerTypeChange()">
           <mat-radio-button value="filter">Kategoriya va brand (bunda bannerdagi tugmani bosilganda tanlangan kategoriya
             va brendlar bo'yicha tovarlar filterlab ko'rsatiladi)
           </mat-radio-button>
@@ -146,9 +146,9 @@
       </fieldset>
 
       <fieldset
-        [hidden]="bannerForm.get('type').value === 'product'"
+        [hidden]="bannerForm.get('type').value === 'filter'"
         class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
-        <legend class="text-gray-900 font-medium text-[16px]">Kategoriya va brend</legend>
+        <legend class="text-gray-900 font-medium text-[16px]">Tovar</legend>
 
         <div class="grid grid-cols-2 gap-5">
           <mat-form-field class="fuse-mat-dense" floatLabel="always">
@@ -156,11 +156,17 @@
               type="text"
               placeholder="Tovarni qidirish (SKU yoki nomi bo'yicha)"
               matInput
-              formControlName="productId"
-              [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete">
-              @for (option of filteredOptions | async; track option) {
-                <mat-option [value]="option">{{ option }}</mat-option>
+              #productSearchInput
+              (keydown.enter)="searchProduct()"
+              [matAutocomplete]="auto"
+            >
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="onProductSelected($event)"
+              [displayWith]="displayFn"
+            >
+              @for (product of products; track product._id) {
+                <mat-option [value]="product">{{ product?.nameUz }}</mat-option>
               }
             </mat-autocomplete>
           </mat-form-field>
@@ -175,7 +181,7 @@
       <mat-icon svgIcon="heroicons_outline:x-circle"/>
       <span class="ml-2">Bekor qilish</span>
     </button>
-    <button (click)="createProduct()" mat-flat-button color="primary"
+    <button (click)="createBanner()" mat-flat-button color="primary"
             [disabled]="bannerForm.invalid || bannerForm.disabled">
       <mat-icon svgIcon="heroicons_solid:check-circle"/>
       <span class="ml-2">Saqlash</span>

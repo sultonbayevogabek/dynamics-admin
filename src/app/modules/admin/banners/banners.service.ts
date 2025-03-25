@@ -8,23 +8,23 @@ import { IBanner } from './interfaces/banner.interface';
 })
 
 export class BannersService extends RequestService {
-  createProduct(payload: any): Observable<any> {
-    return this.request('product/add', payload);
+  createBanner(payload: any): Observable<any> {
+    return this.request('banner/add', payload);
   }
 
-  editProduct(payload: any): Observable<any> {
-    return this.request('product/update', payload);
+  editBanner(payload: any): Observable<any> {
+    return this.request('banner/update', payload);
   }
 
-  getProductsList(params: any): Observable<{ total: number; data: IBanner[] }> {
-    return this.request<{ total: number; data: IBanner[] }>('product/get-list', params);
+  getBannersList(params: any): Observable<{ total: number; data: IBanner[] }> {
+    return this.request<{ total: number; data: IBanner[] }>('banner/get-list', params);
   }
 
   getProduct(slug: string): Observable<IBanner> {
     return this.request('product/get-product', { slug });
   }
 
-  deleteProduct(_id: string): Observable<any> {
-    return this.request('product/delete', { _id });
+  deleteBanner(_id: string): Observable<any> {
+    return this.request('banner/delete', { _id });
   }
 }

@@ -12,24 +12,23 @@ import { environment } from '@env/environment';
 import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Confirmable } from '../../../core/decorators/confirmation-decorator';
 import { ToasterService } from '@shared/services/toaster.service';
-import { BannerEditComponent } from './banner-edit/banner-edit.component';
 import { ICategory } from '../categories/category.interface';
 import { CategoriesService } from '../categories/categories.service';
 import { IBrand } from '../brands/brands.interface';
 import { BrandsService } from '../brands/brands.service';
+import { BannerEditComponent } from './banner-edit/banner-edit.component';
 
 @Component({
   selector: 'banners',
   imports: [
     MatButton,
     MatIcon,
-    CurrencyPipe,
     FormsModule,
     MatSlideToggle
   ],
   templateUrl: './banners.component.html',
   standalone: true,
-  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
 
 export class BannersComponent implements OnInit {
@@ -40,9 +39,9 @@ export class BannersComponent implements OnInit {
     brandId: null,
     mainCategoryId: null,
     middleCategoryId: null,
-    subCategoryId: null,
+    subCategoryId: null
   };
-  products: IBanner[] = [];
+  banners: IBanner[] = [];
   categories: { [key: string]: ICategory[] } = {
     main: [],
     middle: [],
@@ -51,13 +50,13 @@ export class BannersComponent implements OnInit {
   brands: IBrand[] = [];
 
   private matDialog = inject(MatDialog);
-  private productsService = inject(BannersService);
+  private bannersService = inject(BannersService);
   private categoriesService = inject(CategoriesService);
   private brandsService = inject(BrandsService);
   private toasterService = inject(ToasterService);
 
   async ngOnInit() {
-    await this.getProducts();
+    await this.getBanners();
     await this.getBrands();
 
     this.categories.main = await this.getCategories();
@@ -77,138 +76,81 @@ export class BannersComponent implements OnInit {
     this.brands = response?.data || [];
   }
 
-  async getProducts() {
+  async getBanners() {
     const response = await firstValueFrom(
-      this.productsService.getProductsList({
+      this.bannersService.getBannersList({
         ...this.params
       })
     );
-    this.products = response.data || [];
+    this.banners = response.data || [];
   }
 
   async openAddBannerDialog() {
-    this.matDialog.open(BannerCreateComponent, {
-      width: '100vw',
-      height: '100vh',
-      maxHeight: '100vh',
-      maxWidth: '100vw'
-    })
+    const result = await firstValueFrom(
+      this.matDialog.open(BannerCreateComponent, {
+        width: '100vw',
+        height: '100vh',
+        maxHeight: '100vh',
+        maxWidth: '100vw'
+      }).afterClosed()
+    );
+    if (result === 'created') {
+      await this.getBanners()
+    }
   }
 
-  async openProductDetails(slugUz: string) {
-    const data = await firstValueFrom(
-      this.productsService.getProduct(slugUz)
-    );
+  async openDetails(banner: IBanner) {
     const result = await firstValueFrom(
       this.matDialog.open(BannerEditComponent, {
         width: '100vw',
         height: '100vh',
         maxWidth: '100vw',
         maxHeight: '100vh',
-        data
+        data: banner
       }).afterClosed()
-    )
+    );
     if (result === 'edited') {
-      await this.searchProduct();
+      await this.getBanners();
     }
   }
 
   @Confirmable({
-    message: `Tovarni o'chirishni tasdiqlaysizmi?`,
+    message: `Bannerni o'chirishni tasdiqlaysizmi?`,
     title: 'Diqqat'
   })
-  async deleteProduct(_id: string) {
+  async deleteItem(_id: string) {
     const response = await firstValueFrom(
-      this.productsService.deleteProduct(_id)
+      this.bannersService.deleteBanner(_id)
     );
     if (response && response.statusCode === 200) {
       this.toasterService.open({
-        message: `Tovar o'chirildi!`
+        message: `Banner o'chirildi!`
       });
-      await this.getProducts();
+      await this.getBanners();
     } else {
       this.toasterService.open({
         title: 'Diqqat',
-        message: `Tovarni o'chirishda xatolik sodir bo'ldi`,
+        message: `Bannerni o'chirishda xatolik sodir bo'ldi`,
         type: 'warning'
       });
     }
   }
 
-  async searchProduct() {
-    await this.getProducts();
-  }
-
-  async selectCategory(type: 'main' | 'middle' | 'sub', $event: string) {
-    console.log(this.params);
-    if (type === 'main') {
-      if ($event) {
-        this.categories.middle = await this.getCategories($event);
-      } else {
-        this.categories.middle = [];
-      }
-      this.categories.sub = [];
-      this.params.mainCategoryId = $event;
-      this.params.middleCategoryId = null;
-      this.params.subCategoryId = null;
-    }
-
-    if (type === 'middle') {
-      if ($event) {
-        this.categories.sub = await this.getCategories($event);
-      } else {
-        this.categories.sub = [];
-      }
-      this.params.middleCategoryId = $event;
-      this.params.subCategoryId = null;
-    }
-
-    if (type === 'sub') {
-      this.params.subCategoryId = $event;
-    }
-
-    if (this.params.subCategoryId) {
-      this.params.categoryId = this.params.subCategoryId;
-      await this.searchProduct();
-      return;
-    }
-
-    if (this.params.middleCategoryId) {
-      this.params.categoryId = this.params.middleCategoryId;
-      await this.searchProduct();
-      return;
-    }
-
-    if (this.params.mainCategoryId) {
-      this.params.categoryId = this.params.mainCategoryId;
-      await this.searchProduct();
-      return;
-    }
-
-    this.params.categoryId = null;
-    await this.searchProduct();
-  }
-
-  async selectBrand($event: string) {
-    this.params.brandId = $event;
-    await this.searchProduct();
-  }
-
-  async productStatusChange($event: MatSlideToggleChange, product: IBanner) {
-    const newStatus = $event.checked ? 1 : 0
+  async itemStatusChange($event: MatSlideToggleChange, item: IBanner) {
+    const newStatus = $event.checked ? 1 : 0;
     const params = {
-      _id: product._id,
-      status: newStatus,
-    }
+      _id: item._id,
+      status: newStatus
+    };
 
     await firstValueFrom(
-      this.productsService.editProduct(params)
-    )
+      this.bannersService.editBanner(params)
+    );
 
-    product.status = newStatus;
+    item.status = newStatus;
     this.toasterService.open({
-      message: `Tovar status o'zgartirildi`,
+      message: `Bannerning status o'zgartirildi`,
       duration: 1000
-    })
+    });
   }
 }

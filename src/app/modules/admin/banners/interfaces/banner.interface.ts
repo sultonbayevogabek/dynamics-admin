@@ -1,54 +1,38 @@
 import { IFile } from '@shared/interfaces/file.interface';
 
 export interface IBanner {
+  _id: string
+  titleUz: string
+  titleRu: string
+  titleEn: string
+  textUz: string
+  textRu: string
+  textEn: string
+  images: IFile[]
+  hierarchy: Hierarchy[]
+  product: Product
+  brandIds: string[]
+  brandSlugs: string[]
+  type: string
+  status: number
+  isDeleted: boolean
+  createdAt: string
+  updatedAt: string
+  __v: number
+}
+
+interface Hierarchy {
+  categoryId: string
+  categoryNameUz: string
+  categoryNameRu: string
+  categoryNameEn: string
+  _id: string
+}
+
+interface Product {
   _id: string;
-  nameUz: string;
-  nameRu: string;
-  nameEn: string;
-  descriptionUz: string;
-  descriptionRu: string;
-  descriptionEn: string;
-  slugUz: string;
+  slug: string;
   slugRu: string;
   slugEn: string;
-  attributes: Attribute[];
-  sku: string;
-  oldPrice: number;
-  currentPrice: number;
-  quantity: number;
-  rate: number;
-  categoryId: string;
-  brandId: string;
-  images: IFile[];
-  status: number;
-  isDeleted: boolean;
-  details: Details;
-  createdAt: string;
-  updatedAt: string;
-  hierarchy: ProductHierarchy[];
-  keywords: string;
-}
-
-export interface Attribute {
-  nameUz: string;
-  nameRu: string;
-  nameEn: string;
-  _id: string;
-}
-
-export interface Details {
-  mainCategoryId: string;
-  middleCategoryId: string;
-}
-
-export interface ProductHierarchy {
-  categoryId: string;
-  categorySlugUz: string;
-  categorySlugRu: string;
-  categorySlugEn: string;
-  categoryName: string;
-  categoryNameUz: string;
-  categoryNameRu: string;
-  categoryNameEn: string;
-  _id: string;
+  slugUz: string;
 }

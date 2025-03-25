@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, OnInit, viewChild } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategoriesService } from '../../categories/categories.service';
 import { firstValueFrom } from 'rxjs';
@@ -21,7 +21,14 @@ import { BannersService } from '../banners.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ToasterService } from '@shared/services/toaster.service';
 import { MatRadioButton, MatRadioGroup } from '@angular/material/radio';
-import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+  MatAutocompleteTrigger,
+  MatOption
+} from '@angular/material/autocomplete';
+import { ProductsService } from '../../products/products.service';
+import { IProduct } from '../../products/interfaces/product.interface';
 
 @Component({
   selector: 'banner-create',
@@ -55,6 +62,8 @@ import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/mat
 
 
 export class BannerCreateComponent implements OnInit {
+  productSearchInput = viewChild<ElementRef<HTMLInputElement>>('productSearchInput');
+
   bannerForm = new FormGroup({
     mainCategoryId: new FormControl<string>(null),
     middleCategoryId: new FormControl<string>(null),
@@ -104,9 +113,11 @@ export class BannerCreateComponent implements OnInit {
     sub: []
   };
   brands: IBrand[] = [];
+  products: IProduct[] = [];
 
   private categoriesService = inject(CategoriesService);
-  private productsService = inject(BannersService);
+  private bannersService = inject(BannersService);
+  private productsService = inject(ProductsService);
   private brandsService = inject(BrandsService);
   private snackbar = inject(MatSnackBar);
   private toaster = inject(ToasterService);
@@ -114,7 +125,7 @@ export class BannerCreateComponent implements OnInit {
 
   async ngOnInit() {
     this.categories.main = await this.getCategories();
-    await this.getBrands();
+    await this.getBrands()
   }
 
   async getCategories(parentCategoryId?: string) {
@@ -131,9 +142,6 @@ export class BannerCreateComponent implements OnInit {
   }
 
   async selectCategory(type: 'main' | 'middle' | 'sub', $event: string) {
-    setTimeout(() => {
-      console.log(this.bannerForm.getRawValue(), 'banner');
-    }, 1000)
     if (type === 'main') {
       if ($event) {
         this.categories.middle = await this.getCategories($event);
@@ -184,7 +192,48 @@ export class BannerCreateComponent implements OnInit {
     this.bannerForm.get('images').setValue(currentFiles);
   }
 
-  async createProduct() {
+  onBannerTypeChange() {
+    if (this.bannerForm.get('type').value === 'product') {
+      this.bannerForm.get('categoryId').setValue(null);
+      this.bannerForm.get('mainCategoryId').setValue(null);
+      this.bannerForm.get('middleCategoryId').setValue(null);
+      this.bannerForm.get('subCategoryId').setValue(null);
+      this.bannerForm.get('brandIds').setValue([]);
+      this.categories.middle = [];
+      this.categories.sub = [];
+      return;
+    }
+
+    this.products = [];
+    this.bannerForm.get('productId').setValue(null);
+    this.productSearchInput().nativeElement.value = ''
+  }
+
+  async searchProduct() {
+    const search = this.productSearchInput().nativeElement.value;
+    this.products = [];
+    this.bannerForm.get('productId').setValue(null);
+
+    if (search?.trim()) {
+      const response = await firstValueFrom(
+        this.productsService.getProductsList({
+          search
+        })
+      );
+
+      this.products = response?.data || [];
+    }
+  }
+
+  onProductSelected($event: MatAutocompleteSelectedEvent) {
+    this.bannerForm.get('productId').setValue($event.option.value._id);
+  }
+
+  displayFn(product: IProduct): string {
+    return product?.nameUz
+  }
+
+  async createBanner() {
     const form = this.bannerForm;
 
     if (form.invalid) {
@@ -199,22 +248,47 @@ export class BannerCreateComponent implements OnInit {
       return;
     }
 
+    const bannerType = this.bannerForm.get('type').value;
+
+    if (bannerType === 'product' && !form.get('productId').value) {
+      this.toaster.open({
+        type: 'warning',
+        title: 'Diqqat!',
+        message: `Banner turida tovarni belgilagansiz. Bannerdagi tugmani bosganda qaysi tovar ochilishi kerakligini belgilang!`
+      })
+      return;
+    }
+
+    if (bannerType === 'filter' && !form.get('categoryId').value && !form.get('brandIds')?.value?.length) {
+      this.toaster.open({
+        type: 'warning',
+        title: 'Diqqat!',
+        message: `Banner turida filterni belgilagansiz. Bannerdagi tugmani bosganda qaysi kategoriya va brandlar bo'yicha tovarlar ko'rsatilishi kerakligini ko'rsating!`
+      })
+      return;
+    }
+
     form.disable();
 
     try {
       const response = await firstValueFrom(
-        this.productsService.createProduct(form.getRawValue())
+        this.bannersService.createBanner(form.getRawValue())
       );
       if (response && response.statusCode === 201) {
         this.toaster.open({
-          message: `Tovar muvaffaqiyatli yaratildi`,
+          message: `Banner muvaffaqiyatli yaratildi`
+        });
+        this.dialogRef.close('created')
+      } else {
+        this.toaster.open({
+          message: `Bannerni yaratishda xatolik sodir bo'ldi`,
           type: 'warning'
         });
         form.enable();
       }
     } catch (error) {
       this.toaster.open({
-        message: `Tovarni yaratishda xatolik sodir bo'ldi`,
+        message: `Bannerni yaratishda xatolik sodir bo'ldi`,
         type: 'warning'
       });
       form.enable();
