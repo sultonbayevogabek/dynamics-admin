@@ -122,7 +122,7 @@ export class BannerEditComponent implements OnInit {
     });
 
     if (this.data.product) {
-      this.bannerForm.get('productId').setValue(this.data.product._id);
+      this.bannerForm.get('productId').setValue(this.data.product.productId);
 
       const response = await firstValueFrom(
         this.productsService.getProduct({
