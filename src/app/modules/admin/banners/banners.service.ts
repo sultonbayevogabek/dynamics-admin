@@ -17,7 +17,7 @@ export class BannersService extends RequestService {
   }
 
   getBannersList(params: any): Observable<{ total: number; data: IBanner[] }> {
-    return this.request<{ total: number; data: IBanner[] }>('banner/get-list', params);
+    return this.request<{ total: number; data: IBanner[] }>('banner/list', params);
   }
 
   getProduct(slug: string): Observable<IBanner> {

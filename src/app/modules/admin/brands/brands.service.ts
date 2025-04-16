@@ -24,6 +24,6 @@ export class BrandsService extends RequestService {
     total: number;
     data: IBrand[]
   }> {
-    return this.request('brand/get-list', params);
+    return this.request('brand/list', params);
   }
 }
