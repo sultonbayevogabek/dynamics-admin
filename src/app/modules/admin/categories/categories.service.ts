@@ -33,7 +33,7 @@ export class CategoriesService extends RequestService {
   }
 
   getCategoriesList(parentId?: string): Observable<ICategory[]> {
-    return this.request<{ data: ICategory[]; total: number }>('category/get-list', parentId ? { parentId } : {})
+    return this.request<{ data: ICategory[]; total: number }>('category/list', parentId ? { parentId } : {})
       .pipe(
         map(res => {
           return res?.data || [];

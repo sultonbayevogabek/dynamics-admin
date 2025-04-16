@@ -17,7 +17,7 @@ export class ProductsService extends RequestService {
   }
 
   getProductsList(params: any): Observable<{ total: number; data: IProduct[] }> {
-    return this.request<{ total: number; data: IProduct[] }>('product/get-list', params);
+    return this.request<{ total: number; data: IProduct[] }>('product/list', params);
   }
 
   getProduct(params: { slug?: string; _id?: string }): Observable<IProduct> {

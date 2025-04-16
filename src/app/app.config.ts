@@ -13,13 +13,15 @@ import { MockApiService } from 'app/mock-api';
 import { firstValueFrom } from 'rxjs';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
 import { loggingInterceptor } from './core/interceptor/logging.interceptor';
+import { configInterceptor } from './core/interceptor/config.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
     provideHttpClient(
       withInterceptors([
-        loggingInterceptor
+        loggingInterceptor,
+        configInterceptor,
       ])
     ),
     provideRouter(
