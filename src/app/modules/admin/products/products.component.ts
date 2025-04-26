@@ -109,12 +109,13 @@ export class ProductsComponent implements OnInit {
   }
 
   async openAddProductDialog() {
-    this.matDialog.open(ProductCreateComponent, {
+    await firstValueFrom(this.matDialog.open(ProductCreateComponent, {
       width: '100vw',
       height: '100vh',
       maxWidth: '100vw',
       maxHeight: '100vh'
-    })
+    }).afterClosed())
+    await this.searchProduct();
   }
 
   async openProductDetails(slugUz: string) {

@@ -19,9 +19,10 @@ import { IFile } from '@shared/interfaces/file.interface';
 import { FileListComponent } from '@shared/components/file-list/file-list.component';
 import { ProductsService } from '../products.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatOption, MatSelect } from '@angular/material/select';
 
 @Component({
-  selector: 'banner-create',
+  selector: 'product-create',
   imports: [
     ReactiveFormsModule,
     SearchableMultiselectComponent,
@@ -37,7 +38,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatSuffix,
     NgxMaskDirective,
     FileUploadComponent,
-    FileListComponent
+    FileListComponent,
+    MatSelect,
+    MatOption
   ],
   templateUrl: './product-create.component.html',
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
@@ -73,53 +76,19 @@ export class ProductCreateComponent implements OnInit {
     and durable electric saw designed for cutting wood, plastic, and metal materials. Equipped with a powerful
     motor, precise cutting mechanism, and ergonomic design, it is an ideal choice for both home and professional
     workshops. The safety system and comfortable handle ensure ease of use and enhanced safety during operation.`, [ Validators.required ]),
-    oldPrice: new FormControl<number>(1099),
-    currentPrice: new FormControl<number>(990, [ Validators.required ]),
-    quantity: new FormControl<number>(22, [ Validators.required ]),
-    brandId: new FormControl<string>('67d5246564e989204561e7be', [ Validators.required ]),
-    images: new FormControl<IFile[]>([
-      {
-        "fieldname": "file",
-        "originalname": "product-2.jpg",
-        "encoding": "7bit",
-        "mimetype": "image/jpeg",
-        "destination": "uploads",
-        "filename": "1742669705230-243513238-product-2.jpg",
-        "path": "uploads/1742669705230-243513238-product-2.jpg",
-        "size": 0.117,
-        "extension": "jpg"
-      },
-      {
-        "fieldname": "file",
-        "originalname": "product-3.jpg",
-        "encoding": "7bit",
-        "mimetype": "image/jpeg",
-        "destination": "uploads",
-        "filename": "1742669705235-664174433-product-3.jpg",
-        "path": "uploads/1742669705235-664174433-product-3.jpg",
-        "size": 0.098,
-        "extension": "jpg"
-      },
-      {
-        "fieldname": "file",
-        "originalname": "product-4.jpg",
-        "encoding": "7bit",
-        "mimetype": "image/jpeg",
-        "destination": "uploads",
-        "filename": "1742669705237-178916660-product-4.jpg",
-        "path": "uploads/1742669705237-178916660-product-4.jpg",
-        "size": 0.078,
-        "extension": "jpg"
-      }
-    ], [ Validators.required ]),
+    oldPrice: new FormControl(),
+    currentPrice: new FormControl(),
+    availability: new FormControl('on_demand'),
+    brandId: new FormControl<string>(null, [ Validators.required ]),
+    images: new FormControl<IFile[]>([], [ Validators.required ]),
     attributes: new FormArray<FormGroup>([
         new FormGroup({
           nameUz: new FormControl<string>('Ishlab chiqaruvchi', [ Validators.required ]),
           nameRu: new FormControl<string>('Производитель', [ Validators.required ]),
           nameEn: new FormControl<string>('Manufacturer', [ Validators.required ]),
-          valueUz: new FormControl<string>('Fubag', [ Validators.required ]),
-          valueRu: new FormControl<string>('Fubag', [ Validators.required ]),
-          valueEn: new FormControl<string>('Fubag', [ Validators.required ])
+          valueUz: new FormControl<string>('ABB', [ Validators.required ]),
+          valueRu: new FormControl<string>('Samsung', [ Validators.required ]),
+          valueEn: new FormControl<string>('LG', [ Validators.required ])
         })
       ], [ Validators.required ]
     ),

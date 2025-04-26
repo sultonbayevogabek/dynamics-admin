@@ -105,7 +105,7 @@
             <th class="px-6 py-4 border">Tovar nomi</th>
             <th class="px-6 py-4 border">Kategoriya</th>
             <th class="px-6 py-4 border">Tovar narxi</th>
-            <th class="px-6 py-4 border">Miqdori</th>
+            <th class="px-6 py-4 border">Mavjudligi</th>
             <th class="px-6 py-4 border">Aktiv</th>
             <th class="px-6 py-4 border">Harakatlar</th>
           </tr>
@@ -141,11 +141,17 @@
                   @if (product.oldPrice) {
                     <del class="text-red-500">{{ product.oldPrice | currency: 'USD': 'symbol': '1.2-2' }}</del> /
                   }
-                  {{ product.currentPrice | currency : 'USD' : 'symbol' : '1.2-2' }}
+                  @if (product.currentPrice) {
+                    {{ product.currentPrice | currency : 'USD' : 'symbol' : '1.2-2' }}
+                  }
+
+                  @if (!product.currentPrice && !product.oldPrice) {
+                    So'rov bo'yicha
+                  }
                 </td>
 
                 <!-- Stock -->
-                <td class="border px-6 py-3 hidden lg:table-cell">{{ product.quantity }}</td>
+                <td class="border px-6 py-3 hidden lg:table-cell uppercase">{{ product.availability }}</td>
 
                 <!-- Status Toggle -->
                 <td class="border px-6 py-3 hidden lg:table-cell" (click)="$event.stopPropagation()">

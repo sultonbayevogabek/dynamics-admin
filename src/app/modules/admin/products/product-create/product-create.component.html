@@ -154,15 +154,14 @@
             <span matSuffix>USD</span>
           </mat-form-field>
           <mat-form-field class="fuse-mat-dense" floatLabel="always">
-            <mat-label>Miqdori</mat-label>
-            <input
-              [mask]="'separator'"
-              [thousandSeparator]="' '"
-              formControlName="quantity"
-              matInput type="text"
-              placeholder="Miqdori"
-            >
-            <span matSuffix>dona</span>
+            <mat-label>Sotuvda mavjudligi</mat-label>
+
+            <mat-select formControlName="availability">
+              <mat-option [value]="'on_demand'">Buyurtmaga ko'ra</mat-option>
+              <mat-option [value]="'in_stock'">Sotuvda bor</mat-option>
+              <mat-option [value]="'out_of_stock'">Sotuvda yo'q</mat-option>
+            </mat-select>
+
             <mat-error>Majburiy maydon</mat-error>
           </mat-form-field>
         </div>

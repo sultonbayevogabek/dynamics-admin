@@ -20,6 +20,8 @@ import { FileListComponent } from '@shared/components/file-list/file-list.compon
 import { ProductsService } from '../products.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { IProduct } from '../interfaces/product.interface';
+import { MatOption } from '@angular/material/core';
+import { MatSelect } from '@angular/material/select';
 
 @Component({
   selector: 'banner-edit',
@@ -38,7 +40,9 @@ import { IProduct } from '../interfaces/product.interface';
     MatSuffix,
     NgxMaskDirective,
     FileUploadComponent,
-    FileListComponent
+    FileListComponent,
+    MatOption,
+    MatSelect
   ],
   templateUrl: './product-edit.component.html',
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
@@ -64,8 +68,8 @@ export class ProductEditComponent implements OnInit {
     descriptionRu: new FormControl<string>(null, [ Validators.required ]),
     descriptionEn: new FormControl<string>(null, [ Validators.required ]),
     oldPrice: new FormControl<number>(null),
-    currentPrice: new FormControl<number>(null, [ Validators.required ]),
-    quantity: new FormControl<number>(null, [ Validators.required ]),
+    currentPrice: new FormControl<number>(null),
+    availability: new FormControl('on_demand'),
     brandId: new FormControl<string>(null, [ Validators.required ]),
     images: new FormControl<IFile[]>([], [ Validators.required ]),
     attributes: new FormArray<FormGroup>([], [ Validators.required ]
@@ -197,7 +201,7 @@ export class ProductEditComponent implements OnInit {
       descriptionEn: this.data.descriptionEn,
       oldPrice: this.data.oldPrice || null,
       currentPrice: this.data.currentPrice,
-      quantity: this.data.quantity,
+      availability: this.data.availability,
       brandId: this.data.brandId,
       images: this.data.images,
       keywords: this.data.keywords
