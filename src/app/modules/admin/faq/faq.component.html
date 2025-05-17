@@ -55,11 +55,18 @@
             @for (item of items; track item._id) {
               <tr
                 cdkDrag
-                class="hover:bg-slate-50 cursor-move"
+                class="hover:bg-slate-50 cursor-move bg-white"
                 [cdkDragData]="item"
                 (cdkDragStarted)="onDragStarted()"
                 (cdkDragReleased)="onDragReleased()"
               >
+                <!-- Placeholder that shows where the row will be dropped -->
+                <ng-template cdkDragPlaceholder>
+                  <td colspan="5" class="py-4 bg-gray-200 border-t border-b border-gray-300">
+                    <div class="h-10 w-full"></div>
+                  </td>
+                </ng-template>
+
                 <!-- Drag handle -->
                 <td class="border px-2 py-3 text-center bg-slate-50">
                   <div class="cdkDragHandle flex justify-center">
