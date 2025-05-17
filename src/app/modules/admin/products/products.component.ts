@@ -23,6 +23,7 @@ import {
 } from '@shared/components/searchable-multiselect/searchable-multiselect.component';
 import { IBrand } from '../brands/brands.interface';
 import { BrandsService } from '../brands/brands.service';
+import { ImgUrlPipe } from '@shared/pipes/img-url.pipe';
 
 @Component({
   selector: 'products',
@@ -36,7 +37,8 @@ import { BrandsService } from '../brands/brands.service';
     MatPaginator,
     MatPrefix,
     MatSlideToggle,
-    SearchableMultiselectComponent
+    SearchableMultiselectComponent,
+    ImgUrlPipe
   ],
   templateUrl: './products.component.html',
   standalone: true,

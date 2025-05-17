@@ -1,0 +1,128 @@
+<!-- faq.component.html -->
+<div
+  class="bg-card flex min-w-0 flex-auto flex-col dark:bg-transparent sm:absolute sm:inset-0 sm:overflow-hidden"
+>
+  <!-- Header -->
+  <div
+    class="flex flex-col px-6 py-8 gap-4"
+  >
+    <div class="flex items-center justify-between">
+      <div class="text-4xl font-extrabold tracking-tight">Ko'p so'raladigan savollar</div>
+
+      <div class="flex gap-3">
+        @if (isDragging) {
+          <div class="text-amber-600 font-medium flex items-center">
+            <mat-icon [svgIcon]="'heroicons_outline:information-circle'" class="mr-1"></mat-icon>
+            Savolni siljitib tartibni o'zgartiring
+          </div>
+        }
+
+        <button
+          mat-flat-button
+          [color]="'primary'"
+          (click)="openAddDialog()"
+        >
+          <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+          <span class="ml-2 mr-1">Yangi savol</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="flex flex-auto overflow-hidden">
+    <!-- FAQs list -->
+    <div
+      class="flex flex-auto flex-col overflow-hidden sm:mb-18 sm:overflow-y-auto"
+    >
+      @if (items.length > 0) {
+        <table class="w-full border-collapse border border-gray-300">
+          <!-- Header -->
+          <thead
+            class="bg-gray-50 text-secondary sticky top-0 z-10 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5">
+          <tr>
+            <th class="px-2 py-4 border" style="width: 50px;">№</th>
+            <th class="px-6 py-4 border">Savol</th>
+            <th class="px-6 py-4 border">Javob</th>
+            <th class="px-6 py-4 border">Aktiv</th>
+            <th class="px-6 py-4 border">Harakatlar</th>
+          </tr>
+          </thead>
+          <tbody
+            cdkDropList
+            (cdkDropListDropped)="onDrop($event)"
+          >
+            @for (item of items; track item._id) {
+              <tr
+                cdkDrag
+                class="hover:bg-slate-50 cursor-move"
+                [cdkDragData]="item"
+                (cdkDragStarted)="onDragStarted()"
+                (cdkDragReleased)="onDragReleased()"
+              >
+                <!-- Drag handle -->
+                <td class="border px-2 py-3 text-center bg-slate-50">
+                  <div class="cdkDragHandle flex justify-center">
+                    <mat-icon class="icon-size-5 text-gray-400" svgIcon="heroicons_outline:bars-3"></mat-icon>
+                  </div>
+                </td>
+
+                <!-- Question -->
+                <td class="border px-6 py-3 cursor-pointer" (click)="openDetails(item)">{{ item.questionUz }}</td>
+
+                <!-- Answer -->
+                <td class="border px-6 py-3 cursor-pointer" (click)="openDetails(item)">
+                  <div class="line-clamp-2">{{ item.answerUz }}</div>
+                </td>
+
+                <!-- Status Toggle -->
+                <td class="border px-6 py-3 hidden lg:table-cell" (click)="$event.stopPropagation()">
+                  <mat-slide-toggle color="primary" [checked]="item.status === 1"
+                                    (change)="itemStatusChange($event, item)"></mat-slide-toggle>
+                </td>
+
+                <!-- Actions -->
+                <td class="border px-6 py-3">
+                  <button class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button color="warn"
+                          (click)="$event.stopPropagation(); deleteItem(item._id)">
+                    <mat-icon class="icon-size-4" svgIcon="heroicons_outline:trash"></mat-icon>
+                  </button>
+                </td>
+
+                <!-- Custom Drag Preview Template -->
+                <ng-template cdkDragPreview>
+                  <table class="w-full border-collapse border border-gray-300 bg-white shadow-lg rounded">
+                    <tr class="bg-white">
+                      <td class="border px-2 py-3 text-center bg-slate-50" style="width: 50px;">
+                        <div class="flex justify-center">
+                          <mat-icon class="icon-size-5 text-gray-400" svgIcon="heroicons_outline:bars-3"></mat-icon>
+                        </div>
+                      </td>
+                      <td class="border px-6 py-3">{{ item.questionUz }}</td>
+                      <td class="border px-6 py-3">
+                        <div class="line-clamp-2">{{ item.answerUz }}</div>
+                      </td>
+                      <td class="border px-6 py-3 hidden lg:table-cell">
+                        <mat-slide-toggle color="primary" [checked]="item.status === 1" disabled></mat-slide-toggle>
+                      </td>
+                      <td class="border px-6 py-3">
+                        <button class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button color="warn" disabled>
+                          <mat-icon class="icon-size-4" svgIcon="heroicons_outline:trash"></mat-icon>
+                        </button>
+                      </td>
+                    </tr>
+                  </table>
+                </ng-template>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <div class="flex flex-col items-center justify-center p-8">
+          <div class="text-2xl font-semibold mb-4">Savollar topilmadi</div>
+          <div class="text-secondary">Yangi savol qo'shish uchun yuqoridagi tugmani bosing</div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

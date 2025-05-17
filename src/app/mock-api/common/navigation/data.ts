@@ -35,6 +35,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:view-columns',
         link: '/banners'
+      },
+      {
+        id: 'admin.faq',
+        title: `Ko'p so'raladigan savollar`,
+        type: 'basic',
+        icon: 'heroicons_outline:question-mark-circle',
+        link: '/faq'
       }
     ]
   },

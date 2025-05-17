@@ -20,6 +20,7 @@ export interface IProduct {
   categoryId: string;
   brandId: string;
   images: IFile[];
+  thumbs: IFile[];
   status: number;
   isDeleted: boolean;
   details: Details;
