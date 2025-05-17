@@ -12,7 +12,7 @@ import { firstValueFrom } from 'rxjs';
 import { IFaq } from '../interfaces/faq.interface';
 
 @Component({
-  selector: 'faq-edit',
+  selector: 'news-edit',
   imports: [
     ReactiveFormsModule,
     MatButton,

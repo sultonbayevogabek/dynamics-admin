@@ -3,15 +3,15 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
-import { FaqCreateComponent } from './faq-create/faq-create.component';
+import { NewsCreateComponent } from './news-create/news-create.component';
 import { firstValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { FaqService } from './faq.service';
-import { IFaq } from './interfaces/faq.interface';
+import { NewsService } from './news.service';
+import { IFaq } from './interfaces/news.interface';
 import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Confirmable } from '../../../core/decorators/confirmation-decorator';
 import { ToasterService } from '@shared/services/toaster.service';
-import { FaqEditComponent } from './faq-edit/faq-edit.component';
+import { NewsEditComponent } from './news-edit/news-edit.component';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 
 interface IFaqOrder {
@@ -20,7 +20,7 @@ interface IFaqOrder {
 }
 
 @Component({
-  selector: 'faq',
+  selector: 'news',
   imports: [
     MatButton,
     MatIcon,
@@ -28,11 +28,11 @@ interface IFaqOrder {
     MatSlideToggle,
     DragDropModule
   ],
-  templateUrl: './faq.component.html',
+  templateUrl: './news.component.html',
   standalone: true,
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ]
 })
-export class FaqComponent implements OnInit {
+export class NewsComponent implements OnInit {
   items: IFaq[] = [
     {
       _id: '1',
@@ -90,7 +90,7 @@ export class FaqComponent implements OnInit {
   isDragging = false;
 
   private matDialog = inject(MatDialog);
-  private service = inject(FaqService);
+  private service = inject(NewsService);
   private toasterService = inject(ToasterService);
 
   async ngOnInit() {
@@ -107,7 +107,7 @@ export class FaqComponent implements OnInit {
 
   async openAddDialog() {
     const result = await firstValueFrom(
-      this.matDialog.open(FaqCreateComponent, {
+      this.matDialog.open(NewsCreateComponent, {
         width: '100vw',
         height: '100vh',
         maxHeight: '100vh',
@@ -123,7 +123,7 @@ export class FaqComponent implements OnInit {
 
   async openDetails(faq: IFaq) {
     const result = await firstValueFrom(
-      this.matDialog.open(FaqEditComponent, {
+      this.matDialog.open(NewsEditComponent, {
         width: '100vw',
         height: '100vh',
         maxWidth: '100vw',

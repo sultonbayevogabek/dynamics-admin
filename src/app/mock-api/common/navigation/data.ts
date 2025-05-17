@@ -42,6 +42,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:question-mark-circle',
         link: '/faq'
+      },
+      {
+        id: 'admin.news',
+        title: `Yangiliklar`,
+        type: 'basic',
+        icon: 'heroicons_outline:newspaper',
+        link: '/news'
       }
     ]
   },

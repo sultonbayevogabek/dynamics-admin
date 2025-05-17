@@ -31,7 +31,7 @@ import { ProductsService } from '../../products/products.service';
 import { IProduct } from '../../products/interfaces/product.interface';
 
 @Component({
-  selector: 'faq-create',
+  selector: 'news-create',
   imports: [
     ReactiveFormsModule,
     SearchableMultiselectComponent,

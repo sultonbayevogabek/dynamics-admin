@@ -31,7 +31,7 @@ import { IProduct } from '../../products/interfaces/product.interface';
 import { IBanner } from '../interfaces/banner.interface';
 
 @Component({
-  selector: 'faq-edit',
+  selector: 'news-edit',
   imports: [
     ReactiveFormsModule,
     SearchableMultiselectComponent,

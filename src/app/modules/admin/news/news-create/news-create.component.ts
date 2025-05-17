@@ -6,7 +6,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { provideNgxMask } from 'ngx-mask';
-import { FaqService } from '../faq.service';
+import { NewsService } from '../news.service';
 import { ToasterService } from '@shared/services/toaster.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -23,14 +23,14 @@ import { firstValueFrom } from 'rxjs';
     MatLabel,
     MatError,
   ],
-  templateUrl: './faq-create.component.html',
+  templateUrl: './news-create.component.html',
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   standalone: true,
   providers: [
     provideNgxMask()
   ]
 })
-export class FaqCreateComponent implements OnInit {
+export class NewsCreateComponent implements OnInit {
   faqForm = new FormGroup({
     questionUz: new FormControl<string>('', [ Validators.required ]),
     questionRu: new FormControl<string>('', [ Validators.required ]),
@@ -40,7 +40,7 @@ export class FaqCreateComponent implements OnInit {
     answerEn: new FormControl<string>('', [ Validators.required ]),
   });
 
-  private faqService = inject(FaqService);
+  private faqService = inject(NewsService);
   private toaster = inject(ToasterService);
   private dialogRef = inject(MatDialogRef);
 

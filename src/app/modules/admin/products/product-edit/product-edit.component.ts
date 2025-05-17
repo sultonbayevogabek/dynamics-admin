@@ -24,7 +24,7 @@ import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
 
 @Component({
-  selector: 'faq-edit',
+  selector: 'news-edit',
   imports: [
     ReactiveFormsModule,
     SearchableMultiselectComponent,
