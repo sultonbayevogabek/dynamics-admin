@@ -9,7 +9,7 @@ import { provideNgxMask } from 'ngx-mask';
 import { NewsService } from '../news.service';
 import { ToasterService } from '@shared/services/toaster.service';
 import { firstValueFrom } from 'rxjs';
-import { QuillModule } from 'ngx-quill';
+import { Focus, QuillModule } from 'ngx-quill';
 import { NgClass, NgIf } from '@angular/common';
 import { FileService } from '@shared/services/file.service';
 import { environment } from '@env/environment';
@@ -46,6 +46,10 @@ const BlockBase64Paste = (quill) => {
   ],
   encapsulation: ViewEncapsulation.None,
   styles: [ `
+    .ql-editor {
+      padding: 30px;
+    }
+
     .editor-container {
       @apply w-full;
     }
@@ -104,6 +108,7 @@ export class NewsCreateComponent implements OnInit, AfterViewInit {
   imagePreviewUrl: string | null = null;
   isUploading = false;
   editorList = [];
+  activeTabIndex = 0;
 
   private newsService = inject(NewsService);
   private fileService = inject(FileService);
@@ -243,7 +248,7 @@ export class NewsCreateComponent implements OnInit, AfterViewInit {
     }
 
     // Agar fokusda bo'lmasa, aktiv tilni aniqlash
-    const activeTabIndex = this.findActiveTabIndex();
+    const activeTabIndex = this.activeTabIndex;
     if (activeTabIndex >= 0 && activeTabIndex < this.editorList.length) {
       return this.editorList[activeTabIndex];
     }
@@ -256,15 +261,7 @@ export class NewsCreateComponent implements OnInit, AfterViewInit {
     return null;
   }
 
-  /**
-   * Aktiv til tabini aniqlash
-   */
-  findActiveTabIndex() {
-    // Odatda O'zbekcha tab aktiv
-    return 0;
-  }
-
-  customImageHandler() {
+  async customImageHandler() {
     console.log('Image handler called');
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
@@ -425,5 +422,9 @@ export class NewsCreateComponent implements OnInit, AfterViewInit {
       });
       form.enable();
     }
+  }
+
+  onFocus(index: number) {
+    this.activeTabIndex = index;
   }
 }
