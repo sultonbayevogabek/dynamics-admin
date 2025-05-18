@@ -16,8 +16,8 @@ export class NewsService extends RequestService {
     return this.request('news/update', payload);
   }
 
-  getItemsList(): Observable<{ total: number; data: INews[] }> {
-    return this.request<{ total: number; data: INews[] }>('news/list');
+  getItemsList(params: any): Observable<{ total: number; data: INews[] }> {
+    return this.request<{ total: number; data: INews[] }>('news/list', params);
   }
 
   getItem(_id: string): Observable<INews> {

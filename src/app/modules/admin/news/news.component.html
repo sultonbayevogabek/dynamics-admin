@@ -10,6 +10,23 @@
       <div class="text-4xl font-extrabold tracking-tight">Yangiliklar</div>
 
       <div class="flex gap-3">
+        <mat-form-field
+          class="fuse-mat-dense fuse-mat-rounded min-w-100"
+          [subscriptSizing]="'dynamic'"
+        >
+          <mat-icon
+            class="icon-size-5"
+            matPrefix
+            [svgIcon]="'heroicons_solid:magnifying-glass'"
+          ></mat-icon>
+          <input
+            matInput
+            [placeholder]="'Yangilikni qidirish'"
+            [(ngModel)]="params.search"
+            (keydown.enter)="searchNews()"
+          />
+        </mat-form-field>
+
         <button
           mat-flat-button
           [color]="'primary'"

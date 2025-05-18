@@ -12,6 +12,8 @@ import { ToasterService } from '@shared/services/toaster.service';
 import { NewsEditComponent } from './news-edit/news-edit.component';
 import { DatePipe } from '@angular/common';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatFormField, MatPrefix } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
 
 @Component({
   selector: 'news',
@@ -20,7 +22,10 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
     MatIcon,
     FormsModule,
     DatePipe,
-    MatPaginator
+    MatPaginator,
+    MatFormField,
+    MatInput,
+    MatPrefix
   ],
   templateUrl: './news.component.html',
   standalone: true,
@@ -32,7 +37,7 @@ export class NewsComponent implements OnInit {
 
   params = {
     page: 0,
-    limit: 15,
+    limit: 10,
     total: 0,
     search: ''
   };
@@ -47,9 +52,13 @@ export class NewsComponent implements OnInit {
 
   async getNews() {
     const response = await firstValueFrom(
-      this.service.getItemsList()
+      this.service.getItemsList({
+        ...this.params,
+        page: this.params.page + 1
+      })
     );
     this.items = response.data || [];
+    this.params.total = response?.total;
   }
 
   async openAddDialog() {
@@ -101,7 +110,7 @@ export class NewsComponent implements OnInit {
           message: `Yangilik muvaffaqiyatli o'chirildi!`
         });
 
-        await this.getNews();
+        await this.searchNews();
       }
 
     } catch (error) {
