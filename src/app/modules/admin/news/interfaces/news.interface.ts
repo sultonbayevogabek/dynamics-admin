@@ -1,11 +1,15 @@
-export interface IFaq {
+export interface INews {
   _id: string;
-  questionUz: string;
-  questionRu: string;
-  questionEn: string;
-  answerUz: string;
-  answerRu: string;
-  answerEn: string;
-  status: 0 | 1;
+  titleUz: string;
+  titleRu: string;
+  titleEn: string;
+  shortDescriptionUz: string;
+  shortDescriptionRu: string;
+  shortDescriptionEn: string;
+  contentUz: string;
+  contentRu: string;
+  contentEn: string;
+  imageUrl: string;
+  createdAt: string;
 }
 

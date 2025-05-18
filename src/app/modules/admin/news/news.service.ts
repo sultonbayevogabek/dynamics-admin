@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { RequestService } from '@shared/services/request.service';
 import { Observable } from 'rxjs';
-import { IFaq } from './interfaces/news.interface';
+import { INews } from './interfaces/news.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +16,11 @@ export class NewsService extends RequestService {
     return this.request('faq/update', payload);
   }
 
-  getItemsList(): Observable<{ total: number; data: IFaq[] }> {
-    return this.request<{ total: number; data: IFaq[] }>('faq/list');
+  getItemsList(): Observable<{ total: number; data: INews[] }> {
+    return this.request<{ total: number; data: INews[] }>('faq/list');
   }
 
-  getItem(slug: string): Observable<IFaq> {
+  getItem(slug: string): Observable<INews> {
     return this.request('faq/get-product', { slug });
   }
 

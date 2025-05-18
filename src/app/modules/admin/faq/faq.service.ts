@@ -16,8 +16,8 @@ export class FaqService extends RequestService {
     return this.request('faq/update', payload);
   }
 
-  getItemsList(): Observable<{ total: number; data: IFaq[] }> {
-    return this.request<{ total: number; data: IFaq[] }>('faq/list');
+  getItemsList(): Observable<IFaq[]> {
+    return this.request<IFaq[]>('faq/list');
   }
 
   getItem(slug: string): Observable<IFaq> {
@@ -25,6 +25,6 @@ export class FaqService extends RequestService {
   }
 
   deleteItem(_id: string): Observable<any> {
-    return this.request('banner/delete', { _id });
+    return this.request('faq/delete', { _id });
   }
 }

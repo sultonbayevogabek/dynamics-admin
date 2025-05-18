@@ -7,23 +7,16 @@
     class="flex flex-col px-6 py-8 gap-4"
   >
     <div class="flex items-center justify-between">
-      <div class="text-4xl font-extrabold tracking-tight">Ko'p so'raladigan savollar</div>
+      <div class="text-4xl font-extrabold tracking-tight">Yangiliklar</div>
 
       <div class="flex gap-3">
-        @if (isDragging) {
-          <div class="text-amber-600 font-medium flex items-center">
-            <mat-icon [svgIcon]="'heroicons_outline:information-circle'" class="mr-1"></mat-icon>
-            Savolni siljitib tartibni o'zgartiring
-          </div>
-        }
-
         <button
           mat-flat-button
           [color]="'primary'"
           (click)="openAddDialog()"
         >
           <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-          <span class="ml-2 mr-1">Yangi savol</span>
+          <span class="ml-2 mr-1">Yangi yangilik</span>
         </button>
       </div>
     </div>
@@ -31,7 +24,7 @@
 
   <!-- Main -->
   <div class="flex flex-auto overflow-hidden">
-    <!-- FAQs list -->
+    <!-- News list -->
     <div
       class="flex flex-auto flex-col overflow-hidden sm:mb-18 sm:overflow-y-auto"
     >
@@ -42,92 +35,90 @@
             class="bg-gray-50 text-secondary sticky top-0 z-10 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5">
           <tr>
             <th class="px-2 py-4 border" style="width: 50px;">№</th>
-            <th class="px-6 py-4 border">Savol</th>
-            <th class="px-6 py-4 border">Javob</th>
-            <th class="px-6 py-4 border">Aktiv</th>
-            <th class="px-6 py-4 border">Harakatlar</th>
+            <th class="px-6 py-4 border">Sarlavha</th>
+            <th class="px-6 py-4 border">Qisqacha mazmun</th>
+            <th class="px-6 py-4 border" style="width: 180px;">Sana</th>
+            <th class="px-6 py-4 border" style="width: 150px;">Harakatlar</th>
           </tr>
           </thead>
-          <tbody
-            cdkDropList
-            (cdkDropListDropped)="onDrop($event)"
-          >
-            @for (item of items; track item._id) {
-              <tr
-                cdkDrag
-                class="hover:bg-slate-50 cursor-move bg-white"
-                [cdkDragData]="item"
-                (cdkDragStarted)="onDragStarted()"
-                (cdkDragReleased)="onDragReleased()"
-              >
-                <!-- Placeholder that shows where the row will be dropped -->
-                <ng-template cdkDragPlaceholder>
-                  <td colspan="5" class="py-4 bg-gray-200 border-t border-b border-gray-300">
-                    <div class="h-10 w-full"></div>
-                  </td>
-                </ng-template>
-
-                <!-- Drag handle -->
+          <tbody>
+            @for (item of paginatedItems; track item._id; let i = $index) {
+              <tr class="hover:bg-slate-50 bg-white">
+                <!-- Index -->
                 <td class="border px-2 py-3 text-center bg-slate-50">
-                  <div class="cdkDragHandle flex justify-center">
-                    <mat-icon class="icon-size-5 text-gray-400" svgIcon="heroicons_outline:bars-3"></mat-icon>
-                  </div>
+                  {{ calculateIndex(i) }}
                 </td>
 
-                <!-- Question -->
-                <td class="border px-6 py-3 cursor-pointer" (click)="openDetails(item)">{{ item.questionUz }}</td>
-
-                <!-- Answer -->
+                <!-- Title -->
                 <td class="border px-6 py-3 cursor-pointer" (click)="openDetails(item)">
-                  <div class="line-clamp-2">{{ item.answerUz }}</div>
+                  {{ item.titleUz }}
                 </td>
 
-                <!-- Status Toggle -->
-                <td class="border px-6 py-3 hidden lg:table-cell" (click)="$event.stopPropagation()">
-                  <mat-slide-toggle color="primary" [checked]="item.status === 1"
-                                    (change)="itemStatusChange($event, item)"></mat-slide-toggle>
+                <!-- Short Description -->
+                <td class="border px-6 py-3 cursor-pointer" (click)="openDetails(item)">
+                  <div class="line-clamp-2">{{ item.shortDescriptionUz }}</div>
+                </td>
+
+                <!-- Date -->
+                <td class="border px-6 py-3 text-center">
+                  {{ item.createdAt | date:'dd.MM.yyyy' }}
                 </td>
 
                 <!-- Actions -->
                 <td class="border px-6 py-3">
-                  <button class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button color="warn"
-                          (click)="$event.stopPropagation(); deleteItem(item._id)">
-                    <mat-icon class="icon-size-4" svgIcon="heroicons_outline:trash"></mat-icon>
-                  </button>
+                  <div class="flex gap-2 justify-center">
+                    <button class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button color="primary"
+                            (click)="$event.stopPropagation(); openDetails(item)">
+                      <mat-icon class="icon-size-4" svgIcon="heroicons_outline:pencil"></mat-icon>
+                    </button>
+                    <button class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button color="warn"
+                            (click)="$event.stopPropagation(); deleteItem(item._id)">
+                      <mat-icon class="icon-size-4" svgIcon="heroicons_outline:trash"></mat-icon>
+                    </button>
+                  </div>
                 </td>
-
-                <!-- Custom Drag Preview Template -->
-                <ng-template cdkDragPreview>
-                  <table class="w-full border-collapse border border-gray-300 bg-white shadow-lg rounded">
-                    <tr class="bg-white">
-                      <td class="border px-2 py-3 text-center bg-slate-50" style="width: 50px;">
-                        <div class="flex justify-center">
-                          <mat-icon class="icon-size-5 text-gray-400" svgIcon="heroicons_outline:bars-3"></mat-icon>
-                        </div>
-                      </td>
-                      <td class="border px-6 py-3">{{ item.questionUz }}</td>
-                      <td class="border px-6 py-3">
-                        <div class="line-clamp-2">{{ item.answerUz }}</div>
-                      </td>
-                      <td class="border px-6 py-3 hidden lg:table-cell">
-                        <mat-slide-toggle color="primary" [checked]="item.status === 1" disabled></mat-slide-toggle>
-                      </td>
-                      <td class="border px-6 py-3">
-                        <button class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button color="warn" disabled>
-                          <mat-icon class="icon-size-4" svgIcon="heroicons_outline:trash"></mat-icon>
-                        </button>
-                      </td>
-                    </tr>
-                  </table>
-                </ng-template>
               </tr>
             }
           </tbody>
         </table>
+
+        <!-- Pagination -->
+          <!--        <div class="flex justify-center mt-4 mb-6">-->
+          <!--          <div class="flex items-center gap-2">-->
+          <!--            <button-->
+          <!--              mat-icon-button-->
+          <!--              (click)="prevPage()"-->
+          <!--              [disabled]="currentPage === 1"-->
+          <!--              class="text-gray-600"-->
+          <!--            >-->
+          <!--              <mat-icon svgIcon="heroicons_outline:chevron-left"></mat-icon>-->
+          <!--            </button>-->
+          <!--            -->
+          <!--            @for (page of pageNumbers; track page) {-->
+          <!--              <button-->
+          <!--                mat-mini-fab-->
+          <!--                [color]="currentPage === page ? 'primary' : ''"-->
+          <!--                (click)="goToPage(page)"-->
+          <!--                class="h-8 w-8 min-h-8"-->
+          <!--              >-->
+          <!--                {{ page }}-->
+          <!--              </button>-->
+          <!--            }-->
+          <!--            -->
+          <!--            <button-->
+          <!--              mat-icon-button-->
+          <!--              (click)="nextPage()"-->
+          <!--              [disabled]="currentPage === totalPages"-->
+          <!--              class="text-gray-600"-->
+          <!--            >-->
+          <!--              <mat-icon svgIcon="heroicons_outline:chevron-right"></mat-icon>-->
+          <!--            </button>-->
+          <!--          </div>-->
+          <!--        </div>-->
       } @else {
         <div class="flex flex-col items-center justify-center p-8">
-          <div class="text-2xl font-semibold mb-4">Savollar topilmadi</div>
-          <div class="text-secondary">Yangi savol qo'shish uchun yuqoridagi tugmani bosing</div>
+          <div class="text-2xl font-semibold mb-4">Yangiliklar topilmadi</div>
+          <div class="text-secondary">Yangi yangilik qo'shish uchun yuqoridagi tugmani bosing</div>
         </div>
       }
     </div>

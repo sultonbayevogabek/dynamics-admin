@@ -1,6 +1,6 @@
 <div class="fixed inset-0 flex flex-col gap-5 p-6 bg-white">
   <div class="flex items-center justify-between">
-    <div class="text-xl font-medium text-gray-700">Savolni tahrirlash</div>
+    <div class="text-xl font-medium text-gray-700">Yangilikni tahrirlash</div>
 
     <button mat-icon-button mat-dialog-close class="bg-gray-50">
       <mat-icon svgIcon="heroicons_outline:x-mark"></mat-icon>
@@ -8,49 +8,147 @@
   </div>
 
   <div class="grow relative">
-    <form class="absolute inset-0 overflow-auto flex flex-col gap-2" [formGroup]="faqForm"
-          (ngSubmit)="edit()">
+    <form class="absolute inset-0 overflow-auto flex flex-col gap-5" [formGroup]="newsForm"
+          (ngSubmit)="editNews()">
+
+      <!-- Rasm va sarlavha (yonma-yon) -->
+      <div class="grid grid-cols-3 gap-5">
+        <!-- Asosiy rasm (chap tomon) -->
+        <div class="col-span-1">
+          <fieldset class="border h-full px-3 pb-3 pt-2 rounded-lg bg-slate-50 flex flex-col">
+            <legend class="text-gray-900 font-medium text-[16px]">Yangilik rasmi (730x490)</legend>
+
+            <div class="flex flex-col items-center gap-3 flex-grow">
+              <div *ngIf="imagePreviewUrl" class="w-full aspect-[730/490] bg-gray-100 rounded-lg overflow-hidden">
+                <img [src]="imagePreviewUrl" alt="Rasm" class="w-full h-full object-contain">
+              </div>
+
+              <div *ngIf="!imagePreviewUrl" class="w-full aspect-[730/490] bg-gray-100 rounded-lg flex items-center justify-center">
+                <span class="text-gray-400">Rasm tanlang (730 x 490 )</span>
+              </div>
+
+              <div class="flex gap-3 mt-auto">
+                <button type="button" mat-flat-button color="primary" (click)="fileInput.click()" [disabled]="isUploading">
+                  <mat-icon svgIcon="heroicons_outline:photo"></mat-icon>
+                  <span class="ml-2">Rasm tanlash</span>
+                </button>
+
+                <button *ngIf="imagePreviewUrl" type="button" mat-stroked-button color="warn"
+                        (click)="imagePreviewUrl = null; newsForm.get('imageUrl')?.setValue('')">
+                  <mat-icon svgIcon="heroicons_outline:trash"></mat-icon>
+                  <span class="ml-2">O'chirish</span>
+                </button>
+              </div>
+
+              <input #fileInput type="file" accept="image/*" hidden (change)="uploadMainImage($event)">
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- Sarlavha (o'ng tomon - ustma-ust) -->
+        <div class="col-span-2">
+          <fieldset class="border h-full px-3 pb-3 pt-2 rounded-lg bg-slate-50 flex flex-col">
+            <legend class="text-gray-900 font-medium text-[16px]">Yangilik sarlavhasi</legend>
+
+            <div class="flex flex-col gap-3">
+              <mat-form-field class="fuse-mat-dense" floatLabel="always">
+                <mat-label>O'zbekcha</mat-label>
+                <input formControlName="titleUz" matInput type="text" placeholder="O'zbekcha sarlavha">
+                <mat-error>Majburiy maydon</mat-error>
+              </mat-form-field>
+              <mat-form-field class="fuse-mat-dense" floatLabel="always">
+                <mat-label>Ruscha</mat-label>
+                <input formControlName="titleRu" matInput type="text" placeholder="Ruscha sarlavha">
+                <mat-error>Majburiy maydon</mat-error>
+              </mat-form-field>
+              <mat-form-field class="fuse-mat-dense" floatLabel="always">
+                <mat-label>Inglizcha</mat-label>
+                <input formControlName="titleEn" matInput type="text" placeholder="Inglizcha sarlavha">
+                <mat-error>Majburiy maydon</mat-error>
+              </mat-form-field>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
+      <!-- Qisqa tavsif -->
       <fieldset class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
-        <legend class="text-gray-900 font-medium text-[16px]">Savol</legend>
+        <legend class="text-gray-900 font-medium text-[16px]">Qisqa tavsif</legend>
 
         <div class="grid grid-cols-3 gap-5">
           <mat-form-field class="fuse-mat-dense" floatLabel="always">
             <mat-label>O'zbekcha</mat-label>
-            <input formControlName="questionUz" matInput type="text" placeholder="O'zbekcha savol">
+            <textarea formControlName="shortDescriptionUz" matInput rows="3" placeholder="O'zbekcha qisqa tavsif"></textarea>
             <mat-error>Majburiy maydon</mat-error>
           </mat-form-field>
           <mat-form-field class="fuse-mat-dense" floatLabel="always">
             <mat-label>Ruscha</mat-label>
-            <input formControlName="questionRu" matInput type="text" placeholder="Ruscha savol">
+            <textarea formControlName="shortDescriptionRu" matInput rows="3" placeholder="Ruscha qisqa tavsif"></textarea>
             <mat-error>Majburiy maydon</mat-error>
           </mat-form-field>
           <mat-form-field class="fuse-mat-dense" floatLabel="always">
             <mat-label>Inglizcha</mat-label>
-            <input formControlName="questionEn" matInput type="text" placeholder="Inglizcha savol">
+            <textarea formControlName="shortDescriptionEn" matInput rows="3" placeholder="Inglizcha qisqa tavsif"></textarea>
             <mat-error>Majburiy maydon</mat-error>
           </mat-form-field>
         </div>
       </fieldset>
 
+      <!-- Kontent -->
       <fieldset class="border px-3 pb-1 pt-2 rounded-lg bg-slate-50">
-        <legend class="text-gray-900 font-medium text-[16px]">Javob</legend>
+        <legend class="text-gray-900 font-medium text-[16px]">Yangilik matni</legend>
 
-        <div class="grid grid-cols-3 gap-5">
-          <mat-form-field class="fuse-mat-dense" floatLabel="always">
-            <mat-label>O'zbekcha</mat-label>
-            <textarea formControlName="answerUz" matInput rows="5" placeholder="O'zbekcha javob"></textarea>
-            <mat-error>Majburiy maydon</mat-error>
-          </mat-form-field>
-          <mat-form-field class="fuse-mat-dense" floatLabel="always">
-            <mat-label>Ruscha</mat-label>
-            <textarea formControlName="answerRu" matInput rows="5" placeholder="Ruscha javob"></textarea>
-            <mat-error>Majburiy maydon</mat-error>
-          </mat-form-field>
-          <mat-form-field class="fuse-mat-dense" floatLabel="always">
-            <mat-label>Inglizcha</mat-label>
-            <textarea formControlName="answerEn" matInput rows="5" placeholder="Inglizcha javob"></textarea>
-            <mat-error>Majburiy maydon</mat-error>
-          </mat-form-field>
+        <div class="grid grid-cols-1 gap-5">
+          <div class="w-full">
+            <label class="text-gray-700 font-medium block mb-2">O'zbekcha</label>
+            <div class="w-full editor-container">
+              <quill-editor
+                class="quill-editor"
+                formControlName="contentUz"
+                [modules]="quillModules"
+                placeholder="O'zbekcha yangilik matni"
+                [ngClass]="{'ng-invalid': newsForm.get('contentUz')?.invalid && newsForm.get('contentUz')?.touched}"
+                (onEditorCreated)="handleEditorCreated($event)">
+              </quill-editor>
+            </div>
+            <div *ngIf="newsForm.get('contentUz')?.invalid && newsForm.get('contentUz')?.touched" class="text-red-500 text-sm mt-1">
+              Majburiy maydon
+            </div>
+          </div>
+
+          <div class="w-full">
+            <label class="text-gray-700 font-medium block mb-2">Ruscha</label>
+            <div class="w-full editor-container">
+              <quill-editor
+                class="quill-editor"
+                formControlName="contentRu"
+                [modules]="quillModules"
+                placeholder="Ruscha yangilik matni"
+                [ngClass]="{'ng-invalid': newsForm.get('contentRu')?.invalid && newsForm.get('contentRu')?.touched}"
+                (onEditorCreated)="handleEditorCreated($event)">
+              </quill-editor>
+            </div>
+            <div *ngIf="newsForm.get('contentRu')?.invalid && newsForm.get('contentRu')?.touched" class="text-red-500 text-sm mt-1">
+              Majburiy maydon
+            </div>
+          </div>
+
+          <div class="w-full">
+            <label class="text-gray-700 font-medium block mb-2">Inglizcha</label>
+            <div class="w-full editor-container">
+              <quill-editor
+                class="quill-editor"
+                formControlName="contentEn"
+                [modules]="quillModules"
+                placeholder="Inglizcha yangilik matni"
+                [ngClass]="{'ng-invalid': newsForm.get('contentEn')?.invalid && newsForm.get('contentEn')?.touched}"
+                (onEditorCreated)="handleEditorCreated($event)">
+              </quill-editor>
+            </div>
+            <div *ngIf="newsForm.get('contentEn')?.invalid && newsForm.get('contentEn')?.touched" class="text-red-500 text-sm mt-1">
+              Majburiy maydon
+            </div>
+          </div>
         </div>
       </fieldset>
     </form>
@@ -61,8 +159,8 @@
       <mat-icon svgIcon="heroicons_outline:x-circle"/>
       <span class="ml-2">Bekor qilish</span>
     </button>
-    <button (click)="edit()" mat-flat-button color="primary"
-            [disabled]="faqForm.invalid || faqForm.disabled">
+    <button (click)="editNews()" mat-flat-button color="primary"
+            [disabled]="newsForm.invalid || newsForm.disabled">
       <mat-icon svgIcon="heroicons_solid:check-circle"/>
       <span class="ml-2">O'zgarishlarni saqlash</span>
     </button>
