@@ -197,7 +197,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
     this.activeTabIndex = index;
   }
 
-  handlePaste(event: ClipboardEvent) {
+  async handlePaste(event: ClipboardEvent) {
     // Faol editorni aniqlash
     const activeEditor = this.getActiveQuillEditor();
     if (!activeEditor) return;
@@ -214,14 +214,14 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
 
         const file = item.getAsFile();
         if (file) {
-          this.uploadFileAndInsertToEditor(file, activeEditor);
+          await this.uploadFileAndInsertToEditor(file, activeEditor);
         }
         return;
       }
     }
   }
 
-  handleDrop(event: DragEvent) {
+  async handleDrop(event: DragEvent) {
     // Faol editorni aniqlash
     const activeEditor = this.getActiveQuillEditor();
     if (!activeEditor) return;
@@ -238,7 +238,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
 
         const file = item.getAsFile();
         if (file) {
-          this.uploadFileAndInsertToEditor(file, activeEditor);
+          await this.uploadFileAndInsertToEditor(file, activeEditor);
         }
         return;
       }
@@ -283,7 +283,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
     return null;
   }
 
-  customImageHandler() {
+  async customImageHandler() {
     console.log('Image handler called for editor index:', this.activeTabIndex);
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
