@@ -32,12 +32,12 @@ import { firstValueFrom } from 'rxjs';
 })
 export class FaqCreateComponent implements OnInit {
   faqForm = new FormGroup({
-    questionUz: new FormControl<string>('Internet xizmatlari qanday ulanadi?', [ Validators.required ]),
-    questionRu: new FormControl<string>('Как подключить интернет услуги?', [ Validators.required ]),
-    questionEn: new FormControl<string>('How to connect internet services?', [ Validators.required ]),
-    answerUz: new FormControl<string>('Internet xizmatlarini ulash uchun bizning ofisimizga tashrif buyuring yoki onlayn ariza qoldiring.', [ Validators.required ]),
-    answerRu: new FormControl<string>('Для подключения интернет услуг посетите наш офис или оставьте онлайн заявку.', [ Validators.required ]),
-    answerEn: new FormControl<string>('To connect internet services, visit our office or submit an online application.', [ Validators.required ])
+    questionUz: new FormControl<string>('', [ Validators.required ]),
+    questionRu: new FormControl<string>('', [ Validators.required ]),
+    questionEn: new FormControl<string>('', [ Validators.required ]),
+    answerUz: new FormControl<string>('', [ Validators.required ]),
+    answerRu: new FormControl<string>('', [ Validators.required ]),
+    answerEn: new FormControl<string>('', [ Validators.required ])
   });
 
   private faqService = inject(FaqService);
