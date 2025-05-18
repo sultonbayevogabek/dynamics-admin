@@ -73,21 +73,21 @@ export class NewsCreateComponent implements OnInit, AfterViewInit {
     titleUz: new FormControl<string>('Toshkentda IT sohasidagi innovatsion loyihalar taqdimoti bo\'lib o\'tdi\n', [ Validators.required ]),
     titleRu: new FormControl<string>(`В Ташкенте прошла презентация инновационных проектов в сфере IT`, [ Validators.required ]),
     titleEn: new FormControl<string>('Innovative IT Projects Presented in Tashkent', [ Validators.required ]),
-    shortDescriptionUz: new FormControl<string>(`
+    shortDescUz: new FormControl<string>(`
       Poytaxtimizda "Digital Future" konferensiyasi doirasida yosh dasturchilar
       tomonidan ishlab chiqilgan 50 dan ortiq innovatsion loyihalar taqdimoti
       bo'lib o'tdi. Tadbir davomida sun'iy intellekt, blokchein texnologiyalari va
       mobil ilovalar sohasidagi eng istiqbolli loyihalar aniqlanib, g'oliblar
       1 milliard so'mlik grant sohibiga aylanishdi.
     `, [ Validators.required ]),
-    shortDescriptionRu: new FormControl<string>(`
+    shortDescRu: new FormControl<string>(`
       В столице в рамках конференции "Digital Future" состоялась презентация более
       50 инновационных проектов, разработанных молодыми программистами.
       В ходе мероприятия были определены самые перспективные проекты
       в области искусственного интеллекта, блокчейн-технологий и мобильных приложений,
       а победители стали обладателями грантов на сумму 1 миллиард сумов.
     `, [ Validators.required ]),
-    shortDescriptionEn: new FormControl<string>(`
+    shortDescEn: new FormControl<string>(`
       The capital hosted presentations of more than
       50 innovative projects developed by young programmers
       as part of the "Digital Future" conference. During the event,

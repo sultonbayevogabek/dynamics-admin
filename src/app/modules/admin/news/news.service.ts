@@ -9,22 +9,22 @@ import { INews } from './interfaces/news.interface';
 
 export class NewsService extends RequestService {
   create(payload: any): Observable<any> {
-    return this.request('faq/add', payload);
+    return this.request('news/add', payload);
   }
 
   editItem(payload: any): Observable<any> {
-    return this.request('faq/update', payload);
+    return this.request('news/update', payload);
   }
 
   getItemsList(): Observable<{ total: number; data: INews[] }> {
-    return this.request<{ total: number; data: INews[] }>('faq/list');
+    return this.request<{ total: number; data: INews[] }>('news/list');
   }
 
   getItem(slug: string): Observable<INews> {
-    return this.request('faq/get-product', { slug });
+    return this.request('news/get-news', { slug });
   }
 
   deleteItem(_id: string): Observable<any> {
-    return this.request('banner/delete', { _id });
+    return this.request('news/delete', { _id });
   }
 }

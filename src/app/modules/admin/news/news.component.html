@@ -34,20 +34,15 @@
           <thead
             class="bg-gray-50 text-secondary sticky top-0 z-10 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5">
           <tr>
-            <th class="px-2 py-4 border" style="width: 50px;">№</th>
             <th class="px-6 py-4 border">Sarlavha</th>
             <th class="px-6 py-4 border">Qisqacha mazmun</th>
-            <th class="px-6 py-4 border" style="width: 180px;">Sana</th>
+            <th class="px-6 py-4 border" style="width: 180px;">Yaratilgan sana</th>
             <th class="px-6 py-4 border" style="width: 150px;">Harakatlar</th>
           </tr>
           </thead>
           <tbody>
-            @for (item of paginatedItems; track item._id; let i = $index) {
+            @for (item of items; track item._id; let i = $index) {
               <tr class="hover:bg-slate-50 bg-white">
-                <!-- Index -->
-                <td class="border px-2 py-3 text-center bg-slate-50">
-                  {{ calculateIndex(i) }}
-                </td>
 
                 <!-- Title -->
                 <td class="border px-6 py-3 cursor-pointer" (click)="openDetails(item)">
@@ -56,12 +51,12 @@
 
                 <!-- Short Description -->
                 <td class="border px-6 py-3 cursor-pointer" (click)="openDetails(item)">
-                  <div class="line-clamp-2">{{ item.shortDescriptionUz }}</div>
+                  <div class="line-clamp-2">{{ item.shortDescUz }}</div>
                 </td>
 
                 <!-- Date -->
                 <td class="border px-6 py-3 text-center">
-                  {{ item.createdAt | date:'dd.MM.yyyy' }}
+                  {{ item.createdAt | date:'dd.MM.yyyy HH:mm' }}
                 </td>
 
                 <!-- Actions -->
@@ -82,39 +77,14 @@
           </tbody>
         </table>
 
-        <!-- Pagination -->
-          <!--        <div class="flex justify-center mt-4 mb-6">-->
-          <!--          <div class="flex items-center gap-2">-->
-          <!--            <button-->
-          <!--              mat-icon-button-->
-          <!--              (click)="prevPage()"-->
-          <!--              [disabled]="currentPage === 1"-->
-          <!--              class="text-gray-600"-->
-          <!--            >-->
-          <!--              <mat-icon svgIcon="heroicons_outline:chevron-left"></mat-icon>-->
-          <!--            </button>-->
-          <!--            -->
-          <!--            @for (page of pageNumbers; track page) {-->
-          <!--              <button-->
-          <!--                mat-mini-fab-->
-          <!--                [color]="currentPage === page ? 'primary' : ''"-->
-          <!--                (click)="goToPage(page)"-->
-          <!--                class="h-8 w-8 min-h-8"-->
-          <!--              >-->
-          <!--                {{ page }}-->
-          <!--              </button>-->
-          <!--            }-->
-          <!--            -->
-          <!--            <button-->
-          <!--              mat-icon-button-->
-          <!--              (click)="nextPage()"-->
-          <!--              [disabled]="currentPage === totalPages"-->
-          <!--              class="text-gray-600"-->
-          <!--            >-->
-          <!--              <mat-icon svgIcon="heroicons_outline:chevron-right"></mat-icon>-->
-          <!--            </button>-->
-          <!--          </div>-->
-          <!--        </div>-->
+        <mat-paginator
+          class="z-10 border-b bg-gray-50 dark:bg-transparent sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-b-0 sm:border-t"
+          [length]="params.total"
+          [pageIndex]="params.page"
+          [pageSize]="params.limit"
+          [showFirstLastButtons]="true"
+          (page)="pageChange($event)"
+        ></mat-paginator>
       } @else {
         <div class="flex flex-col items-center justify-center p-8">
           <div class="text-2xl font-semibold mb-4">Yangiliklar topilmadi</div>

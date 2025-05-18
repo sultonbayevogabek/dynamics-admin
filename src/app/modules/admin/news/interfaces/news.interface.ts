@@ -3,9 +3,9 @@ export interface INews {
   titleUz: string;
   titleRu: string;
   titleEn: string;
-  shortDescriptionUz: string;
-  shortDescriptionRu: string;
-  shortDescriptionEn: string;
+  shortDescUz: string;
+  shortDescRu: string;
+  shortDescEn: string;
   contentUz: string;
   contentRu: string;
   contentEn: string;
