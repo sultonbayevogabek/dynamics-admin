@@ -67,15 +67,20 @@ export class NewsComponent implements OnInit {
   }
 
   async openDetails(news: INews) {
+    const data = await firstValueFrom(
+      this.service.getItem(news?._id)
+    )
+
     const result = await firstValueFrom(
       this.matDialog.open(NewsEditComponent, {
         width: '100vw',
         height: '100vh',
         maxWidth: '100vw',
         maxHeight: '100vh',
-        data: news
+        data
       }).afterClosed()
     );
+
     if (result === 'edited') {
       await this.searchNews();
     }

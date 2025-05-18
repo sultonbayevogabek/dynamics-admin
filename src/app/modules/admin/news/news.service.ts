@@ -20,8 +20,8 @@ export class NewsService extends RequestService {
     return this.request<{ total: number; data: INews[] }>('news/list');
   }
 
-  getItem(slug: string): Observable<INews> {
-    return this.request('news/get-news', { slug });
+  getItem(_id: string): Observable<INews> {
+    return this.request('news/get-news', { _id });
   }
 
   deleteItem(_id: string): Observable<any> {

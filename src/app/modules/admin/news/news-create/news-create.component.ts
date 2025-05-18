@@ -135,6 +135,7 @@ export class NewsCreateComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     // this metodi bindini saqlash
     this.handleEditorCreated = this.handleEditorCreated.bind(this);
+    this.watchContentUz();
   }
 
   ngAfterViewInit() {
@@ -146,6 +147,15 @@ export class NewsCreateComponent implements OnInit, AfterViewInit {
     setTimeout(() => {
       this.setupToolbarHandlers();
     }, 500);
+  }
+
+  watchContentUz(): void {
+    this.newsForm.get('contentUz')?.valueChanges.subscribe(value => {
+      this.newsForm.patchValue({
+        contentRu: value,
+        contentEn: value
+      }, { emitEvent: false });
+    });
   }
 
   /**

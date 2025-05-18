@@ -103,12 +103,13 @@
             <label class="text-gray-700 font-medium block mb-2">O'zbekcha</label>
             <div class="w-full editor-container">
               <quill-editor
-                class="quill-editor"
+                class="quill-editor w-full"
                 formControlName="contentUz"
                 [modules]="quillModules"
                 placeholder="O'zbekcha yangilik matni"
                 [ngClass]="{'ng-invalid': newsForm.get('contentUz')?.invalid && newsForm.get('contentUz')?.touched}"
-                (onEditorCreated)="handleEditorCreated($event)">
+                (onEditorCreated)="handleEditorCreated($event)"
+                (onFocus)="onFocus(0)">
               </quill-editor>
             </div>
             <div *ngIf="newsForm.get('contentUz')?.invalid && newsForm.get('contentUz')?.touched" class="text-red-500 text-sm mt-1">
@@ -120,12 +121,13 @@
             <label class="text-gray-700 font-medium block mb-2">Ruscha</label>
             <div class="w-full editor-container">
               <quill-editor
-                class="quill-editor"
+                class="quill-editor w-full"
                 formControlName="contentRu"
                 [modules]="quillModules"
                 placeholder="Ruscha yangilik matni"
                 [ngClass]="{'ng-invalid': newsForm.get('contentRu')?.invalid && newsForm.get('contentRu')?.touched}"
-                (onEditorCreated)="handleEditorCreated($event)">
+                (onEditorCreated)="handleEditorCreated($event)"
+                (onFocus)="onFocus(1)">
               </quill-editor>
             </div>
             <div *ngIf="newsForm.get('contentRu')?.invalid && newsForm.get('contentRu')?.touched" class="text-red-500 text-sm mt-1">
@@ -137,12 +139,13 @@
             <label class="text-gray-700 font-medium block mb-2">Inglizcha</label>
             <div class="w-full editor-container">
               <quill-editor
-                class="quill-editor"
+                class="quill-editor w-full"
                 formControlName="contentEn"
                 [modules]="quillModules"
                 placeholder="Inglizcha yangilik matni"
                 [ngClass]="{'ng-invalid': newsForm.get('contentEn')?.invalid && newsForm.get('contentEn')?.touched}"
-                (onEditorCreated)="handleEditorCreated($event)">
+                (onEditorCreated)="handleEditorCreated($event)"
+                (onFocus)="onFocus(2)">
               </quill-editor>
             </div>
             <div *ngIf="newsForm.get('contentEn')?.invalid && newsForm.get('contentEn')?.touched" class="text-red-500 text-sm mt-1">

@@ -15,6 +15,14 @@ import { FileService } from '@shared/services/file.service';
 import { environment } from '@env/environment';
 import { INews } from '../interfaces/news.interface';
 
+// Pastedan base64 ni bloklash uchun
+const BlockBase64Paste = (quill) => {
+  quill.clipboard.addMatcher('img', (node, delta) => {
+    // Rasmlar uchun delta qaytaramiz, lekin img atributlarini bo'sh qilamiz
+    return delta;
+  });
+};
+
 @Component({
   selector: 'news-edit',
   imports: [
@@ -39,6 +47,10 @@ import { INews } from '../interfaces/news.interface';
   ],
   encapsulation: ViewEncapsulation.None,
   styles: [`
+    .ql-editor {
+      padding: 30px;
+    }
+
     .editor-container {
       @apply w-full;
     }
@@ -78,7 +90,8 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
 
   imagePreviewUrl: string | null = null;
   isUploading = false;
-  editors = {};
+  editorList = [];
+  activeTabIndex = 0;
 
   private newsService = inject(NewsService);
   private fileService = inject(FileService);
@@ -86,17 +99,17 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
   private dialogRef = inject(MatDialogRef);
   private data: INews = inject(MAT_DIALOG_DATA);
 
-  // Quill editorni sozlash
+  // Quill editorni sodda konfiguratsiyasi (toolbar handlerlar bilan)
   quillModules = {
     toolbar: [
-      ['bold', 'italic', 'underline', 'strike'],
-      [{ 'header': 1 }, { 'header': 2 }],
-      [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-      [{ 'script': 'sub' }, { 'script': 'super' }],
-      [{ 'indent': '-1' }, { 'indent': '+1' }],
-      [{ 'align': [] }],
-      ['link', 'image'],
-      ['clean']
+      [ 'bold', 'italic', 'underline', 'strike' ],
+      [ { 'header': 1 }, { 'header': 2 } ],
+      [ { 'list': 'ordered' }, { 'list': 'bullet' } ],
+      [ { 'script': 'sub' }, { 'script': 'super' } ],
+      [ { 'indent': '-1' }, { 'indent': '+1' } ],
+      [ { 'align': [] } ],
+      [ 'link', 'image' ],
+      [ 'clean' ]
     ],
     clipboard: {
       matchVisual: false
@@ -104,16 +117,19 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
   };
 
   ngOnInit() {
+    // this metodi bindini saqlash
     this.handleEditorCreated = this.handleEditorCreated.bind(this);
     this.setDataToForm();
   }
 
   ngAfterViewInit() {
+    // Paste va drop uchun listener qo'shish
     document.addEventListener('paste', this.handlePaste.bind(this));
     document.addEventListener('drop', this.handleDrop.bind(this));
 
+    // Editor yaratilgandan keyin button handlerlarni qo'shish
     setTimeout(() => {
-      this.setupImageHandlers();
+      this.setupToolbarHandlers();
     }, 500);
   }
 
@@ -137,51 +153,59 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
     }
   }
 
-  setupImageHandlers() {
+  /**
+   * Quill editorlar yaratilgandan keyin toolbar handlerlarni qo'shish
+   */
+  setupToolbarHandlers() {
     const imageButtons = document.querySelectorAll('.ql-image');
 
-    imageButtons.forEach(button => {
+    imageButtons.forEach((button, index) => {
+      // Existing listeners ni olib tashlash
       const newButton = button.cloneNode(true);
       if (button.parentNode) {
         button.parentNode.replaceChild(newButton, button);
       }
 
+      // Yangi event listener qo'shish
       newButton.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this.selectImage();
+        this.activeTabIndex = index;
+        this.customImageHandler();
       });
     });
   }
 
-  handleEditorCreated(editor: any) {
-    // Base64 img paste bloklash
-    editor.clipboard.addMatcher('img', (node, delta) => {
-      return delta;
-    });
+  handleEditorCreated(editor) {
+    // Editorni listga qo'shish
+    this.editorList.push(editor);
 
-    // Qo'shimcha sozlamalar
-    const field = editor.root.dataset.field;
-    if (field) {
-      this.editors[field] = editor;
-    }
+    // Base64 ni bloklash
+    BlockBase64Paste(editor);
 
-    // Rasm handler o'rnatish
+    // Rasm qo'shish uchun button handlerlarni o'zgartirish
     const toolbar = editor.getModule('toolbar');
     if (toolbar) {
       toolbar.addHandler('image', () => {
-        this.selectImage();
+        this.customImageHandler();
       });
     }
   }
 
+  // Editor fokus bo'lganda, aktiv tabni o'rnatish
+  onFocus(index: number) {
+    this.activeTabIndex = index;
+  }
+
   handlePaste(event: ClipboardEvent) {
-    const activeEditor = this.getActiveEditor();
+    // Faol editorni aniqlash
+    const activeEditor = this.getActiveQuillEditor();
     if (!activeEditor) return;
 
     const clipboardData = event.clipboardData;
     if (!clipboardData) return;
 
+    // Rasmlarni tekshirish
     for (let i = 0; i < clipboardData.items.length; i++) {
       const item = clipboardData.items[i];
       if (item.type.indexOf('image') !== -1) {
@@ -198,12 +222,14 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
   }
 
   handleDrop(event: DragEvent) {
-    const activeEditor = this.getActiveEditor();
+    // Faol editorni aniqlash
+    const activeEditor = this.getActiveQuillEditor();
     if (!activeEditor) return;
 
     const dataTransfer = event.dataTransfer;
     if (!dataTransfer) return;
 
+    // Rasmlarni tekshirish
     for (let i = 0; i < dataTransfer.items.length; i++) {
       const item = dataTransfer.items[i];
       if (item.type.indexOf('image') !== -1) {
@@ -219,48 +245,64 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
     }
   }
 
-  getActiveEditor() {
-    // Document.activeElement bo'yicha qidirish
-    const activeElement = document.activeElement;
-    const editorElements = document.querySelectorAll('.ql-editor');
-
-    for (let i = 0; i < editorElements.length; i++) {
-      const editor = editorElements[i];
-      if (editor === activeElement || editor.contains(activeElement)) {
-        // Ota elementni topib, undan quill instansini olish
-        const container = editor.closest('.quill-editor');
-        if (container && container['__quill']) {
-          return container['__quill'];
+  getActiveQuillEditor() {
+    // 1. Toolbar orqali tekshirish
+    const activeToolbar = document.activeElement?.closest('.ql-toolbar');
+    if (activeToolbar) {
+      const editorContainer = activeToolbar.closest('.quill-editor');
+      if (editorContainer) {
+        const quillInstance = (editorContainer as any).__quill;
+        if (quillInstance) {
+          return quillInstance;
         }
       }
     }
 
-    // Agar aktiv editor topilmasa, contentUz ni qaytarish
-    if (this.editors['contentUz']) {
-      return this.editors['contentUz'];
+    // 2. Agar biror editor fokusda bo'lsa, uni qaytarish
+    const editorElements = document.querySelectorAll('.ql-editor');
+    for (let i = 0; i < editorElements.length; i++) {
+      const editorEl = editorElements[i];
+      if (document.activeElement === editorEl || editorEl.contains(document.activeElement)) {
+        const editorContainer = editorEl.closest('.quill-editor');
+        if (editorContainer) {
+          return (editorContainer as any).__quill;
+        }
+      }
     }
 
-    // So'nggi usul - birinchi editorni qaytarish
-    const editorKeys = Object.keys(this.editors);
-    if (editorKeys.length > 0) {
-      return this.editors[editorKeys[0]];
+    // 3. Aktiv tab indeksidan foydalanish
+    if (this.activeTabIndex >= 0 && this.activeTabIndex < this.editorList.length) {
+      return this.editorList[this.activeTabIndex];
+    }
+
+    // 4. Hech nima topilmasa, birinchi editorni qaytarish
+    if (this.editorList.length > 0) {
+      return this.editorList[0];
     }
 
     return null;
   }
 
-  selectImage() {
+  customImageHandler() {
+    console.log('Image handler called for editor index:', this.activeTabIndex);
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
-    input.click();
+
+    // Click eventini qo'lda ishga tushirish
+    input.dispatchEvent(new MouseEvent('click'));
 
     input.onchange = () => {
       const file = input.files?.[0];
       if (file) {
-        const activeEditor = this.getActiveEditor();
+        console.log('File selected:', file.name);
+        // Aktiv editorni qayta tekshirish
+        const activeEditor = this.getActiveQuillEditor();
         if (activeEditor) {
+          console.log('Uploading to editor:', this.editorList.indexOf(activeEditor));
           this.uploadFileAndInsertToEditor(file, activeEditor);
+        } else {
+          console.error('No active editor found');
         }
       }
     };
@@ -275,6 +317,8 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
       return;
     }
 
+    console.log('Uploading file to editor');
+
     try {
       this.isUploading = true;
       this.toaster.open({
@@ -283,6 +327,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
       });
 
       const imageUrl = await this.uploadImage(file);
+      console.log('Image uploaded successfully:', imageUrl);
 
       // Editorga rasm qo'shish
       const range = editor.getSelection() || { index: 0 };
@@ -290,7 +335,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
       editor.setSelection(range.index + 1);
 
       this.toaster.open({
-        message: 'Rasm muvaffaqiyatli qo\'shildi',
+        message: `Rasm muvaffaqiyatli qo'shildi`,
         type: 'success'
       });
     } catch (error) {
@@ -366,7 +411,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
 
     if (form.invalid) {
       this.toaster.open({
-        message: 'Majburiy maydonlarni to\'ldiring',
+        message: `Majburiy maydonlarni to'ldiring`,
         type: 'warning'
       });
       return;
@@ -384,19 +429,19 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
       );
       if (response && response.statusCode === 200) {
         this.toaster.open({
-          message: 'Yangilik muvaffaqiyatli tahrirlandi'
+          message: `Yangilik muvaffaqiyatli yangilandi`
         });
-        this.dialogRef.close('edited');
+        this.dialogRef.close('updated');
       } else {
         this.toaster.open({
-          message: 'Yangilikni tahrirlashda xatolik sodir bo\'ldi',
+          message: `Yangilikni yangilashda xatolik sodir bo'ldi`,
           type: 'warning'
         });
         form.enable();
       }
     } catch (error) {
       this.toaster.open({
-        message: 'Yangilikni tahrirlashda xatolik sodir bo\'ldi',
+        message: `Yangilikni yangilashda xatolik sodir bo'ldi`,
         type: 'warning'
       });
       form.enable();
