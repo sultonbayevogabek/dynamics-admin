@@ -62,7 +62,6 @@ export class FaqCreateComponent implements OnInit {
     if (form.disabled) {
       return;
     }
-
     form.disable();
 
     try {
