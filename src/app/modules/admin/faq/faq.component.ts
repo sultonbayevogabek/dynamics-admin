@@ -7,17 +7,12 @@ import { FaqCreateComponent } from './faq-create/faq-create.component';
 import { firstValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { FaqService } from './faq.service';
-import { IFaq } from './interfaces/faq.interface';
+import { IFaq, IFaqOrder } from './interfaces/faq.interface';
 import { MatSlideToggle, MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Confirmable } from '../../../core/decorators/confirmation-decorator';
 import { ToasterService } from '@shared/services/toaster.service';
 import { FaqEditComponent } from './faq-edit/faq-edit.component';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-
-interface IFaqOrder {
-  _id: string;
-  index: number;
-}
 
 @Component({
   selector: 'faq',
@@ -164,9 +159,11 @@ export class FaqComponent implements OnInit {
     try {
       // Backend API chaqiruvi
       // Asl APIda:
-      // await firstValueFrom(
-      //   this.service.updateOrder(orderData)
-      // );
+      await firstValueFrom(
+        this.service.updateOrder({
+          orders: orderData
+        })
+      );
 
       // Testing uchun log
       console.log('Savollar tartibi o\'zgartirildi:', orderData);
@@ -180,8 +177,7 @@ export class FaqComponent implements OnInit {
         type: 'warning'
       });
 
-      // Xatolik yuz berganda ma'lumotlar oldingi tartibga qaytarilishi mumkin
-      // await this.getFaqs();
+      await this.getFaqs();
     }
   }
 }

@@ -9,3 +9,7 @@ export interface IFaq {
   status: 0 | 1;
 }
 
+export interface IFaqOrder {
+  _id: string;
+  index: number;
+}
