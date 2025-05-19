@@ -8,11 +8,15 @@
   </div>
 
   <div class="grow relative">
-    <form class="absolute inset-0 overflow-auto flex flex-col gap-5" [formGroup]="newsForm"
-          (ngSubmit)="editNews()">
+    <div *ngIf="isLoading" class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 z-10">
+      <div class="text-primary">Yuklanmoqda...</div>
+    </div>
+
+    <form class="absolute inset-0 overflow-auto flex flex-col gap-4" [formGroup]="newsForm"
+          (ngSubmit)="updateNews()">
 
       <!-- Rasm va sarlavha (yonma-yon) -->
-      <div class="grid grid-cols-3 gap-5">
+      <div class="grid grid-cols-4 gap-5">
         <!-- Asosiy rasm (chap tomon) -->
         <div class="col-span-1">
           <fieldset class="border h-full px-3 pb-3 pt-2 rounded-lg bg-slate-50 flex flex-col">
@@ -23,12 +27,14 @@
                 <img [src]="imagePreviewUrl" alt="Rasm" class="w-full h-full object-contain">
               </div>
 
-              <div *ngIf="!imagePreviewUrl" class="w-full aspect-[730/490] bg-gray-100 rounded-lg flex items-center justify-center">
+              <div *ngIf="!imagePreviewUrl"
+                   class="w-full aspect-[730/490] bg-gray-100 rounded-lg flex items-center justify-center">
                 <span class="text-gray-400">Rasm tanlang (730 x 490 )</span>
               </div>
 
               <div class="flex gap-3 mt-auto">
-                <button type="button" mat-flat-button color="primary" (click)="fileInput.click()" [disabled]="isUploading">
+                <button type="button" mat-flat-button color="primary" (click)="fileInput.click()"
+                        [disabled]="isUploading">
                   <mat-icon svgIcon="heroicons_outline:photo"></mat-icon>
                   <span class="ml-2">Rasm tanlash</span>
                 </button>
@@ -46,7 +52,7 @@
         </div>
 
         <!-- Sarlavha (o'ng tomon - ustma-ust) -->
-        <div class="col-span-2">
+        <div class="col-span-3">
           <fieldset class="border h-full px-3 pb-3 pt-2 rounded-lg bg-slate-50 flex flex-col">
             <legend class="text-gray-900 font-medium text-[16px]">Yangilik sarlavhasi</legend>
 
@@ -106,13 +112,14 @@
                 class="quill-editor w-full"
                 formControlName="contentUz"
                 [modules]="quillModules"
-                placeholder="O'zbekcha yangilik matni"
                 [ngClass]="{'ng-invalid': newsForm.get('contentUz')?.invalid && newsForm.get('contentUz')?.touched}"
                 (onEditorCreated)="handleEditorCreated($event)"
-                (onFocus)="onFocus(0)">
+                (onFocus)="onFocus(0)"
+              >
               </quill-editor>
             </div>
-            <div *ngIf="newsForm.get('contentUz')?.invalid && newsForm.get('contentUz')?.touched" class="text-red-500 text-sm mt-1">
+            <div *ngIf="newsForm.get('contentUz')?.invalid && newsForm.get('contentUz')?.touched"
+                 class="text-red-500 text-sm mt-1">
               Majburiy maydon
             </div>
           </div>
@@ -124,13 +131,14 @@
                 class="quill-editor w-full"
                 formControlName="contentRu"
                 [modules]="quillModules"
-                placeholder="Ruscha yangilik matni"
                 [ngClass]="{'ng-invalid': newsForm.get('contentRu')?.invalid && newsForm.get('contentRu')?.touched}"
                 (onEditorCreated)="handleEditorCreated($event)"
-                (onFocus)="onFocus(1)">
+                (onFocus)="onFocus(1)"
+              >
               </quill-editor>
             </div>
-            <div *ngIf="newsForm.get('contentRu')?.invalid && newsForm.get('contentRu')?.touched" class="text-red-500 text-sm mt-1">
+            <div *ngIf="newsForm.get('contentRu')?.invalid && newsForm.get('contentRu')?.touched"
+                 class="text-red-500 text-sm mt-1">
               Majburiy maydon
             </div>
           </div>
@@ -142,13 +150,14 @@
                 class="quill-editor w-full"
                 formControlName="contentEn"
                 [modules]="quillModules"
-                placeholder="Inglizcha yangilik matni"
                 [ngClass]="{'ng-invalid': newsForm.get('contentEn')?.invalid && newsForm.get('contentEn')?.touched}"
                 (onEditorCreated)="handleEditorCreated($event)"
-                (onFocus)="onFocus(2)">
+                (onFocus)="onFocus(2)"
+              >
               </quill-editor>
             </div>
-            <div *ngIf="newsForm.get('contentEn')?.invalid && newsForm.get('contentEn')?.touched" class="text-red-500 text-sm mt-1">
+            <div *ngIf="newsForm.get('contentEn')?.invalid && newsForm.get('contentEn')?.touched"
+                 class="text-red-500 text-sm mt-1">
               Majburiy maydon
             </div>
           </div>
@@ -162,10 +171,10 @@
       <mat-icon svgIcon="heroicons_outline:x-circle"/>
       <span class="ml-2">Bekor qilish</span>
     </button>
-    <button (click)="editNews()" mat-flat-button color="primary"
+    <button (click)="updateNews()" mat-flat-button color="primary"
             [disabled]="newsForm.invalid || newsForm.disabled">
       <mat-icon svgIcon="heroicons_solid:check-circle"/>
-      <span class="ml-2">O'zgarishlarni saqlash</span>
+      <span class="ml-2">Saqlash</span>
     </button>
   </div>
 </div>

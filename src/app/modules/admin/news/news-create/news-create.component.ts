@@ -9,7 +9,7 @@ import { provideNgxMask } from 'ngx-mask';
 import { NewsService } from '../news.service';
 import { ToasterService } from '@shared/services/toaster.service';
 import { firstValueFrom } from 'rxjs';
-import { Focus, QuillModule } from 'ngx-quill';
+import { QuillModule } from 'ngx-quill';
 import { NgClass, NgIf } from '@angular/common';
 import { FileService } from '@shared/services/file.service';
 import { environment } from '@env/environment';
@@ -119,13 +119,12 @@ export class NewsCreateComponent implements OnInit, AfterViewInit {
   quillModules = {
     toolbar: [
       [ 'bold', 'italic', 'underline', 'strike' ],
-      [ { 'header': 1 }, { 'header': 2 } ],
+      [ { 'header': 3 } ],
       [ { 'list': 'ordered' }, { 'list': 'bullet' } ],
       [ { 'script': 'sub' }, { 'script': 'super' } ],
       [ { 'indent': '-1' }, { 'indent': '+1' } ],
       [ { 'align': [] } ],
-      [ 'link', 'image' ],
-      [ 'clean' ]
+      [ 'link', 'image' ]
     ],
     clipboard: {
       matchVisual: false
@@ -151,6 +150,10 @@ export class NewsCreateComponent implements OnInit, AfterViewInit {
 
   watchContentUz(): void {
     this.newsForm.get('contentUz')?.valueChanges.subscribe(value => {
+      const element = document.createElement('div');
+      element.innerHTML = value;
+      console.log(element);
+
       this.newsForm.patchValue({
         contentRu: value,
         contentEn: value
@@ -319,6 +322,10 @@ export class NewsCreateComponent implements OnInit, AfterViewInit {
       const range = editor.getSelection() || { index: 0 };
       editor.insertEmbed(range.index, 'image', this.host + imageUrl);
       editor.setSelection(range.index + 1);
+
+      this.newsForm.get('contentUz')?.updateValueAndValidity();
+      this.newsForm.get('contentRu')?.updateValueAndValidity();
+      this.newsForm.get('contentEn')?.updateValueAndValidity();
 
       this.toaster.open({
         message: `Rasm muvaffaqiyatli qo'shildi`,

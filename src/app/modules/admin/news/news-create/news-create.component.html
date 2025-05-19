@@ -8,11 +8,11 @@
   </div>
 
   <div class="grow relative">
-    <form class="absolute inset-0 overflow-auto flex flex-col gap-5" [formGroup]="newsForm"
+    <form class="absolute inset-0 overflow-auto flex flex-col gap-4" [formGroup]="newsForm"
           (ngSubmit)="createNews()">
 
       <!-- Rasm va sarlavha (yonma-yon) -->
-      <div class="grid grid-cols-3 gap-5">
+      <div class="grid grid-cols-4 gap-5">
         <!-- Asosiy rasm (chap tomon) -->
         <div class="col-span-1">
           <fieldset class="border h-full px-3 pb-3 pt-2 rounded-lg bg-slate-50 flex flex-col">
@@ -23,12 +23,14 @@
                 <img [src]="imagePreviewUrl" alt="Rasm" class="w-full h-full object-contain">
               </div>
 
-              <div *ngIf="!imagePreviewUrl" class="w-full aspect-[730/490] bg-gray-100 rounded-lg flex items-center justify-center">
+              <div *ngIf="!imagePreviewUrl"
+                   class="w-full aspect-[730/490] bg-gray-100 rounded-lg flex items-center justify-center">
                 <span class="text-gray-400">Rasm tanlang (730 x 490 )</span>
               </div>
 
               <div class="flex gap-3 mt-auto">
-                <button type="button" mat-flat-button color="primary" (click)="fileInput.click()" [disabled]="isUploading">
+                <button type="button" mat-flat-button color="primary" (click)="fileInput.click()"
+                        [disabled]="isUploading">
                   <mat-icon svgIcon="heroicons_outline:photo"></mat-icon>
                   <span class="ml-2">Rasm tanlash</span>
                 </button>
@@ -46,7 +48,7 @@
         </div>
 
         <!-- Sarlavha (o'ng tomon - ustma-ust) -->
-        <div class="col-span-2">
+        <div class="col-span-3">
           <fieldset class="border h-full px-3 pb-3 pt-2 rounded-lg bg-slate-50 flex flex-col">
             <legend class="text-gray-900 font-medium text-[16px]">Yangilik sarlavhasi</legend>
 
@@ -112,7 +114,8 @@
               >
               </quill-editor>
             </div>
-            <div *ngIf="newsForm.get('contentUz')?.invalid && newsForm.get('contentUz')?.touched" class="text-red-500 text-sm mt-1">
+            <div *ngIf="newsForm.get('contentUz')?.invalid && newsForm.get('contentUz')?.touched"
+                 class="text-red-500 text-sm mt-1">
               Majburiy maydon
             </div>
           </div>
@@ -130,7 +133,8 @@
               >
               </quill-editor>
             </div>
-            <div *ngIf="newsForm.get('contentRu')?.invalid && newsForm.get('contentRu')?.touched" class="text-red-500 text-sm mt-1">
+            <div *ngIf="newsForm.get('contentRu')?.invalid && newsForm.get('contentRu')?.touched"
+                 class="text-red-500 text-sm mt-1">
               Majburiy maydon
             </div>
           </div>
@@ -148,7 +152,8 @@
               >
               </quill-editor>
             </div>
-            <div *ngIf="newsForm.get('contentEn')?.invalid && newsForm.get('contentEn')?.touched" class="text-red-500 text-sm mt-1">
+            <div *ngIf="newsForm.get('contentEn')?.invalid && newsForm.get('contentEn')?.touched"
+                 class="text-red-500 text-sm mt-1">
               Majburiy maydon
             </div>
           </div>

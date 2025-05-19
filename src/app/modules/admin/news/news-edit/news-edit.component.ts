@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, Inject, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogClose, MatDialogRef } from '@angular/material/dialog';
 import { MatButton, MatIconButton } from '@angular/material/button';
@@ -40,13 +40,13 @@ const BlockBase64Paste = (quill) => {
     NgClass
   ],
   templateUrl: './news-edit.component.html',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
   standalone: true,
   providers: [
     provideNgxMask()
   ],
   encapsulation: ViewEncapsulation.None,
-  styles: [`
+  styles: [ `
     .ql-editor {
       padding: 30px;
     }
@@ -70,26 +70,27 @@ const BlockBase64Paste = (quill) => {
     .editor-container.ng-invalid.ng-touched .ql-container {
       @apply border-red-500;
     }
-  `]
+  ` ]
 })
 export class NewsEditComponent implements OnInit, AfterViewInit {
   host = environment.host;
   newsForm = new FormGroup({
-    _id: new FormControl<string>(null, [Validators.required]),
-    titleUz: new FormControl<string>('', [Validators.required]),
-    titleRu: new FormControl<string>('', [Validators.required]),
-    titleEn: new FormControl<string>('', [Validators.required]),
-    shortDescUz: new FormControl<string>('', [Validators.required]),
-    shortDescRu: new FormControl<string>('', [Validators.required]),
-    shortDescEn: new FormControl<string>('', [Validators.required]),
-    contentUz: new FormControl<string>('', [Validators.required]),
-    contentRu: new FormControl<string>('', [Validators.required]),
-    contentEn: new FormControl<string>('', [Validators.required]),
-    imageUrl: new FormControl<string>('', [Validators.required])
+    _id: new FormControl<string>(''),
+    titleUz: new FormControl<string>('', [ Validators.required ]),
+    titleRu: new FormControl<string>('', [ Validators.required ]),
+    titleEn: new FormControl<string>('', [ Validators.required ]),
+    shortDescUz: new FormControl<string>('', [ Validators.required ]),
+    shortDescRu: new FormControl<string>('', [ Validators.required ]),
+    shortDescEn: new FormControl<string>('', [ Validators.required ]),
+    contentUz: new FormControl<string>('', [ Validators.required ]),
+    contentRu: new FormControl<string>('', [ Validators.required ]),
+    contentEn: new FormControl<string>('', [ Validators.required ]),
+    imageUrl: new FormControl<string>('', [ Validators.required ])
   });
 
   imagePreviewUrl: string | null = null;
   isUploading = false;
+  isLoading = false;
   editorList = [];
   activeTabIndex = 0;
 
@@ -97,19 +98,18 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
   private fileService = inject(FileService);
   private toaster = inject(ToasterService);
   private dialogRef = inject(MatDialogRef);
-  private data: INews = inject(MAT_DIALOG_DATA);
+  private dialogData: INews = inject(MAT_DIALOG_DATA);
 
   // Quill editorni sodda konfiguratsiyasi (toolbar handlerlar bilan)
   quillModules = {
     toolbar: [
       [ 'bold', 'italic', 'underline', 'strike' ],
-      [ { 'header': 1 }, { 'header': 2 } ],
+      [ { 'header': 3 } ],
       [ { 'list': 'ordered' }, { 'list': 'bullet' } ],
       [ { 'script': 'sub' }, { 'script': 'super' } ],
       [ { 'indent': '-1' }, { 'indent': '+1' } ],
       [ { 'align': [] } ],
-      [ 'link', 'image' ],
-      [ 'clean' ]
+      [ 'link', 'image' ]
     ],
     clipboard: {
       matchVisual: false
@@ -119,7 +119,12 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     // this metodi bindini saqlash
     this.handleEditorCreated = this.handleEditorCreated.bind(this);
-    this.setDataToForm();
+    this.watchContentUz();
+
+    // Yangilik ma'lumotlarini olish va formaga to'ldirish
+    if (this.dialogData) {
+      this.loadNewsData();
+    }
   }
 
   ngAfterViewInit() {
@@ -133,24 +138,44 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
     }, 500);
   }
 
-  setDataToForm() {
-    if (this.data) {
-      this.newsForm.patchValue({
-        _id: this.data._id,
-        titleUz: this.data.titleUz,
-        titleRu: this.data.titleRu,
-        titleEn: this.data.titleEn,
-        shortDescUz: this.data.shortDescUz,
-        shortDescRu: this.data.shortDescRu,
-        shortDescEn: this.data.shortDescEn,
-        contentUz: this.data.contentUz,
-        contentRu: this.data.contentRu,
-        contentEn: this.data.contentEn,
-        imageUrl: this.data.imageUrl
-      });
+  loadNewsData() {
+    this.newsForm.patchValue({
+      _id: this.dialogData._id,
+      titleUz: this.dialogData.titleUz || '',
+      titleRu: this.dialogData.titleRu || '',
+      titleEn: this.dialogData.titleEn || '',
+      shortDescUz: this.dialogData.shortDescUz || '',
+      shortDescRu: this.dialogData.shortDescRu || '',
+      shortDescEn: this.dialogData.shortDescEn || '',
+      contentUz: this.dialogData.contentUz || '',
+      contentRu: this.dialogData.contentRu || '',
+      contentEn: this.dialogData.contentEn || '',
+      imageUrl: this.dialogData.imageUrl || ''
+    });
+    this.imagePreviewUrl = this.dialogData.imageUrl;
+  }
 
-      this.imagePreviewUrl = this.data.imageUrl;
-    }
+  watchContentUz(): void {
+    this.newsForm.get('contentUz')?.valueChanges.subscribe(value => {
+      // HTML elementini konsolda to'liq ko'rish uchun
+      const element = document.createElement('div');
+      element.innerHTML = value;
+      console.log(element);
+    });
+
+    this.newsForm.get('contentRu')?.valueChanges.subscribe(value => {
+      // HTML elementini konsolda to'liq ko'rish uchun
+      const element = document.createElement('div');
+      element.innerHTML = value;
+      console.log(element);
+    });
+
+    this.newsForm.get('contentEn')?.valueChanges.subscribe(value => {
+      // HTML elementini konsolda to'liq ko'rish uchun
+      const element = document.createElement('div');
+      element.innerHTML = value;
+      console.log(element);
+    });
   }
 
   /**
@@ -159,7 +184,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
   setupToolbarHandlers() {
     const imageButtons = document.querySelectorAll('.ql-image');
 
-    imageButtons.forEach((button, index) => {
+    imageButtons.forEach(button => {
       // Existing listeners ni olib tashlash
       const newButton = button.cloneNode(true);
       if (button.parentNode) {
@@ -170,7 +195,6 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
       newButton.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this.activeTabIndex = index;
         this.customImageHandler();
       });
     });
@@ -192,12 +216,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
     }
   }
 
-  // Editor fokus bo'lganda, aktiv tabni o'rnatish
-  onFocus(index: number) {
-    this.activeTabIndex = index;
-  }
-
-  async handlePaste(event: ClipboardEvent) {
+  handlePaste(event: ClipboardEvent) {
     // Faol editorni aniqlash
     const activeEditor = this.getActiveQuillEditor();
     if (!activeEditor) return;
@@ -214,14 +233,14 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
 
         const file = item.getAsFile();
         if (file) {
-          await this.uploadFileAndInsertToEditor(file, activeEditor);
+          this.uploadFileAndInsertToEditor(file, activeEditor);
         }
         return;
       }
     }
   }
 
-  async handleDrop(event: DragEvent) {
+  handleDrop(event: DragEvent) {
     // Faol editorni aniqlash
     const activeEditor = this.getActiveQuillEditor();
     if (!activeEditor) return;
@@ -238,7 +257,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
 
         const file = item.getAsFile();
         if (file) {
-          await this.uploadFileAndInsertToEditor(file, activeEditor);
+          this.uploadFileAndInsertToEditor(file, activeEditor);
         }
         return;
       }
@@ -246,19 +265,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
   }
 
   getActiveQuillEditor() {
-    // 1. Toolbar orqali tekshirish
-    const activeToolbar = document.activeElement?.closest('.ql-toolbar');
-    if (activeToolbar) {
-      const editorContainer = activeToolbar.closest('.quill-editor');
-      if (editorContainer) {
-        const quillInstance = (editorContainer as any).__quill;
-        if (quillInstance) {
-          return quillInstance;
-        }
-      }
-    }
-
-    // 2. Agar biror editor fokusda bo'lsa, uni qaytarish
+    // Agar biror editor fokusda bo'lsa, uni qaytarish
     const editorElements = document.querySelectorAll('.ql-editor');
     for (let i = 0; i < editorElements.length; i++) {
       const editorEl = editorElements[i];
@@ -270,12 +277,13 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
       }
     }
 
-    // 3. Aktiv tab indeksidan foydalanish
-    if (this.activeTabIndex >= 0 && this.activeTabIndex < this.editorList.length) {
-      return this.editorList[this.activeTabIndex];
+    // Agar fokusda bo'lmasa, aktiv tilni aniqlash
+    const activeTabIndex = this.activeTabIndex;
+    if (activeTabIndex >= 0 && activeTabIndex < this.editorList.length) {
+      return this.editorList[activeTabIndex];
     }
 
-    // 4. Hech nima topilmasa, birinchi editorni qaytarish
+    // Hech nima topilmasa, birinchi editorni qaytarish
     if (this.editorList.length > 0) {
       return this.editorList[0];
     }
@@ -284,7 +292,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
   }
 
   async customImageHandler() {
-    console.log('Image handler called for editor index:', this.activeTabIndex);
+    console.log('Image handler called');
     const input = document.createElement('input');
     input.setAttribute('type', 'file');
     input.setAttribute('accept', 'image/*');
@@ -296,10 +304,8 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
       const file = input.files?.[0];
       if (file) {
         console.log('File selected:', file.name);
-        // Aktiv editorni qayta tekshirish
         const activeEditor = this.getActiveQuillEditor();
         if (activeEditor) {
-          console.log('Uploading to editor:', this.editorList.indexOf(activeEditor));
           this.uploadFileAndInsertToEditor(file, activeEditor);
         } else {
           console.error('No active editor found');
@@ -333,6 +339,10 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
       const range = editor.getSelection() || { index: 0 };
       editor.insertEmbed(range.index, 'image', this.host + imageUrl);
       editor.setSelection(range.index + 1);
+
+      this.newsForm.get('contentUz')?.updateValueAndValidity();
+      this.newsForm.get('contentRu')?.updateValueAndValidity();
+      this.newsForm.get('contentEn')?.updateValueAndValidity();
 
       this.toaster.open({
         message: `Rasm muvaffaqiyatli qo'shildi`,
@@ -406,7 +416,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async editNews() {
+  async updateNews() {
     const form = this.newsForm;
 
     if (form.invalid) {
@@ -431,7 +441,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
         this.toaster.open({
           message: `Yangilik muvaffaqiyatli yangilandi`
         });
-        this.dialogRef.close('updated');
+        this.dialogRef.close('edited');
       } else {
         this.toaster.open({
           message: `Yangilikni yangilashda xatolik sodir bo'ldi`,
@@ -446,5 +456,9 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
       });
       form.enable();
     }
+  }
+
+  onFocus(index: number) {
+    this.activeTabIndex = index;
   }
 }
