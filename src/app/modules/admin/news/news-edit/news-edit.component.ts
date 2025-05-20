@@ -104,7 +104,7 @@ export class NewsEditComponent implements OnInit, AfterViewInit {
   quillModules = {
     toolbar: [
       [ 'bold', 'italic', 'underline', 'strike' ],
-      [ { 'header': 3 } ],
+      [ { 'header': 2 }, { 'header': 3 } ],
       [ { 'list': 'ordered' }, { 'list': 'bullet' } ],
       [ { 'script': 'sub' }, { 'script': 'super' } ],
       [ { 'indent': '-1' }, { 'indent': '+1' } ],
