@@ -49,6 +49,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type: 'basic',
         icon: 'heroicons_outline:newspaper',
         link: '/news'
+      },
+      {
+        id: 'admin.settings',
+        title: `Sozlamalar`,
+        type: 'basic',
+        icon: 'heroicons_outline:cog-6-tooth',
+        link: '/settings'
       }
     ]
   },

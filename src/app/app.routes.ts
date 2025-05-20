@@ -274,6 +274,10 @@ export const appRoutes: Route[] = [
         path: 'news',
         loadChildren: () => import('app/modules/admin/news/news.routes')
       },
+      {
+        path: 'settings',
+        loadChildren: () => import('app/modules/admin/settings/settings.routes')
+      },
 
       // 404 & Catch all
       {

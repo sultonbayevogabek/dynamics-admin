@@ -31,7 +31,8 @@
     <div
       class="flex flex-auto flex-col overflow-hidden sm:mb-18 sm:overflow-y-auto">
       <table class="w-full">
-        <thead class="bg-gray-50 text-secondary sticky top-0 z-10 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5">
+        <thead
+          class="bg-gray-50 text-secondary sticky top-0 z-10 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5">
         <tr class="bg-gray-100">
           <th class="px-6 py-4 border text-center">
             №
@@ -62,7 +63,8 @@
           </td>
           <td class="border p-3">
             <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
-              <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz" (keydown.enter)="createBrand()">
+              <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz"
+                     (keydown.enter)="createBrand()">
             </mat-form-field>
           </td>
           <td class="border p-3">
@@ -72,12 +74,14 @@
           </td>
           <td class="border p-3">
             <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
-              <input matInput type="text" placeholder="Inglizcha" formControlName="nameEn" (keydown.enter)="createBrand()">
+              <input matInput type="text" placeholder="Inglizcha" formControlName="nameEn"
+                     (keydown.enter)="createBrand()">
             </mat-form-field>
           </td>
           <td class="border p-3">
             <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
-              <input matInput type="url" placeholder="Veb-sayt" formControlName="website" (keydown.enter)="createBrand()">
+              <input matInput type="url" placeholder="Veb-sayt" formControlName="website"
+                     (keydown.enter)="createBrand()">
             </mat-form-field>
           </td>
           <td class="border p-3">
@@ -111,25 +115,29 @@
                 {{ i + 1 }}
               </td>
               <td class="border p-3">
-                <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+                <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
+                                floatLabel="always">
                   <input matInput type="text" placeholder="O'zbekcha" [(ngModel)]="brand.nameUz"
                          (keydown.enter)="updateBrand(brand)">
                 </mat-form-field>
               </td>
               <td class="border p-3">
-                <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+                <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
+                                floatLabel="always">
                   <input matInput type="text" placeholder="Ruscha" [(ngModel)]="brand.nameRu"
                          (keydown.enter)="updateBrand(brand)">
                 </mat-form-field>
               </td>
               <td class="border p-3">
-                <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+                <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
+                                floatLabel="always">
                   <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="brand.nameEn"
                          (keydown.enter)="updateBrand(brand)">
                 </mat-form-field>
               </td>
               <td class="border p-3">
-                <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+                <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
+                                floatLabel="always">
                   <input matInput type="text" placeholder="Veb-sayt" [(ngModel)]="brand.website"
                          (keydown.enter)="updateBrand(brand)">
                 </mat-form-field>
@@ -181,5 +189,6 @@
         (page)="pageChange($event)"
       ></mat-paginator>
     </div>
-</div>
+  </div>
 
+</div>
