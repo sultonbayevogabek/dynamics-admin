@@ -14,6 +14,9 @@
     <th class="px-6 py-4 border">
       Inglizcha
     </th>
+    <th class="px-6 py-4 border w-44">
+      Rasmi
+    </th>
     <th class="px-6 py-4 border">
     </th>
   </tr>
@@ -37,6 +40,20 @@
       <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
         <input (keydown.enter)="createCategory()" matInput type="text" placeholder="Inglizcha" formControlName="nameEn">
       </mat-form-field>
+    </td>
+    <td class="border p-3">
+      @if (!createForm.get('image').value) {
+        <file-upload
+          (onFilesUpload)="filesUploaded($event)"
+        />
+      }
+      @if (createForm.get('image').value) {
+        <file-list
+          [classes]="'grid-cols-3'"
+          [files]="[createForm.get('image').value]"
+          (filesChange)="onLogoRemoved()"
+        />
+      }
     </td>
     <td class="border p-3">
       <button
@@ -82,6 +99,20 @@
             <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="category.nameEn"
                    (keydown.enter)="updateCategory(category)">
           </mat-form-field>
+        </td>
+        <td class="border p-3">
+          @if (category.image) {
+            <file-list
+              [files]="[category.image]"
+              (filesChange)="category.image = null"
+              classes="grid-cols-3"
+            />
+          }
+          @if (!category.image) {
+            <file-upload
+              (onFilesUpload)="category.image = $event[0]"
+            />
+          }
         </td>
         <td class="border p-3">
           <button

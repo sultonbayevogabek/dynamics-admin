@@ -138,7 +138,6 @@ export class BrandsComponent implements OnInit {
 
   filesUploaded(files: IFile[]) {
     this.createForm.get('logo').setValue(files[0]);
-    console.log(this.createForm.getRawValue());
   }
 
   onLogoRemoved() {

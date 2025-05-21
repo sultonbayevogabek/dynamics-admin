@@ -9,6 +9,9 @@ import { firstValueFrom } from 'rxjs';
 import { ICategory } from '../category.interface';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FuseConfirmationService } from '../../../../../@fuse/services/confirmation';
+import { FileListComponent } from '@shared/components/file-list/file-list.component';
+import { FileUploadComponent } from '@shared/components/file-upload/file-upload.component';
+import { IFile } from '@shared/interfaces/file.interface';
 
 @Component({
   selector: 'categories-crud',
@@ -18,7 +21,9 @@ import { FuseConfirmationService } from '../../../../../@fuse/services/confirmat
     MatInput,
     MatIcon,
     ReactiveFormsModule,
-    MatIconButton
+    MatIconButton,
+    FileListComponent,
+    FileUploadComponent
   ],
   templateUrl: './categories-crud.component.html',
   standalone: true
@@ -29,7 +34,7 @@ export class CategoriesCrudComponent implements OnInit {
     nameUz: new FormControl(null, [ Validators.required ]),
     nameRu: new FormControl(null, [ Validators.required ]),
     nameEn: new FormControl(null, [ Validators.required ]),
-    images: new FormControl(null),
+    image: new FormControl(null, [ Validators.required ]),
   });
   categories = signal<ICategory[]>([]);
   parentId = input<string>(null);
@@ -115,5 +120,13 @@ export class CategoriesCrudComponent implements OnInit {
         duration: 2000
       });
     }
+  }
+
+  filesUploaded(files: IFile[]) {
+    this.createForm.get('image').setValue(files[0]);
+  }
+
+  onLogoRemoved() {
+    this.createForm.get('image').setValue(null);
   }
 }
