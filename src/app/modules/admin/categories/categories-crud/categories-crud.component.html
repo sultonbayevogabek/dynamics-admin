@@ -116,7 +116,16 @@
         </td>
         <td class="border p-3">
           <button
-            class="bg-red-50"
+            mat-icon-button
+            color="primary"
+            class="bg-primary-50"
+            (click)="updateCategory(category)"
+          >
+            <mat-icon class="icon-size-4" svgIcon="heroicons_outline:check"></mat-icon>
+          </button>
+
+          <button
+            class="bg-red-50 ml-2"
             mat-icon-button
             color="warn"
             (click)="deleteCategory(category._id)"
