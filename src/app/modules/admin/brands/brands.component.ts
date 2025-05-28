@@ -13,6 +13,7 @@ import { FileUploadComponent } from '@shared/components/file-upload/file-upload.
 import { IFile } from '@shared/interfaces/file.interface';
 import { FileListComponent } from '@shared/components/file-list/file-list.component';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { MatSlideToggle } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'brands',
@@ -26,7 +27,8 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
     FileListComponent,
     MatIconButton,
     MatPaginator,
-    MatPrefix
+    MatPrefix,
+    MatSlideToggle
   ],
   templateUrl: './brands.component.html',
   standalone: true
@@ -38,7 +40,8 @@ export class BrandsComponent implements OnInit {
     nameRu: new FormControl<string>(null, [ Validators.required ]),
     nameEn: new FormControl<string>(null, [ Validators.required ]),
     logo: new FormControl<IFile>(null, [ Validators.required ]),
-    website: new FormControl<string>(null, [ Validators.required ])
+    website: new FormControl<string>(null, [ Validators.required ]),
+    isPopular: new FormControl<boolean>(false)
   });
   brands = signal<IBrand[]>([]);
   params = {
@@ -68,11 +71,11 @@ export class BrandsComponent implements OnInit {
       return;
     }
 
-    const response = await firstValueFrom(
+    await firstValueFrom(
       this.brandsService.updateBrand(brand)
     );
+
     this.snackbar.open(`O'zgarishlar saqlandi`, 'OK', { duration: 2000 });
-    await this.searchBrand();
   }
 
   async createBrand(): Promise<void> {

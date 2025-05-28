@@ -34,9 +34,6 @@
         <thead
           class="bg-gray-50 text-secondary sticky top-0 z-10 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5">
         <tr class="bg-gray-100">
-          <th class="px-6 py-4 border text-center">
-            №
-          </th>
           <th class="px-6 py-4 border">
             O'zbekcha
           </th>
@@ -52,15 +49,15 @@
           <th class="w-[170px] px-6 py-4 border">
             Logotip
           </th>
+          <th class="px-6 py-4 border w-30">
+            Mashhur
+          </th>
           <th class="w-[120px] px-6 py-4 border">
           </th>
         </tr>
         </thead>
         <tbody>
         <tr class="hover:bg-slate-50 cursor-pointer" [formGroup]="createForm" (ngSubmit)="createBrand()">
-          <td class="border p-3 text-center">
-            #
-          </td>
           <td class="border p-3">
             <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
               <input matInput type="text" placeholder="O'zbekcha" formControlName="nameUz"
@@ -84,6 +81,7 @@
                      (keydown.enter)="createBrand()">
             </mat-form-field>
           </td>
+
           <td class="border p-3">
             @if (!createForm.get('logo').value) {
               <file-upload
@@ -98,6 +96,14 @@
               />
             }
           </td>
+
+          <td class="border p-3 text-center">
+            <mat-slide-toggle
+              color="primary"
+              formControlName="isPopular"
+            />
+          </td>
+
           <td class="border p-3">
             <button
               class="bg-primary-50 cursor-pointer"
@@ -111,9 +117,6 @@
         </tr>
           @for (brand of brands(); track brand._id; let i = $index) {
             <tr class="hover:bg-slate-50 cursor-pointer">
-              <td class="border p-3 text-center">
-                {{ i + 1 }}
-              </td>
               <td class="border p-3">
                 <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
                                 floatLabel="always">
@@ -142,6 +145,7 @@
                          (keydown.enter)="updateBrand(brand)">
                 </mat-form-field>
               </td>
+
               <td class="border p-3">
                 @if (brand.logo) {
                   <file-list
@@ -156,6 +160,15 @@
                   />
                 }
               </td>
+
+              <td class="border p-3 text-center">
+                <mat-slide-toggle
+                  color="primary"
+                  [(ngModel)]="brand.isPopular"
+                  (change)="updateBrand(brand)"
+                />
+              </td>
+
               <td class="border p-3">
                 <button
                   mat-icon-button
