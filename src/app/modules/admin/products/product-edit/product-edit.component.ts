@@ -184,6 +184,7 @@ export class ProductEditComponent implements OnInit {
   @Inject(MAT_DIALOG_DATA) data: IProduct = inject(MAT_DIALOG_DATA);
 
   async ngOnInit() {
+    console.log('Data ===>', this.data);
     this.categories.main = await this.getCategories();
     await this.getBrands();
 
@@ -219,9 +220,9 @@ export class ProductEditComponent implements OnInit {
       (this.productForm.get('attributes') as FormArray<FormGroup>).push(formGroup);
     })
 
-    await this.selectCategory('main', this.data.details.mainCategoryId);
-    await this.selectCategory('middle', this.data.details.middleCategoryId);
-    await this.selectCategory('sub', this.data.categoryId);
+    await this.selectCategory('main', this.data.hierarchy[0]?.categoryId);
+    await this.selectCategory('middle', this.data.hierarchy[1]?.categoryId);
+    await this.selectCategory('sub', this.data.hierarchy[2]?.categoryId);
   }
 
   async getCategories(parentCategoryId?: string) {
