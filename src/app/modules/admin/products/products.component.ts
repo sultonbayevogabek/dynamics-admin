@@ -4,7 +4,7 @@ import { MatIcon } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductCreateComponent } from './product-create/product-create.component';
 import { firstValueFrom } from 'rxjs';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MatFormField, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
@@ -38,7 +38,8 @@ import { ImgUrlPipe } from '@shared/pipes/img-url.pipe';
     MatPrefix,
     MatSlideToggle,
     SearchableMultiselectComponent,
-    ImgUrlPipe
+    ImgUrlPipe,
+    NgOptimizedImage
   ],
   templateUrl: './products.component.html',
   standalone: true,
