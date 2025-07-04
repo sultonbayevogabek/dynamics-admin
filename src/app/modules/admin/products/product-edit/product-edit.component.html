@@ -169,9 +169,23 @@
 
       <fieldset class="border px-3 py-2 rounded-lg bg-slate-50">
         <legend class="text-gray-900 font-medium text-[16px]">Tovar rasmlari</legend>
-        <file-upload
-          (onFilesUpload)="onFilesUpload($event)"
-        />
+        <div class="flex items-center gap-5">
+          <file-upload
+            (onFilesUpload)="onFilesUpload($event)"
+          />
+
+          @if (data?.link) {
+            <a
+              class="flex items-center gap-2 hover:underline"
+              [href]="data?.link"
+              target="_blank"
+            >
+              <mat-icon class="icon-size-5" svgIcon="heroicons_solid:link"></mat-icon>
+              <span>Rasm uchun link</span>
+            </a>
+          }
+        </div>
+
         <file-list
           classes="grid grid-cols-10 gap-3 mt-3"
           [files]="productForm.get('images').value"
