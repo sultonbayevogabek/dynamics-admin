@@ -122,6 +122,17 @@
                       } @else {
                         <img class="object-cover object-center" [alt]="'Product thumbnail image'" [fill]="true" [ngSrc]="'https://www.svgrepo.com/show/508699/landscape-placeholder.svg'" />
                       }
+
+                      @if (product.link) {
+                        <a
+                          [href]="product.link"
+                          (click)="$event.stopPropagation()"
+                          target="_blank"
+                          class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 flex items-center justify-center"
+                        >
+                          <mat-icon class="text-white" svgIcon="heroicons_solid:link"></mat-icon>
+                        </a>
+                      }
                     </div>
                   </div>
                 </td>

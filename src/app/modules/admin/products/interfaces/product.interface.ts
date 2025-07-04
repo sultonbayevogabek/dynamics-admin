@@ -29,6 +29,7 @@ export interface IProduct {
   hierarchy: ProductHierarchy[];
   keywords: string;
   availability: 'on_demand' | 'in_stock' | 'out_of_stock'
+  link: string;
 }
 
 export interface Attribute {
