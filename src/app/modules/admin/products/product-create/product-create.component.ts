@@ -198,6 +198,7 @@ export class ProductCreateComponent implements OnInit {
     };
 
     this.productForm.reset();
+    (this.productForm.get('attributes') as FormArray<FormGroup>).clear();
 
     this.productForm.patchValue(preservedValues);
   }
