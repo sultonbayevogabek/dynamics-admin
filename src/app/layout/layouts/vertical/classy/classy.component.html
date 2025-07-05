@@ -25,14 +25,14 @@
     <!-- User -->
     <div class="flex w-full flex-col items-center p-4">
       <div class="relative h-24 w-24">
-        @if (user?.image) {
+        @if (user()?.image) {
           <img
             class="h-full w-full rounded-full"
-            [src]="user.image"
+            [src]="user()?.image"
             alt="User avatar"
           />
         }
-        @if (!user?.image) {
+        @if (!user()?.image) {
           <mat-icon
             class="icon-size-24"
             [svgIcon]="'heroicons_solid:user-circle'"
@@ -43,12 +43,12 @@
         <div
           class="w-full overflow-hidden text-ellipsis whitespace-nowrap text-center font-medium leading-normal"
         >
-          {{ user?.lastName }} {{ user?.firstName }}
+          {{ user()?.lastName }} {{ user()?.firstName }}
         </div>
         <div
           class="text-secondary mt-0.5 w-full overflow-hidden text-ellipsis whitespace-nowrap text-center text-md font-medium leading-normal"
         >
-          {{ user?.email }}
+          {{ user()?.email }}
         </div>
       </div>
     </div>

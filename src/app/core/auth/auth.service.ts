@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject, catchError, firstValueFrom, map, Observable, of, switchMap } from 'rxjs';
 import { RequestService } from '@shared/services/request.service';
 import { environment } from '@env/environment';
@@ -10,6 +10,7 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({ providedIn: 'root' })
 export class AuthService extends RequestService {
   currentUser$ = new BehaviorSubject<IUser | null>(null);
+  currentUser = signal<IUser | null>(null);
   private _authorized = false;
   private router = inject(Router);
   private snackbar = inject(MatSnackBar);
@@ -102,11 +103,12 @@ export class AuthService extends RequestService {
     if (!this.token) {
       this.authorized = false;
       this.currentUser$.next(null);
+      this.currentUser.set(null);
       return of(null);
     }
 
     if (this.authorized) {
-      return of(this.currentUser$.value);
+      return of(this.currentUser());
     }
 
     return this.request<IUser>('user/get-user', {}).pipe(
@@ -114,15 +116,18 @@ export class AuthService extends RequestService {
         if ([ 'admin', 'superAdmin' ].includes(user.role)) {
           this.authorized = true;
           this.currentUser$.next(user);
+          this.currentUser.set(user);
           return of(user);
         }
         this.authorized = false;
         this.currentUser$.next(null);
+        this.currentUser.set(null);
         return of(null);
       }),
       catchError(() => {
         this.authorized = false;
         this.currentUser$.next(null);
+        this.currentUser.set(null);
         return of(null);
       })
     );
@@ -140,6 +145,7 @@ export class AuthService extends RequestService {
     localStorage.removeItem('token');
     this.authorized = false;
     this.currentUser$.next(null);
+    this.currentUser.set(null);
     this.router.navigate([ '/sign-in' ]);
   }
 }
