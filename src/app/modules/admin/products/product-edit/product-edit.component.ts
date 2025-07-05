@@ -18,10 +18,10 @@ import { FileUploadComponent } from '@shared/components/file-upload/file-upload.
 import { IFile } from '@shared/interfaces/file.interface';
 import { FileListComponent } from '@shared/components/file-list/file-list.component';
 import { ProductsService } from '../products.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { IProduct } from '../interfaces/product.interface';
 import { MatOption } from '@angular/material/core';
 import { MatSelect } from '@angular/material/select';
+import { ToasterService } from '@shared/services/toaster.service';
 
 @Component({
   selector: 'news-edit',
@@ -71,7 +71,8 @@ export class ProductEditComponent implements OnInit {
     currentPrice: new FormControl<number>(null),
     availability: new FormControl('on_demand'),
     brandId: new FormControl<string>(null, [ Validators.required ]),
-    images: new FormControl<IFile[]>([], [ Validators.required ]),
+    images: new FormControl<IFile[]>([]),
+    link: new FormControl<string>(''),
     attributes: new FormArray<FormGroup>([], [ Validators.required ]
     ),
     keywords: new FormControl<string>('')
@@ -79,96 +80,7 @@ export class ProductEditComponent implements OnInit {
   attributes = computed(() => {
     return this.productForm.get('attributes') as FormArray<FormGroup>;
   });
-  dummyAttributes = [
-    {
-      nameUz: 'Ishlab chiqaruvchi',
-      nameRu: 'Производитель',
-      nameEn: 'Manufacturer',
-      valueUz: 'Fubag',
-      valueRu: 'Fubag',
-      valueEn: 'Fubag'
-    },
-    {
-      nameUz: 'Quvvat',
-      nameRu: 'Мощность',
-      nameEn: 'Power',
-      valueUz: '1200 Vt',
-      valueRu: '1200 Вт',
-      valueEn: '1200 W'
-    },
-    {
-      nameUz: 'Pichoq diametri',
-      nameRu: 'Диаметр диска',
-      nameEn: 'Blade Diameter',
-      valueUz: '185 mm',
-      valueRu: '185 мм',
-      valueEn: '185 mm'
-    },
-    {
-      nameUz: 'Kesish burchagi',
-      nameRu: 'Угол резки',
-      nameEn: 'Cutting Angle',
-      valueUz: '0-45°',
-      valueRu: '0-45°',
-      valueEn: '0-45°'
-    },
-    {
-      nameUz: 'Aylanish tezligi',
-      nameRu: 'Скорость вращения',
-      nameEn: 'Rotation Speed',
-      valueUz: '5000 ayl/min',
-      valueRu: '5000 об/мин',
-      valueEn: '5000 RPM'
-    },
-    {
-      nameUz: 'Og‘irligi',
-      nameRu: 'Вес',
-      nameEn: 'Weight',
-      valueUz: '3.5 kg',
-      valueRu: '3.5 кг',
-      valueEn: '3.5 kg'
-    },
-    {
-      nameUz: 'Korpus materiali',
-      nameRu: 'Материал корпуса',
-      nameEn: 'Body Material',
-      valueUz: 'Metall va plastmassa',
-      valueRu: 'Металл и пластик',
-      valueEn: 'Metal and Plastic'
-    },
-    {
-      nameUz: 'Chang yutish tizimi',
-      nameRu: 'Система удаления пыли',
-      nameEn: 'Dust Extraction System',
-      valueUz: 'Mavjud',
-      valueRu: 'Есть',
-      valueEn: 'Available'
-    },
-    {
-      nameUz: 'Kabel uzunligi',
-      nameRu: 'Длина кабеля',
-      nameEn: 'Cable Length',
-      valueUz: '2 m',
-      valueRu: '2 м',
-      valueEn: '2 m'
-    },
-    {
-      nameUz: 'Quvvat manbai',
-      nameRu: 'Источник питания',
-      nameEn: 'Power Source',
-      valueUz: 'Elektr tarmog‘i',
-      valueRu: 'Электросеть',
-      valueEn: 'Electric Grid'
-    },
-    {
-      nameUz: 'Xavfsizlik himoyasi',
-      nameRu: 'Защита безопасности',
-      nameEn: 'Safety Protection',
-      valueUz: 'Mavjud',
-      valueRu: 'Есть',
-      valueEn: 'Available'
-    }
-  ];
+
   categories: { [key: string]: ICategory[] } = {
     main: [],
     middle: [],
@@ -179,12 +91,11 @@ export class ProductEditComponent implements OnInit {
   private categoriesService = inject(CategoriesService);
   private productsService = inject(ProductsService);
   private brandsService = inject(BrandsService);
-  private snackbar = inject(MatSnackBar);
+  private toaster = inject(ToasterService);
   private dialogRef = inject(MatDialogRef);
   @Inject(MAT_DIALOG_DATA) data: IProduct = inject(MAT_DIALOG_DATA);
 
   async ngOnInit() {
-    console.log('Data ===>', this.data);
     this.categories.main = await this.getCategories();
     await this.getBrands();
 
@@ -205,7 +116,8 @@ export class ProductEditComponent implements OnInit {
       availability: this.data.availability,
       brandId: this.data.brandId,
       images: this.data.images,
-      keywords: this.data.keywords
+      keywords: this.data.keywords,
+      link: this.data.link
     });
 
     this.data.attributes.forEach(attribute => {
@@ -266,15 +178,15 @@ export class ProductEditComponent implements OnInit {
     this.productForm.get('images').setValue(images);
   }
 
-  addNewAttribute() {
-    const formGroup = new FormGroup({});
-    const controls = (this.productForm.get('attributes') as FormArray<FormGroup>).controls;
-    const dummyAttribute = this.dummyAttributes[controls.length];
-
-    for (const dummyAttributeKey in dummyAttribute) {
-      const formControl = new FormControl(dummyAttribute[dummyAttributeKey], [ Validators.required ]);
-      formGroup.setControl(dummyAttributeKey, formControl);
-    }
+  addNewAttribute(nameUz = '', nameRu = '', nameEn = '', valueUz = '', valueRu = '', valueEn = '') {
+    const formGroup = new FormGroup({
+      nameUz: new FormControl(nameUz, [ Validators.required ]),
+      nameRu: new FormControl(nameRu, [ Validators.required ]),
+      nameEn: new FormControl(nameEn, [ Validators.required ]),
+      valueUz: new FormControl(valueUz, [ Validators.required ]),
+      valueRu: new FormControl(valueRu, [ Validators.required ]),
+      valueEn: new FormControl(valueEn, [ Validators.required ])
+    });
 
     (this.productForm.get('attributes') as FormArray<FormGroup>).push(formGroup);
   }
@@ -285,15 +197,48 @@ export class ProductEditComponent implements OnInit {
     this.productForm.get('attributes').updateValueAndValidity();
   }
 
+  async fillAttributesFromBuffer() {
+    const clipboardText = await navigator.clipboard.readText();
+
+    if (!this.isValidAttributesJsonRegex(clipboardText)) {
+      this.toaster.open({
+        type: 'warning',
+        message: `Bufferdagi matn tovar xususiyatlarini kiritish uchun mos kelmaydi. Tekshirib ko'ring!`
+      })
+      return
+    }
+
+    const attributes = JSON.parse(clipboardText);
+
+    (this.productForm.get('attributes') as FormArray<FormGroup>).clear();
+    attributes.forEach((attribute) => {
+      this.addNewAttribute(
+        attribute.nameUz,
+        attribute.nameRu,
+        attribute.nameEn,
+        attribute.valueUz,
+        attribute.valueRu,
+        attribute.valueEn
+      )
+    })
+  }
+
+  private isValidAttributesJsonRegex(text: string): boolean {
+    const cleanText = text.replace(/\s+/g, '');
+
+    const attributesPattern = /^\[\s*(\{\s*"nameUz"\s*:\s*"[^"]*"\s*,\s*"nameRu"\s*:\s*"[^"]*"\s*,\s*"nameEn"\s*:\s*"[^"]*"\s*,\s*"valueUz"\s*:\s*"[^"]*"\s*,\s*"valueRu"\s*:\s*"[^"]*"\s*,\s*"valueEn"\s*:\s*"[^"]*"\s*\}\s*,?\s*)*\]\s*$/;
+
+    return attributesPattern.test(cleanText);
+  }
+
   async createProduct() {
     const form = this.productForm;
 
     if (form.invalid) {
-      this.snackbar.open(`Majburiy maydonlarni to'ldiring`, 'OK', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      this.toaster.open({
+        type: 'warning',
+        message: `Majburiy maydonlarni to'ldiring`
+      })
       return;
     }
 
@@ -311,20 +256,18 @@ export class ProductEditComponent implements OnInit {
         })
       );
       if (response && response.statusCode === 200) {
-        this.snackbar.open(`Tovar muvaffaqiyatli o'zgartirildi`, 'OK', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
+        this.toaster.open({
+          message: `Tovar muvaffaqiyatli o'zgartirildi`
+        })
 
         this.dialogRef.close('edited');
       }
     } catch (error) {
-      this.snackbar.open(`Tovar ma'lumotlarini tahrirlashda xatolik sodir bo'ldi`, 'OK', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
+      this.toaster.open({
+        type: 'error',
+        message: `Tovar ma'lumotlarini tahrirlashda xatolik sodir bo'ldi`
+      })
+
       form.enable();
     }
   }
