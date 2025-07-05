@@ -108,17 +108,17 @@
         <div class="flex flex-col">
           <mat-form-field class="fuse-mat-dense" floatLabel="always">
             <mat-label>O'zbekcha</mat-label>
-            <textarea class="min-h-60" pasteOnFocus formControlName="descriptionUz" matInput type="text" placeholder="O'zbekcha tavsifi"></textarea>
+            <textarea class="min-h-60" formControlName="descriptionUz" matInput type="text" placeholder="O'zbekcha tavsifi"></textarea>
             <mat-error>Majburiy maydon</mat-error>
           </mat-form-field>
           <mat-form-field class="fuse-mat-dense" floatLabel="always">
             <mat-label>Ruscha</mat-label>
-            <textarea class="min-h-60" pasteOnFocus formControlName="descriptionRu" matInput type="text" placeholder="Ruscha tavsifi"></textarea>
+            <textarea class="min-h-60" formControlName="descriptionRu" matInput type="text" placeholder="Ruscha tavsifi"></textarea>
             <mat-error>Majburiy maydon</mat-error>
           </mat-form-field>
           <mat-form-field class="fuse-mat-dense" floatLabel="always">
             <mat-label>Inglizcha</mat-label>
-            <textarea class="min-h-60" pasteOnFocus formControlName="descriptionEn" matInput type="text" placeholder="Inglizcha tavsifi"></textarea>
+            <textarea class="min-h-60" formControlName="descriptionEn" matInput type="text" placeholder="Inglizcha tavsifi"></textarea>
             <mat-error>Majburiy maydon</mat-error>
           </mat-form-field>
         </div>
@@ -180,7 +180,6 @@
               matInput
               type="text"
               placeholder="Tovar rasmi uchun havola"
-              pasteOnFocus
             >
             <mat-icon matSuffix class="icon-size-5" svgIcon="heroicons_solid:link"></mat-icon>
           </mat-form-field>
@@ -203,28 +202,28 @@
               <div class="flex flex-col gap-2">
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
                   <mat-label>O'zbekcha</mat-label>
-                  <input pasteOnFocus matInput type="text" formControlName="nameUz" placeholder="Xususiyat nomi">
+                  <input matInput type="text" formControlName="nameUz" placeholder="Xususiyat nomi">
                 </mat-form-field>
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
-                  <input pasteOnFocus matInput type="text" formControlName="valueUz" placeholder="Xususiyat qiymati">
+                  <input matInput type="text" formControlName="valueUz" placeholder="Xususiyat qiymati">
                 </mat-form-field>
               </div>
               <div class="flex flex-col gap-2">
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
                   <mat-label>Ruscha</mat-label>
-                  <input pasteOnFocus matInput type="text" formControlName="nameRu" placeholder="Xususiyat nomi">
+                  <input matInput type="text" formControlName="nameRu" placeholder="Xususiyat nomi">
                 </mat-form-field>
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
-                  <input pasteOnFocus matInput type="text" formControlName="valueRu" placeholder="Xususiyat qiymati">
+                  <input matInput type="text" formControlName="valueRu" placeholder="Xususiyat qiymati">
                 </mat-form-field>
               </div>
               <div class="flex flex-col gap-2">
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
                   <mat-label>Inglizcha</mat-label>
-                  <input pasteOnFocus matInput type="text" formControlName="nameEn" placeholder="Xususiyat nomi">
+                  <input matInput type="text" formControlName="nameEn" placeholder="Xususiyat nomi">
                 </mat-form-field>
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
-                  <input pasteOnFocus matInput type="text" formControlName="valueEn" placeholder="Xususiyat qiymati">
+                  <input matInput type="text" formControlName="valueEn" placeholder="Xususiyat qiymati">
                 </mat-form-field>
               </div>
 
@@ -258,7 +257,7 @@
 
         <mat-form-field class="fuse-mat-dense w-full" floatLabel="always">
           <mat-label>Kalit so'zlarni vergul bilan ajratib yozing</mat-label>
-          <textarea class="min-h-60" pasteOnFocus matInput formControlName="keywords" placeholder="Kalit so'zlar"></textarea>
+          <textarea class="min-h-60" matInput formControlName="keywords" placeholder="Kalit so'zlar"></textarea>
         </mat-form-field>
       </fieldset>
     </form>

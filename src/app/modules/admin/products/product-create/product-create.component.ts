@@ -6,7 +6,7 @@ import { ICategory } from '../../categories/category.interface';
 import {
   SearchableMultiselectComponent
 } from '@shared/components/searchable-multiselect/searchable-multiselect.component';
-import { MatDialogClose, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogClose } from '@angular/material/dialog';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatError, MatFormField, MatLabel, MatSuffix } from '@angular/material/form-field';
@@ -18,9 +18,7 @@ import { FileUploadComponent } from '@shared/components/file-upload/file-upload.
 import { IFile } from '@shared/interfaces/file.interface';
 import { FileListComponent } from '@shared/components/file-list/file-list.component';
 import { ProductsService } from '../products.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatOption, MatSelect } from '@angular/material/select';
-import { PasteOnFocusDirective } from '@shared/directives/paste-on-focus.directive';
 import { ToasterService } from '@shared/services/toaster.service';
 
 @Component({
@@ -42,8 +40,7 @@ import { ToasterService } from '@shared/services/toaster.service';
     FileUploadComponent,
     FileListComponent,
     MatSelect,
-    MatOption,
-    PasteOnFocusDirective
+    MatOption
   ],
   templateUrl: './product-create.component.html',
   schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
