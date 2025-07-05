@@ -72,18 +72,7 @@ export class ProductCreateComponent implements OnInit {
     brandId: new FormControl<string>(null, [ Validators.required ]),
     images: new FormControl<IFile[]>([]),
     link: new FormControl<string>(''),
-    attributes: new FormArray<FormGroup>(
-      [
-        new FormGroup({
-          nameUz: new FormControl('', [ Validators.required ]),
-          nameRu: new FormControl('', [ Validators.required ]),
-          nameEn: new FormControl('', [ Validators.required ]),
-          valueUz: new FormControl('', [ Validators.required ]),
-          valueRu: new FormControl('', [ Validators.required ]),
-          valueEn: new FormControl('', [ Validators.required ])
-        })
-      ], [ Validators.required ]
-    ),
+    attributes: new FormArray<FormGroup>([], [ Validators.required ]),
     keywords: new FormControl<string>('')
   });
   attributes = computed(() => {
@@ -100,8 +89,6 @@ export class ProductCreateComponent implements OnInit {
   private categoriesService = inject(CategoriesService);
   private productsService = inject(ProductsService);
   private brandsService = inject(BrandsService);
-  private snackbar = inject(MatSnackBar);
-  private dialogRef = inject(MatDialogRef);
   private toaster = inject(ToasterService);
 
   async ngOnInit() {
@@ -169,50 +156,7 @@ export class ProductCreateComponent implements OnInit {
     this.productForm.get('attributes').updateValueAndValidity();
   }
 
-  async createProduct() {
-    const form = this.productForm;
-
-    if (form.invalid) {
-      this.snackbar.open(`Majburiy maydonlarni to'ldiring`, 'OK', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
-      return;
-    }
-
-    if (form.disabled) {
-      return;
-    }
-
-    form.disable();
-
-    try {
-      const response = await firstValueFrom(
-        this.productsService.createProduct({
-          ...form.getRawValue(),
-          oldPrice: form.getRawValue().oldPrice || null
-        })
-      );
-      if (response && response.statusCode === 201) {
-        this.snackbar.open(`Tovar muvaffaqiyatli yaratildi`, 'OK', {
-          duration: 3000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top'
-        });
-        form.enable();
-      }
-    } catch (error) {
-      this.snackbar.open(`Tovarni yaratishda xatolik sodir bo'ldi`, 'OK', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top'
-      });
-      form.enable();
-    }
-  }
-
-  async fillFromBuffer() {
+  async fillAttributesFromBuffer() {
     const clipboardText = await navigator.clipboard.readText();
 
     if (!this.isValidAttributesJsonRegex(clipboardText)) {
@@ -246,4 +190,58 @@ export class ProductCreateComponent implements OnInit {
     return attributesPattern.test(cleanText);
   }
 
+  private resetFormFields(): void {
+    const preservedValues = {
+      categoryId: this.productForm.get('categoryId').value,
+      details: this.productForm.get('details').value,
+      nameUz: this.productForm.get('nameUz').value,
+      nameRu: this.productForm.get('nameRu').value,
+      nameEn: this.productForm.get('nameEn').value,
+      brandId: this.productForm.get('brandId').value
+    };
+
+    this.productForm.reset();
+
+    this.productForm.patchValue(preservedValues);
+  }
+
+  async createProduct() {
+    const form = this.productForm;
+
+    if (form.invalid) {
+      this.toaster.open({
+        type: 'warning',
+        message: 'Majburiy maydonlarni to\'ldiring'
+      });
+      return;
+    }
+
+    if (form.disabled) {
+      return;
+    }
+
+    form.disable();
+
+    try {
+      const response = await firstValueFrom(
+        this.productsService.createProduct({
+          ...form.getRawValue(),
+          oldPrice: form.getRawValue().oldPrice || null
+        })
+      );
+      if (response && response.statusCode === 201) {
+        this.toaster.open({
+          message: 'Tovar muvaffaqiyatli yaratildi'
+        });
+        form.enable();
+        this.resetFormFields();
+      }
+    } catch (error) {
+      this.toaster.open({
+        type: 'error',
+        message: 'Tovarni yaratishda xatolik sodir bo\'ldi'
+      })
+      form.enable();
+    }
+  }
 }

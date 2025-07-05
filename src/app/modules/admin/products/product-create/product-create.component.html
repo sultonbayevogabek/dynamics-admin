@@ -86,17 +86,17 @@
         <div class="grid grid-cols-3 gap-5">
           <mat-form-field class="fuse-mat-dense" floatLabel="always">
             <mat-label>O'zbekcha</mat-label>
-            <input pasteOnFocus formControlName="nameUz" matInput type="text" placeholder="O'zbekcha nomi">
+            <input formControlName="nameUz" matInput type="text" placeholder="O'zbekcha nomi">
             <mat-error>Majburiy maydon</mat-error>
           </mat-form-field>
           <mat-form-field class="fuse-mat-dense" floatLabel="always">
             <mat-label>Ruscha</mat-label>
-            <input pasteOnFocus formControlName="nameRu" matInput type="text" placeholder="Ruscha nomi">
+            <input formControlName="nameRu" matInput type="text" placeholder="Ruscha nomi">
             <mat-error>Majburiy maydon</mat-error>
           </mat-form-field>
           <mat-form-field class="fuse-mat-dense" floatLabel="always">
             <mat-label>Inglizcha</mat-label>
-            <input pasteOnFocus formControlName="nameEn" matInput type="text" placeholder="Inglizcha nomi">
+            <input formControlName="nameEn" matInput type="text" placeholder="Inglizcha nomi">
             <mat-error>Majburiy maydon</mat-error>
           </mat-form-field>
         </div>
@@ -243,7 +243,7 @@
         </div>
 
         <div class="flex gap-3 justify-end pt-5">
-          <button type="button" (click)="fillFromBuffer()" mat-icon-button class="bg-red-50" color="warn">
+          <button type="button" (click)="fillAttributesFromBuffer()" mat-icon-button class="bg-red-50" color="warn">
             <mat-icon svgIcon="heroicons_outline:clipboard-document-check"/>
           </button>
 
@@ -270,8 +270,10 @@
       <mat-icon svgIcon="heroicons_outline:x-circle"/>
       <span class="ml-2">Bekor qilish</span>
     </button>
-    <button (click)="createProduct()" mat-flat-button color="primary"
-            >
+    <button
+      (click)="createProduct()" mat-flat-button color="primary"
+      [disabled]="productForm.invalid || productForm.disabled"
+    >
       <mat-icon svgIcon="heroicons_solid:check-circle"/>
       <span class="ml-2">Saqlash</span>
     </button>
