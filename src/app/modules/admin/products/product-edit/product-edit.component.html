@@ -205,14 +205,20 @@
       </fieldset>
 
       <fieldset class="border px-3 py-2 rounded-lg bg-slate-50">
-        <legend class="text-gray-900 font-medium text-[16px]">Tovar xususiyatlari</legend>
+        <legend class="text-gray-900 font-medium text-[16px]">
+          Tovar xususiyatlari
 
-        <div formArrayName="attributes">
+          @if (attributes().length) {
+            ({{ attributes().length}})
+          }
+        </legend>
+
+        <div class="max-h-90 overflow-auto" formArrayName="attributes">
           @for (attribute of attributes().controls; track attribute; let i = $index; let lastItem = $last) {
             <div class="grid grid-cols-3 gap-5 relative" [formGroupName]="i">
               <div class="flex flex-col gap-2">
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
-                  <mat-label>O'zbekcha</mat-label>
+                  <mat-label>{{ i + 1 }}. O'zbekcha</mat-label>
                   <input matInput type="text" formControlName="nameUz" placeholder="Xususiyat nomi">
                 </mat-form-field>
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
@@ -221,7 +227,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
-                  <mat-label>Ruscha</mat-label>
+                  <mat-label>{{ i + 1 }}. Ruscha</mat-label>
                   <input matInput type="text" formControlName="nameRu" placeholder="Xususiyat nomi">
                 </mat-form-field>
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
@@ -230,7 +236,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
-                  <mat-label>Inglizcha</mat-label>
+                  <mat-label>{{ i + 1 }}. Inglizcha</mat-label>
                   <input matInput type="text" formControlName="nameEn" placeholder="Xususiyat nomi">
                 </mat-form-field>
                 <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript" floatLabel="always">
