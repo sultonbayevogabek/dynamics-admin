@@ -194,7 +194,8 @@ export class ProductCreateComponent implements OnInit {
       nameUz: this.productForm.get('nameUz').value,
       nameRu: this.productForm.get('nameRu').value,
       nameEn: this.productForm.get('nameEn').value,
-      brandId: this.productForm.get('brandId').value
+      brandId: this.productForm.get('brandId').value,
+      images: []
     };
 
     this.productForm.reset();
