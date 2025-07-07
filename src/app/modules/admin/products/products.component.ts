@@ -4,9 +4,9 @@ import { MatIcon } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductCreateComponent } from './product-create/product-create.component';
 import { firstValueFrom } from 'rxjs';
-import { CurrencyPipe, NgOptimizedImage } from '@angular/common';
+import { CurrencyPipe, DatePipe, formatDate, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatFormField, MatPrefix } from '@angular/material/form-field';
+import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ProductsService } from './products.service';
@@ -24,6 +24,7 @@ import {
 import { IBrand } from '../brands/brands.interface';
 import { BrandsService } from '../brands/brands.service';
 import { ImgUrlPipe } from '@shared/pipes/img-url.pipe';
+import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
 
 @Component({
   selector: 'products',
@@ -39,7 +40,13 @@ import { ImgUrlPipe } from '@shared/pipes/img-url.pipe';
     MatSlideToggle,
     SearchableMultiselectComponent,
     ImgUrlPipe,
-    NgOptimizedImage
+    NgOptimizedImage,
+    MatDatepicker,
+    MatDatepickerInput,
+    MatDatepickerToggle,
+    MatLabel,
+    MatSuffix,
+    DatePipe
   ],
   templateUrl: './products.component.html',
   standalone: true,
@@ -64,6 +71,7 @@ export class ProductsComponent implements OnInit {
     mainCategoryId: null,
     middleCategoryId: null,
     subCategoryId: null,
+    createdDate: null
   };
   products: IProduct[] = [];
   categories: { [key: string]: ICategory[] } = {
@@ -104,7 +112,8 @@ export class ProductsComponent implements OnInit {
     const response = await firstValueFrom(
       this.productsService.getProductsList({
         ...this.params,
-        page: this.params.page + 1
+        page: this.params.page + 1,
+        createdDate: this.params.createdDate ? formatDate(this.params.createdDate, 'dd.MM.yyyy', 'en-US') : null
       })
     );
     this.params.total = response.total;

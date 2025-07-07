@@ -74,6 +74,28 @@
         class="fuse-mat-dense fuse-mat-rounded"
         [subscriptSizing]="'dynamic'"
       >
+        <input
+          matInput
+          [matDatepicker]="datePicker"
+          readonly
+          (click)="datePicker.open()"
+          placeholder="Yaratilgan sana"
+          [(ngModel)]="params.createdDate"
+          (dateChange)="searchProduct()"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="datePicker"
+        />
+        <mat-datepicker
+          #datePicker
+        />
+      </mat-form-field>
+
+      <mat-form-field
+        class="fuse-mat-dense fuse-mat-rounded"
+        [subscriptSizing]="'dynamic'"
+      >
         <mat-icon
           class="icon-size-5"
           matPrefix
@@ -137,7 +159,13 @@
                   </div>
                 </td>
                 <!-- SKU -->
-                <td class="border px-6 py-3 hidden md:table-cell">{{ product.sku }}</td>
+                <td class="border px-6 py-3 hidden md:table-cell">
+                  <div class="font-medium">{{ product.sku }}</div>
+                  <div
+                    class="text-secondary text-xs truncate"
+                    title="Tovar yaratilgan vaqt"
+                  >{{ product?.createdAt| date: 'dd.MM.yyyy HH:mm'}}</div>
+                </td>
 
                 <!-- Name -->
                 <td class="border px-6 py-3">{{ product.nameUz }}</td>
