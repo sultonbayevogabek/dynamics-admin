@@ -1,22 +1,21 @@
-<!-- news.component.html -->
 <div
   class="bg-card flex min-w-0 flex-auto flex-col dark:bg-transparent sm:absolute sm:inset-0 sm:overflow-hidden"
 >
-  <nav mat-tab-nav-bar>
+  <mat-button-group>
     @for (item of menu; track item) {
-      <a
-        mat-tab-link
+      <button
+        mat-flat-button
         [routerLink]="item.url"
-        routerLinkActive
+        routerLinkActive="mat-raised-button"
         #rla="routerLinkActive"
-        [active]="rla.isActive"
+        [class.mat-raised-button]="rla.isActive"
       >
         {{ item.title }}
-      </a>
+      </button>
     }
-  </nav>
+  </mat-button-group>
 
-  <div class="grow border relative">
+  <div class="grow relative">
     <div class="absolute inset-0">
       <router-outlet/>
     </div>

@@ -6,7 +6,7 @@ import { ProductCreateComponent } from './product-create/product-create.componen
 import { firstValueFrom } from 'rxjs';
 import { CurrencyPipe, DatePipe, formatDate, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatFormField, MatLabel, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import { MatFormField, MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ProductsService } from './products.service';
@@ -44,7 +44,6 @@ import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular
     MatDatepicker,
     MatDatepickerInput,
     MatDatepickerToggle,
-    MatLabel,
     MatSuffix,
     DatePipe
   ],
