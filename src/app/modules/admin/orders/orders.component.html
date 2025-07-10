@@ -1,0 +1,217 @@
+<div
+  class="bg-card flex min-w-0 flex-auto flex-col dark:bg-transparent sm:absolute sm:inset-0 sm:overflow-hidden"
+>
+  <!-- Header -->
+  <div
+    class="flex flex-col px-6 py-8 gap-4"
+  >
+    <div class="flex items-center justify-between">
+      <div class="text-4xl font-extrabold tracking-tight">Buyurtmalar ro'yxati</div>
+    </div>
+    <!-- Title -->
+
+    <div class="grid grid-cols-5 gap-5">
+      <searchable-multiselect
+        optionTextKey="nameUz"
+        optionValueKey="_id"
+        selectBoxPlaceholder="Asosiy kategoriya"
+        classes="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
+        [emptyOption]="true"
+        [options]="categories.main"
+        [multiple]="false"
+        [defaultValue]="params.mainCategoryId"
+        (selectionChangeEvent)="selectCategory('main', $event)"
+      />
+
+      <searchable-multiselect
+        optionTextKey="nameUz"
+        optionValueKey="_id"
+        selectBoxPlaceholder="Ichki kategoriya"
+        classes="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
+        [hidden]="!categories.middle.length"
+        [emptyOption]="true"
+        [options]="categories.middle"
+        [multiple]="false"
+        [defaultValue]="params.middleCategoryId"
+        (selectionChangeEvent)="selectCategory('middle', $event)"
+      />
+
+      <searchable-multiselect
+        optionTextKey="nameUz"
+        optionValueKey="_id"
+        selectBoxPlaceholder="Kategoriya"
+        classes="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
+        [hidden]="!categories.sub.length"
+        [emptyOption]="true"
+        [options]="categories.sub"
+        [multiple]="false"
+        [defaultValue]="params.subCategoryId"
+        (selectionChangeEvent)="selectCategory('sub', $event)"
+      />
+
+      <searchable-multiselect
+        optionTextKey="nameUz"
+        optionValueKey="_id"
+        selectBoxPlaceholder="Brend"
+        classes="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full"
+        [emptyOption]="true"
+        [options]="brands"
+        [multiple]="false"
+        [defaultValue]="params.brandId"
+        (selectionChangeEvent)="selectBrand($event)"
+      />
+
+      <mat-form-field
+        class="fuse-mat-dense fuse-mat-rounded"
+        [subscriptSizing]="'dynamic'"
+      >
+        <input
+          matInput
+          [matDatepicker]="datePicker"
+          readonly
+          (click)="datePicker.open()"
+          placeholder="Yaratilgan sana"
+          [(ngModel)]="params.createdDate"
+          (dateChange)="searchProduct()"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="datePicker"
+        />
+        <mat-datepicker
+          #datePicker
+        />
+      </mat-form-field>
+
+      <mat-form-field
+        class="fuse-mat-dense fuse-mat-rounded"
+        [subscriptSizing]="'dynamic'"
+      >
+        <mat-icon
+          class="icon-size-5"
+          matPrefix
+          [svgIcon]="'heroicons_solid:magnifying-glass'"
+        ></mat-icon>
+        <input
+          matInput
+          [placeholder]="'Tovarlarni qidirish'"
+          [(ngModel)]="params.search"
+          (keydown.enter)="searchProduct()"
+        />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="flex flex-auto overflow-hidden">
+    <!-- Products list -->
+    <div
+      class="flex flex-auto flex-col overflow-hidden sm:mb-18 sm:overflow-y-auto"
+    >
+      @if (products.length > 0) {
+        <table class="w-full border-collapse border border-gray-300">
+          <!-- Header -->
+          <thead class="bg-gray-50 text-secondary sticky top-0 z-10 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5">
+          <tr>
+            <th class="px-6 py-4 border">ID</th>
+            <th class="px-6 py-4 border">Sana</th>
+            <th class="px-6 py-4 border">Tashkilot</th>
+            <th class="px-6 py-4 border">Kontakt ma'lumotlari</th>
+            <th class="px-6 py-4 border">Tovarlar</th>
+            <th class="px-6 py-4 border">Status</th>
+            <th class="px-6 py-4 border">Mavjudligi</th>
+            <th class="px-6 py-4 border">Harakatlar</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (product of products; track product) {
+              <tr class="hover:bg-slate-50 cursor-pointer">
+                <!-- Image -->
+                <td class="border px-6 py-3">
+                  <div class="flex items-center">
+                    <div class="relative flex h-12 w-12 overflow-hidden rounded border">
+                      @if (product?.thumbs?.length) {
+                        <img class="object-cover object-center" [alt]="'Product thumbnail image'" [fill]="true" [ngSrc]="product.thumbs[0].path| imgUrl" />
+                      } @else {
+                        <img class="object-cover object-center" [alt]="'Product thumbnail image'" [fill]="true" [ngSrc]="'https://www.svgrepo.com/show/508699/landscape-placeholder.svg'" />
+                      }
+
+                      @if (product.link) {
+                        <a
+                          [href]="product.link"
+                          (click)="$event.stopPropagation()"
+                          target="_blank"
+                          class="absolute inset-0 bg-black bg-opacity-50 opacity-0 hover:opacity-100 flex items-center justify-center"
+                        >
+                          <mat-icon class="text-white icon-size-5" svgIcon="heroicons_solid:link"></mat-icon>
+                        </a>
+                      }
+                    </div>
+                  </div>
+                </td>
+                <!-- SKU -->
+                <td class="border px-6 py-3 hidden md:table-cell">
+                  <div class="font-medium">{{ product.sku }}</div>
+                  <div
+                    class="text-secondary text-xs truncate"
+                    title="Tovar yaratilgan vaqt"
+                  >{{ product?.createdAt| date: 'dd.MM.yyyy HH:mm'}}</div>
+                </td>
+
+                <!-- Name -->
+                <td class="border px-6 py-3">{{ product.nameUz }}</td>
+
+                <!-- Category -->
+                <td class="border px-6 py-3">
+                  @for (hierarchy of product.hierarchy; track hierarchy; let lastItem = $last) {
+                    <span>{{ hierarchy.categoryNameUz }}</span>
+                    @if (!lastItem) { <span> / </span> }
+                  }
+                </td>
+
+                <!-- Price -->
+                <td class="border px-6 py-3 hidden sm:table-cell">
+                  @if (product.oldPrice) {
+                    <del class="text-red-500">{{ product.oldPrice | currency: 'USD': 'symbol': '1.2-2' }}</del> /
+                  }
+                  @if (product.currentPrice) {
+                    {{ product.currentPrice | currency : 'USD' : 'symbol' : '1.2-2' }}
+                  }
+
+                  @if (!product.currentPrice && !product.oldPrice) {
+                    So'rov bo'yicha
+                  }
+                </td>
+
+                <!-- Stock -->
+                <td class="border px-6 py-3 hidden lg:table-cell uppercase">{{ product.availability }}</td>
+
+                <!-- Status Toggle -->
+                <td class="border px-6 py-3 hidden lg:table-cell" (click)="$event.stopPropagation()">
+                  <mat-slide-toggle color="primary" [checked]="product.status === 1" (change)="productStatusChange($event, product)"></mat-slide-toggle>
+                </td>
+
+                <!-- Actions -->
+                <td class="border px-6 py-3">
+                  <button class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button color="warn" (click)="$event.stopPropagation(); deleteProduct(product._id)">
+                    <mat-icon class="icon-size-4" svgIcon="heroicons_outline:trash"></mat-icon>
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+
+
+        <mat-paginator
+          class="z-10 border-b bg-gray-50 dark:bg-transparent sm:absolute sm:inset-x-0 sm:bottom-0 sm:border-b-0 sm:border-t"
+          [length]="params.total"
+          [pageIndex]="params.page"
+          [pageSize]="params.limit"
+          [showFirstLastButtons]="true"
+          (page)="pageChange($event)"
+        ></mat-paginator>
+      }
+    </div>
+  </div>
+</div>

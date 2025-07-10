@@ -257,6 +257,11 @@ export const appRoutes: Route[] = [
       },
 
       {
+        path: 'orders',
+        loadChildren: () => import('app/modules/admin/orders/orders.routes')
+      },
+
+      {
         path: 'products',
         loadChildren: () => import('app/modules/admin/products/products.routes')
       },
