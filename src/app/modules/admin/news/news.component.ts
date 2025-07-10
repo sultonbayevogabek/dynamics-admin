@@ -14,6 +14,7 @@ import { DatePipe } from '@angular/common';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatFormField, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'news',
@@ -25,7 +26,8 @@ import { MatInput } from '@angular/material/input';
     MatPaginator,
     MatFormField,
     MatInput,
-    MatPrefix
+    MatPrefix,
+    MatProgressSpinner
   ],
   templateUrl: './news.component.html',
   standalone: true,
@@ -33,7 +35,7 @@ import { MatInput } from '@angular/material/input';
 })
 export class NewsComponent implements OnInit {
   items: INews[] = [];
-  paginatedItems: INews[] = [];
+  loading = true;
 
   params = {
     page: 0,
@@ -48,6 +50,7 @@ export class NewsComponent implements OnInit {
 
   async ngOnInit() {
     await this.getNews();
+    this.loading = false;
   }
 
   async getNews() {

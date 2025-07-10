@@ -17,6 +17,7 @@ import { CategoriesService } from '../categories/categories.service';
 import { IBrand } from '../brands/brands.interface';
 import { BrandsService } from '../brands/brands.service';
 import { BannerEditComponent } from './banner-edit/banner-edit.component';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'banners',
@@ -24,7 +25,8 @@ import { BannerEditComponent } from './banner-edit/banner-edit.component';
     MatButton,
     MatIcon,
     FormsModule,
-    MatSlideToggle
+    MatSlideToggle,
+    MatProgressSpinner
   ],
   templateUrl: './banners.component.html',
   standalone: true,
@@ -48,6 +50,7 @@ export class BannersComponent implements OnInit {
     sub: []
   };
   brands: IBrand[] = [];
+  loading = true;
 
   private matDialog = inject(MatDialog);
   private bannersService = inject(BannersService);
@@ -58,6 +61,7 @@ export class BannersComponent implements OnInit {
   async ngOnInit() {
     await this.getBanners();
     await this.getBrands();
+    this.loading = false;
 
     this.categories.main = await this.getCategories();
   }

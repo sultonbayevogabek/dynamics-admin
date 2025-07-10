@@ -13,6 +13,7 @@ import { Confirmable } from '../../../core/decorators/confirmation-decorator';
 import { ToasterService } from '@shared/services/toaster.service';
 import { FaqEditComponent } from './faq-edit/faq-edit.component';
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'faq',
@@ -21,7 +22,8 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
     MatIcon,
     FormsModule,
     MatSlideToggle,
-    DragDropModule
+    DragDropModule,
+    MatProgressSpinner
   ],
   templateUrl: './faq.component.html',
   standalone: true,
@@ -29,6 +31,7 @@ import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-
 })
 export class FaqComponent implements OnInit {
   items: IFaq[] = [];
+  loading = true;
 
   // Drag&Drop ishlatilayotganini ko'rsatish uchun
   isDragging = false;
@@ -38,8 +41,8 @@ export class FaqComponent implements OnInit {
   private toasterService = inject(ToasterService);
 
   async ngOnInit() {
-    // Comment out when using actual API
     await this.getFaqs();
+    this.loading = false;
   }
 
   async getFaqs() {

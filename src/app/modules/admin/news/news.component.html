@@ -45,7 +45,17 @@
     <div
       class="flex flex-auto flex-col overflow-hidden sm:mb-18 sm:overflow-y-auto"
     >
-      @if (items.length > 0) {
+      @if (loading) {
+        <div class="h-full flex items-center justify-center">
+          <mat-spinner
+            color="primary"
+            [diameter]="36"
+            [strokeWidth]="2"
+          />
+        </div>
+      }
+
+      @if (items.length && !loading) {
         <table class="w-full border-collapse border border-gray-300">
           <!-- Header -->
           <thead
@@ -102,7 +112,9 @@
           [showFirstLastButtons]="true"
           (page)="pageChange($event)"
         ></mat-paginator>
-      } @else {
+      }
+
+      @if (!items.length && !loading) {
         <div class="flex flex-col items-center justify-center p-8">
           <div class="text-2xl font-semibold mb-4">Yangiliklar topilmadi</div>
           <div class="text-secondary">Yangi yangilik qo'shish uchun yuqoridagi tugmani bosing</div>
