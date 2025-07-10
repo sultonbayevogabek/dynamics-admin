@@ -8,23 +8,23 @@ import { IOrder } from './interfaces/order.interface';
 })
 
 export class OrdersService extends RequestService {
-  createProduct(payload: any): Observable<any> {
-    return this.request('product/add', payload);
+  createOrder(payload: any): Observable<any> {
+    return this.request('order/add', payload);
   }
 
-  editProduct(payload: any): Observable<any> {
-    return this.request('product/update', payload);
+  editOrder(payload: any): Observable<any> {
+    return this.request('order/update', payload);
   }
 
   getOrdersList(params: any): Observable<{ total: number; data: IOrder[] }> {
-    return this.request<{ total: number; data: IOrder[] }>('product/list', params);
+    return this.request<{ total: number; data: IOrder[] }>('order/list', params);
   }
 
-  getProduct(params: { slug?: string; _id?: string }): Observable<IOrder> {
-    return this.request('product/get-product', params);
+  getOrder(params: { slug?: string; _id?: string }): Observable<IOrder> {
+    return this.request('order/get-product', params);
   }
 
-  deleteProduct(_id: string): Observable<any> {
-    return this.request('product/delete', { _id });
+  deleteOrder(_id: string): Observable<any> {
+    return this.request('order/delete', { _id });
   }
 }

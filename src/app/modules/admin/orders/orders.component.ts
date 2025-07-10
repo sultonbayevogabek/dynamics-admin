@@ -9,9 +9,9 @@ import { environment } from '@env/environment';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Confirmable } from '../../../core/decorators/confirmation-decorator';
 import { ToasterService } from '@shared/services/toaster.service';
-import { CategoriesService } from '../categories/categories.service';
 import { OrdersService } from './orders.service';
 import { IOrder } from './interfaces/order.interface';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'orders',
@@ -21,7 +21,8 @@ import { IOrder } from './interfaces/order.interface';
     MatFormField,
     MatInput,
     MatPaginator,
-    MatPrefix
+    MatPrefix,
+    DatePipe
   ],
   templateUrl: './orders.component.html',
   standalone: true,
@@ -45,17 +46,10 @@ export class OrdersComponent implements OnInit {
   orders: IOrder[] = [];
 
   private ordersService = inject(OrdersService);
-  private categoriesService = inject(CategoriesService);
   private toasterService = inject(ToasterService);
 
   async ngOnInit() {
     await this.getOrders();
-  }
-
-  async getCategories(parentCategoryId?: string) {
-    return await firstValueFrom(
-      this.categoriesService.getCategoriesList(parentCategoryId)
-    );
   }
 
   async getOrders() {
@@ -75,14 +69,14 @@ export class OrdersComponent implements OnInit {
   })
   async deleteProduct(_id: string) {
     const response = await firstValueFrom(
-      this.productsService.deleteProduct(_id)
+      this.ordersService.deleteOrder(_id)
     );
     if (response && response.statusCode === 200) {
       this.toasterService.open({
         message: `Buyurtma o'chirildi!`
       });
       this.params.page = 0;
-      await this.getProducts();
+      await this.getOrders();
     } else {
       this.toasterService.open({
         title: 'Diqqat',
@@ -94,12 +88,12 @@ export class OrdersComponent implements OnInit {
 
   async searchProduct() {
     this.params.page = 0;
-    await this.getProducts();
+    await this.getOrders();
   }
 
   async pageChange($event: PageEvent) {
     this.params.page = $event.pageIndex;
-    await this.getProducts();
+    await this.getOrders();
   }
 
   async orderStatusChange($event: MatSlideToggleChange, order: IOrder) {
@@ -110,7 +104,7 @@ export class OrdersComponent implements OnInit {
     }
 
     await firstValueFrom(
-      this.productsService.editProduct(params)
+      this.ordersService.editOrder(params)
     )
 
     // order.status = newStatus;
