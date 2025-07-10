@@ -11,7 +11,7 @@ import { Confirmable } from '../../../core/decorators/confirmation-decorator';
 import { ToasterService } from '@shared/services/toaster.service';
 import { OrdersService } from './orders.service';
 import { IOrder } from './interfaces/order.interface';
-import { DatePipe } from '@angular/common';
+import { DatePipe, TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'orders',
@@ -22,7 +22,8 @@ import { DatePipe } from '@angular/common';
     MatInput,
     MatPaginator,
     MatPrefix,
-    DatePipe
+    DatePipe,
+    TitleCasePipe
   ],
   templateUrl: './orders.component.html',
   standalone: true,
