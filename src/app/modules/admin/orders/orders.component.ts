@@ -12,6 +12,7 @@ import { ToasterService } from '@shared/services/toaster.service';
 import { OrdersService } from './orders.service';
 import { IOrder } from './interfaces/order.interface';
 import { DatePipe, TitleCasePipe } from '@angular/common';
+import { MatIconButton } from '@angular/material/button';
 
 @Component({
   selector: 'orders',
@@ -23,7 +24,8 @@ import { DatePipe, TitleCasePipe } from '@angular/common';
     MatPaginator,
     MatPrefix,
     DatePipe,
-    TitleCasePipe
+    TitleCasePipe,
+    MatIconButton
   ],
   templateUrl: './orders.component.html',
   standalone: true,

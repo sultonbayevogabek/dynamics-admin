@@ -84,29 +84,24 @@
 
                 <!-- Price -->
                 <td class="border px-6 py-3 hidden sm:table-cell">
-                  @if (order.oldPrice) {
-                    <del class="text-red-500">{{ order.oldPrice | currency: 'USD': 'symbol': '1.2-2' }}</del> /
-                  }
-                  @if (order.currentPrice) {
-                    {{ order.currentPrice | currency : 'USD' : 'symbol' : '1.2-2' }}
-                  }
 
-                  @if (!order.currentPrice && !order.oldPrice) {
-                    So'rov bo'yicha
-                  }
                 </td>
 
                 <!-- Stock -->
-                <td class="border px-6 py-3 hidden lg:table-cell uppercase">{{ order.availability }}</td>
+                <td class="border px-6 py-3 hidden lg:table-cell uppercase"></td>
 
                 <!-- Status Toggle -->
-                <td class="border px-6 py-3 hidden lg:table-cell" (click)="$event.stopPropagation()">
-                  <mat-slide-toggle color="primary" [checked]="order.status === 1" (change)="orderStatusChange($event, order)"></mat-slide-toggle>
+                <td class="border px-6 py-3 hidden lg:table-cell">
                 </td>
 
                 <!-- Actions -->
                 <td class="border px-6 py-3">
-                  <button class="h-7 min-h-7 min-w-10 px-2 leading-6" mat-stroked-button color="warn" (click)="$event.stopPropagation(); deleteProduct(order._id)">
+                  <button
+                    class="bg-red-50"
+                    mat-icon-button
+                    color="warn"
+                    (click)="deleteProduct(order._id)"
+                  >
                     <mat-icon class="icon-size-4" svgIcon="heroicons_outline:trash"></mat-icon>
                   </button>
                 </td>
