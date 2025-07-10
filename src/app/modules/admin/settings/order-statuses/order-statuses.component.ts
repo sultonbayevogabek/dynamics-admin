@@ -8,6 +8,7 @@ import { FuseConfirmationService } from '../../../../../@fuse/services/confirmat
 import { firstValueFrom } from 'rxjs';
 import { SettingsService } from '../settings.service';
 import { ToasterService } from '@shared/services/toaster.service';
+import { IOrderStatus } from '../interfaces/order-status.interface';
 
 @Component({
   selector: 'order-statuses',
@@ -32,7 +33,7 @@ export class OrderStatusesComponent {
     nameEn: new FormControl(null, [ Validators.required ]),
     color: new FormControl('#000000', [ Validators.required ]),
   });
-  statuses = signal([]);
+  statuses = signal<IOrderStatus[]>([]);
 
   private settingsService = inject(SettingsService);
   private confirmation = inject(FuseConfirmationService);
@@ -42,19 +43,19 @@ export class OrderStatusesComponent {
     await this.getOrderStatuses();
   }
 
-  // async updateCategory(category: ICategory) {
-  //   if (!category.nameUz?.trim() || !category.nameRu?.trim() || !category.nameEn?.trim()) {
-  //     return;
-  //   }
-  //   const response = await firstValueFrom(
-  //     this.categoriesService.updateCategory(category)
-  //   );
-  //   if (response.statusCode === 200) {
-  //     this.snackbar.open(`O'zgarishlar muvaffaqiyatli saqlandi`, 'OK', {
-  //       duration: 2000
-  //     });
-  //   }
-  // }
+  async updateOrderStatus(status: IOrderStatus) {
+    if (!status.nameUz?.trim() || !status.nameRu?.trim() || !status.nameEn?.trim()) {
+      return;
+    }
+    const response = await firstValueFrom(
+      this.settingsService.updateOrderStatus(status)
+    );
+    if (response.statusCode === 200) {
+      this.toasterService.open({
+        message: `O'zgarishlar muvaffaqiyatli saqlandi`
+      })
+    }
+  }
 
   async createOrderStatus(): Promise<void> {
     const form = this.createForm;
@@ -62,9 +63,6 @@ export class OrderStatusesComponent {
     if (form.invalid || form.disabled) {
       return;
     }
-
-    console.log(form.getRawValue());
-    return
 
     const res = await firstValueFrom(
       this.settingsService.createNewOrderStatus(form.getRawValue())
@@ -82,7 +80,7 @@ export class OrderStatusesComponent {
     const statuses = await firstValueFrom(
       this.settingsService.getOrderStatusesList()
     );
-    this.statuses.set(statuses?.data);
+    this.statuses.set(statuses);
   }
 
   async deleteStatus(_id: string) {
@@ -102,7 +100,7 @@ export class OrderStatusesComponent {
 
     if (confirm === 'cancelled' || !confirm) return;
 
-    const response = await firstValueFrom(this.settingsService.deletOrderStatus(_id));
+    const response = await firstValueFrom(this.settingsService.deleteOrderStatus(_id));
     if (response.statusCode === 200) {
       this.toasterService.open({
         message: `Status muvaffaqiyatli o'chirildi`
