@@ -1,17 +1,15 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { MatTabLink, MatTabNav } from '@angular/material/tabs';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { MatButton } from '@angular/material/button';
+import { MatButtonToggle, MatButtonToggleGroup } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'admin-settings',
   imports: [
-    MatTabNav,
-    MatTabLink,
     RouterLink,
     RouterLinkActive,
     RouterOutlet,
-    MatButton
+    MatButtonToggleGroup,
+    MatButtonToggle
   ],
   templateUrl: './settings.component.html',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

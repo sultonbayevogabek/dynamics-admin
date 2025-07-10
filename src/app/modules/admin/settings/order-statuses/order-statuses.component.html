@@ -1,11 +1,134 @@
 <div
-  class="bg-card flex flex-col"
+  class="bg-card flex min-w-0 flex-auto flex-col dark:bg-transparent absolute inset-0 overflow-auto border"
 >
-  <div
-    class="flex flex-col px-6 py-8 gap-4"
-  >
-    <div class="flex items-center justify-between">
-      <div class="text-4xl font-extrabold tracking-tight">Buyurtma statuslari</div>
-    </div>
-  </div>
+  <table class="w-full">
+    <thead
+      class="bg-gray-50 text-secondary sticky top-0 z-10 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5">
+    <tr>
+      <th class="py-4 border w-14">
+        №
+      </th>
+      <th class="px-6 py-4 border">
+        O'zbekcha
+      </th>
+      <th class="px-6 py-4 border">
+        Ruscha
+      </th>
+      <th class="px-6 py-4 border">
+        Inglizcha
+      </th>
+      <th class="px-6 py-4 border w-44">
+        Rangi
+      </th>
+      <th class="px-6 py-4 border w-30">
+      </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="hover:bg-slate-50 cursor-pointer" [formGroup]="createForm" (ngSubmit)="createOrderStatus()">
+      <td class="border p-3 text-center">
+        #
+      </td>
+      <td class="border p-3">
+        <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+          <input (keydown.enter)="createOrderStatus()" matInput type="text" placeholder="O'zbekcha" formControlName="nameUz">
+        </mat-form-field>
+      </td>
+      <td class="border p-3">
+        <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+          <input (keydown.enter)="createOrderStatus()" matInput type="text" placeholder="Ruscha" formControlName="nameRu">
+        </mat-form-field>
+      </td>
+      <td class="border p-3">
+        <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+          <input (keydown.enter)="createOrderStatus()" matInput type="text" placeholder="Inglizcha" formControlName="nameEn">
+        </mat-form-field>
+      </td>
+      <td class="border p-3">
+        <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">
+          <input (keydown.enter)="createOrderStatus()" matInput type="color" placeholder="Rang" formControlName="color">
+        </mat-form-field>
+      </td>
+      <td class="border p-3">
+        <button
+          class="bg-primary-50"
+          mat-icon-button
+          (click)="createOrderStatus()"
+        >
+          <mat-icon class="text-primary icon-size-5" svgIcon="heroicons_outline:plus-circle"></mat-icon>
+        </button>
+      </td>
+    </tr>
+
+<!--      @for (category of categories(); track category._id; let i = $index) {-->
+<!--        <tr class="hover:bg-slate-50 cursor-pointer">-->
+<!--          <td class="border p-3 relative">-->
+<!--            <div class="absolute inset-0 p-2 h-full">-->
+<!--              <div class="absolute top-0.5 left-1 text-[10px]">{{ i + 1 }}</div>-->
+<!--              <button class="bg-gray-50" color="accent" mat-icon-button-->
+<!--                      (click)="category.showChildren = !category.showChildren">-->
+<!--                @if (category.showChildren) {-->
+<!--                  <mat-icon class="icon-size-4.5" svgIcon="heroicons_solid:chevron-down"></mat-icon>-->
+<!--                }-->
+<!--                @if (!category.showChildren) {-->
+<!--                  <mat-icon class="icon-size-4.5" svgIcon="heroicons_solid:chevron-right"></mat-icon>-->
+<!--                }-->
+<!--              </button>-->
+<!--            </div>-->
+<!--          </td>-->
+<!--          <td class="border p-3">-->
+<!--            <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">-->
+<!--              <input matInput type="text" placeholder="O'zbekcha" [(ngModel)]="category.nameUz"-->
+<!--                     (keydown.enter)="updateCategory(category)">-->
+<!--            </mat-form-field>-->
+<!--          </td>-->
+<!--          <td class="border p-3">-->
+<!--            <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">-->
+<!--              <input matInput type="text" placeholder="Ruscha" [(ngModel)]="category.nameRu"-->
+<!--                     (keydown.enter)="updateCategory(category)">-->
+<!--            </mat-form-field>-->
+<!--          </td>-->
+<!--          <td class="border p-3">-->
+<!--            <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full" floatLabel="always">-->
+<!--              <input matInput type="text" placeholder="Inglizcha" [(ngModel)]="category.nameEn"-->
+<!--                     (keydown.enter)="updateCategory(category)">-->
+<!--            </mat-form-field>-->
+<!--          </td>-->
+<!--          <td class="border p-3">-->
+<!--            @if (category.image) {-->
+<!--              <file-list-->
+<!--                [files]="[category.image]"-->
+<!--                (filesChange)="category.image = null"-->
+<!--                classes="grid-cols-3"-->
+<!--              />-->
+<!--            }-->
+<!--            @if (!category.image) {-->
+<!--              <file-upload-->
+<!--                (onFilesUpload)="category.image = $event[0]"-->
+<!--              />-->
+<!--            }-->
+<!--          </td>-->
+<!--          <td class="border p-3">-->
+<!--            <button-->
+<!--              mat-icon-button-->
+<!--              color="primary"-->
+<!--              class="bg-primary-50"-->
+<!--              (click)="updateCategory(category)"-->
+<!--            >-->
+<!--              <mat-icon class="icon-size-4" svgIcon="heroicons_outline:check"></mat-icon>-->
+<!--            </button>-->
+
+<!--            <button-->
+<!--              class="bg-red-50 ml-2"-->
+<!--              mat-icon-button-->
+<!--              color="warn"-->
+<!--              (click)="deleteCategory(category._id)"-->
+<!--            >-->
+<!--              <mat-icon class="icon-size-4.5" svgIcon="heroicons_outline:trash"></mat-icon>-->
+<!--            </button>-->
+<!--          </td>-->
+<!--        </tr>-->
+<!--      }-->
+    </tbody>
+  </table>
 </div>
