@@ -10,7 +10,7 @@ import { LayoutComponent } from 'app/layout/layout.component';
 export const appRoutes: Route[] = [
 
   // Redirect empty path to '/dashboards/project'
-  { path: '', pathMatch: 'full', redirectTo: 'dashboards/project' },
+  { path: '', pathMatch: 'full', redirectTo: '/products' },
 
   // Redirect signed-in user to the '/dashboards/project'
   //
@@ -20,7 +20,7 @@ export const appRoutes: Route[] = [
   {
     path: 'signed-in-redirect',
     pathMatch: 'full',
-    redirectTo: 'dashboards/project'
+    redirectTo: '/products'
   },
 
   // Auth routes for guests
