@@ -39,15 +39,15 @@
       @if (orders.length > 0) {
         <table class="w-full border-collapse border border-gray-300">
           <!-- Header -->
-          <thead class="bg-gray-50 text-secondary sticky top-0 z-10 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5">
+          <thead
+            class="bg-gray-50 text-secondary sticky top-0 z-10 text-md font-semibold shadow dark:bg-black dark:bg-opacity-5">
           <tr>
             <th class="px-6 py-4 border">ID</th>
             <th class="px-6 py-4 border">Sana</th>
             <th class="px-6 py-4 border">Tashkilot</th>
             <th class="px-6 py-4 border">Kontakt ma'lumotlari</th>
-            <th class="px-6 py-4 border">Tovarlar</th>
+            <th class="px-6 py-4 border w-1/5">Tovarlar</th>
             <th class="px-6 py-4 border">Status</th>
-            <th class="px-6 py-4 border">Mavjudligi</th>
             <th class="px-6 py-4 border">Harakatlar</th>
           </tr>
           </thead>
@@ -60,38 +60,66 @@
                 </td>
                 <!-- SKU -->
                 <td class="border px-6 py-3 hidden md:table-cell">
-                  {{ order?.createdAt| date: 'dd.MM.yyyy HH:mm'}}
+                  {{ order?.createdAt| date: 'dd.MM.yyyy HH:mm' }}
                 </td>
 
                 <!-- Name -->
-                <td class="border px-6 py-3">{{ order.companyName || 'Jismoniy shaxs' }}</td>
+                <td class="border px-6 py-3">
+                  @if (order.companyName) {
+                    <div class="flex items-center gap-2 text-blue-600">
+                      <mat-icon class="icon-size-5" svgIcon="heroicons_solid:building-office"></mat-icon>
+                      <span>{{ order.companyName }}</span>
+                    </div>
+                  } @else {
+                    <div class="flex items-center gap-2 text-green-600">
+                      <mat-icon class="icon-size-5" svgIcon="heroicons_solid:user"></mat-icon>
+                      <span>Jismoniy shaxs</span>
+                    </div>
+                  }
+                </td>
 
                 <!-- Category -->
                 <td class="border px-6 py-3">
-                  <div class="flex gap-3">
-                    <span class="font-medium">Ism: </span>
-                    <span class="text-secondary">{{ order?.lastName| titlecase }} {{ order?.firstName| titlecase }}</span>
+                  <div class="flex gap-3 items-center mb-1">
+                    <span class="font-medium text-gray-600 min-w-[60px]">Ism: </span>
+                    <span
+                      class="text-secondary">{{ order?.lastName| titlecase }} {{ order?.firstName| titlecase }}</span>
                   </div>
-                  <div class="flex gap-3">
-                    <span class="font-medium">E-mail: </span>
-                    <a class="text-primary underline" [href]="'mailto:' + order?.email">{{ order?.email }}</a>
+                  <div class="flex gap-3 items-center mb-1">
+                    <span class="font-medium text-gray-600 min-w-[60px]">E-mail: </span>
+                    <a class="text-blue-600 hover:text-blue-800 hover:underline font-medium text-base"
+                       [href]="'mailto:' + order?.email">{{ order?.email }}</a>
                   </div>
-                  <div class="flex gap-3">
-                    <span class="font-medium">Tel: </span>
-                    <a class="text-primary underline" [href]="'tel:' + order?.phone">{{ order?.phone }}</a>
+                  <div class="flex gap-3 items-center">
+                    <span class="font-medium text-gray-600 min-w-[60px]">Tel: </span>
+                    <a class="text-blue-600 hover:text-blue-800 hover:underline font-medium text-base"
+                       [href]="'tel:' + order?.phone">{{ order?.phone }}</a>
                   </div>
                 </td>
 
                 <!-- Price -->
                 <td class="border px-6 py-3 hidden sm:table-cell">
-
+                  <div class="flex flex-wrap gap-1">
+                    @for (item of order.items; track item) {
+                      <div
+                        class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-800 cursor-default">
+                        {{ item.sku }} x {{ item.quantity }}
+                      </div>
+                    }
+                  </div>
                 </td>
 
                 <!-- Stock -->
-                <td class="border px-6 py-3 hidden lg:table-cell uppercase"></td>
-
-                <!-- Status Toggle -->
                 <td class="border px-6 py-3 hidden lg:table-cell">
+                  <mat-form-field class="fuse-mat-dense fuse-mat-rounded fuse-mat-no-subscript w-full">
+                    <mat-select [value]="order.status._id" (selectionChange)="orderStatusChange(order._id, $event)">
+                      @for (status of statuses(); track status) {
+                        <mat-option [value]="status._id">
+                          <span [ngStyle]="{ color: status?.color }">{{ status?.nameUz }}</span>
+                        </mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
                 </td>
 
                 <!-- Actions -->

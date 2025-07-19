@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, signal } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { firstValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
@@ -6,13 +6,16 @@ import { MatFormField, MatPrefix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { environment } from '@env/environment';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Confirmable } from '../../../core/decorators/confirmation-decorator';
 import { ToasterService } from '@shared/services/toaster.service';
 import { OrdersService } from './orders.service';
 import { IOrder } from './interfaces/order.interface';
-import { DatePipe, TitleCasePipe } from '@angular/common';
+import { DatePipe, NgStyle, TitleCasePipe } from '@angular/common';
 import { MatIconButton } from '@angular/material/button';
+import { SettingsService } from '../settings/settings.service';
+import { IOrderStatus } from '../settings/interfaces/order-status.interface';
+import { MatOption } from '@angular/material/core';
+import { MatSelect, MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'orders',
@@ -25,7 +28,10 @@ import { MatIconButton } from '@angular/material/button';
     MatPrefix,
     DatePipe,
     TitleCasePipe,
-    MatIconButton
+    MatIconButton,
+    MatOption,
+    MatSelect,
+    NgStyle
   ],
   templateUrl: './orders.component.html',
   standalone: true,
@@ -47,12 +53,15 @@ export class OrdersComponent implements OnInit {
     search: ''
   };
   orders: IOrder[] = [];
+  statuses = signal<IOrderStatus[]>([]);
 
   private ordersService = inject(OrdersService);
   private toasterService = inject(ToasterService);
+  private settingsService = inject(SettingsService);
 
   async ngOnInit() {
     await this.getOrders();
+    await this.getOrderStatuses();
   }
 
   async getOrders() {
@@ -99,21 +108,33 @@ export class OrdersComponent implements OnInit {
     await this.getOrders();
   }
 
-  async orderStatusChange($event: MatSlideToggleChange, order: IOrder) {
-    const newStatus = $event.checked ? 1 : 0
-    const params = {
-      _id: order._id,
-      status: newStatus,
-    }
-
-    await firstValueFrom(
-      this.ordersService.editOrder(params)
+  async orderStatusChange(id: string, $event: MatSelectChange) {
+    const response = await firstValueFrom(
+      this.ordersService.editOrder({
+        _id: id,
+        status: $event.value
+      })
     )
 
-    // order.status = newStatus;
+    if (response && response.statusCode === 200) {
+      this.toasterService.open({
+        message: `Buyurtmaning statusi o'zgartirildi`,
+        duration: 1000
+      })
+      return;
+    }
+
     this.toasterService.open({
-      message: `Buyurtmaning statusi o'zgartirildi`,
-      duration: 1000
+      message: `Buyurtmaning statusi o'zgartirishda xatolik sodir bo'ldi`,
+      duration: 1000,
+      type: 'warning'
     })
+  }
+
+  async getOrderStatuses() {
+    const statuses = await firstValueFrom(
+      this.settingsService.getOrderStatusesList()
+    );
+    this.statuses.set(statuses);
   }
 }
