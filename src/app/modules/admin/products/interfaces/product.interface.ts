@@ -1,4 +1,5 @@
 import { IFile } from '@shared/interfaces/file.interface';
+import { IBrand } from '../../brands/brands.interface';
 
 export interface IProduct {
   _id: string;
@@ -19,6 +20,7 @@ export interface IProduct {
   rate: number;
   categoryId: string;
   brandId: string;
+  brand: IBrand;
   images: IFile[];
   thumbs: IFile[];
   status: number;
