@@ -12,6 +12,7 @@ import { FuseConfirmationService } from '../../../../../@fuse/services/confirmat
 import { FileListComponent } from '@shared/components/file-list/file-list.component';
 import { FileUploadComponent } from '@shared/components/file-upload/file-upload.component';
 import { IFile } from '@shared/interfaces/file.interface';
+import { ToasterService } from '@shared/services/toaster.service';
 
 @Component({
   selector: 'categories-crud',
@@ -34,13 +35,13 @@ export class CategoriesCrudComponent implements OnInit {
     nameUz: new FormControl(null, [ Validators.required ]),
     nameRu: new FormControl(null, [ Validators.required ]),
     nameEn: new FormControl(null, [ Validators.required ]),
-    image: new FormControl(null, [ Validators.required ]),
+    image: new FormControl(null),
   });
   categories = signal<ICategory[]>([]);
   parentId = input<string>(null);
 
   private categoriesService = inject(CategoriesService);
-  private snackbar = inject(MatSnackBar);
+  private toasterService = inject(ToasterService);
   private confirmation = inject(FuseConfirmationService);
 
   async ngOnInit() {
@@ -55,9 +56,10 @@ export class CategoriesCrudComponent implements OnInit {
       this.categoriesService.updateCategory(category)
     );
     if (response.statusCode === 200) {
-      this.snackbar.open(`O'zgarishlar muvaffaqiyatli saqlandi`, 'OK', {
-        duration: 2000
-      });
+      this.toasterService.open({
+        message: `O'zgarishlar muvaffaqiyatli saqlandi`,
+        type: 'success'
+      })
     }
   }
 
@@ -77,9 +79,10 @@ export class CategoriesCrudComponent implements OnInit {
       this.categoriesService.createCategory(payload)
     );
     if (res.statusCode === 201) {
-      this.snackbar.open(`Yangi kategoriya qo'shildi`, 'OK', {
-        duration: 2000
-      });
+      this.toasterService.open({
+        message: `Yangi kategoriya qo'shildi`,
+        type: 'success'
+      })
       this.createForm.reset();
       await this.getCategories();
     }
@@ -111,14 +114,16 @@ export class CategoriesCrudComponent implements OnInit {
 
     const response = await firstValueFrom(this.categoriesService.deleteCategory(_id));
     if (response.statusCode === 200) {
-      this.snackbar.open(`Kategoriya o'chirildi`, 'OK', {
-        duration: 2000
-      });
+      this.toasterService.open({
+        message: `Kategoriya o'chirildi`,
+        type: 'success'
+      })
       await this.getCategories();
     } else {
-      this.snackbar.open(`O'chirishda xatolik sodir bo'ldi`, 'OK', {
-        duration: 2000
-      });
+      this.toasterService.open({
+        message: `O'chirishda xatolik sodir bo'ldi`,
+        type: 'error'
+      })
     }
   }
 

@@ -158,7 +158,7 @@
           <tr>
             <th class="px-6 py-4 border">Rasmi</th>
             <th class="px-6 py-4 border">SKU</th>
-            <th class="px-6 py-4 border">Tovar nomi</th>
+            <th class="px-6 py-4 border">Tovar nomi / Brend</th>
             <th class="px-6 py-4 border">Kategoriya</th>
             <th class="px-6 py-4 border">Tovar narxi</th>
             <th class="px-6 py-4 border">Mavjudligi</th>
@@ -202,7 +202,10 @@
                 </td>
 
                 <!-- Name -->
-                <td class="border px-6 py-3">{{ product.nameUz }}</td>
+                <td class="border px-6 py-3">
+                  <div>{{ product.nameUz }}</div>
+                  <div>{{ product.brandId }}</div>
+                </td>
 
                 <!-- Category -->
                 <td class="border px-6 py-3">
