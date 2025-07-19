@@ -22,9 +22,84 @@
         ></mat-icon>
         <input
           matInput
-          [placeholder]="'Buyurtmani qidirish ID / Elektron pochta / Telefon raqam'"
+          [placeholder]="'Buyurtmani qidirish'"
           [(ngModel)]="params.search"
           (keydown.enter)="searchProduct()"
+        />
+      </mat-form-field>
+
+      <mat-form-field
+        class="fuse-mat-dense fuse-mat-rounded"
+        [subscriptSizing]="'dynamic'"
+      >
+        <mat-select [(ngModel)]="params.status" (selectionChange)="searchProduct()" placeholder="Status">
+          @for (status of statuses(); track status) {
+            <mat-option [value]="status._id">
+              <span [ngStyle]="{ color: status?.color }">{{ status?.nameUz }}</span>
+            </mat-option>
+          }
+        </mat-select>
+
+        @if (params.status) {
+          <button matSuffix mat-icon-button (click)="params.status = null; searchProduct()">
+            <mat-icon svgIcon="heroicons_outline:x-mark"></mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      <mat-form-field
+        class="fuse-mat-dense fuse-mat-rounded"
+        [subscriptSizing]="'dynamic'"
+      >
+        <input
+          matInput
+          [matDatepicker]="fromDatePicker"
+          readonly
+          (click)="fromDatePicker.open()"
+          placeholder="Yaratilgan sana (dan)"
+          [(ngModel)]="params.fromDate"
+          [max]="params.toDate"
+          (dateChange)="searchProduct()"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="fromDatePicker"
+        />
+        @if (params.fromDate && !params.toDate) {
+          <button matSuffix mat-icon-button (click)="params.fromDate = null; searchProduct()">
+            <mat-icon svgIcon="heroicons_outline:x-mark"></mat-icon>
+          </button>
+        }
+        <mat-datepicker
+          #fromDatePicker
+        />
+      </mat-form-field>
+
+      <mat-form-field
+        class="fuse-mat-dense fuse-mat-rounded"
+        [subscriptSizing]="'dynamic'"
+      >
+        <input
+          matInput
+          [matDatepicker]="toDatePicker"
+          readonly
+          (click)="toDatePicker.open()"
+          placeholder="Yaratilgan sana (gacha)"
+          [(ngModel)]="params.toDate"
+          (dateChange)="searchProduct()"
+          [min]="params.fromDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="toDatePicker"
+        />
+        @if (params.toDate) {
+          <button matSuffix mat-icon-button (click)="params.toDate = null; searchProduct()">
+            <mat-icon svgIcon="heroicons_outline:x-mark"></mat-icon>
+          </button>
+        }
+        <mat-datepicker
+          #toDatePicker
         />
       </mat-form-field>
     </div>

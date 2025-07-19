@@ -2,7 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, signal } from '@angu
 import { MatIcon } from '@angular/material/icon';
 import { firstValueFrom } from 'rxjs';
 import { FormsModule } from '@angular/forms';
-import { MatFormField, MatPrefix } from '@angular/material/form-field';
+import { MatFormField, MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { environment } from '@env/environment';
@@ -10,12 +10,13 @@ import { Confirmable } from '../../../core/decorators/confirmation-decorator';
 import { ToasterService } from '@shared/services/toaster.service';
 import { OrdersService } from './orders.service';
 import { IOrder } from './interfaces/order.interface';
-import { DatePipe, NgStyle, TitleCasePipe } from '@angular/common';
+import { DatePipe, formatDate, NgStyle, TitleCasePipe } from '@angular/common';
 import { MatIconButton } from '@angular/material/button';
 import { SettingsService } from '../settings/settings.service';
 import { IOrderStatus } from '../settings/interfaces/order-status.interface';
 import { MatOption } from '@angular/material/core';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
+import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
 
 @Component({
   selector: 'orders',
@@ -31,7 +32,11 @@ import { MatSelect, MatSelectChange } from '@angular/material/select';
     MatIconButton,
     MatOption,
     MatSelect,
-    NgStyle
+    NgStyle,
+    MatSuffix,
+    MatDatepicker,
+    MatDatepickerInput,
+    MatDatepickerToggle
   ],
   templateUrl: './orders.component.html',
   standalone: true,
@@ -50,7 +55,10 @@ export class OrdersComponent implements OnInit {
     page: 0,
     limit: 15,
     total: 0,
-    search: ''
+    search: '',
+    status: null,
+    fromDate: null,
+    toDate: null
   };
   orders: IOrder[] = [];
   statuses = signal<IOrderStatus[]>([]);
@@ -69,6 +77,8 @@ export class OrdersComponent implements OnInit {
       this.ordersService.getOrdersList({
         ...this.params,
         page: this.params.page + 1,
+        fromDate: this.params.fromDate ? formatDate(this.params.fromDate, 'dd.MM.yyyy', 'en-US') : null,
+        toDate: this.params.toDate ? formatDate(this.params.toDate, 'dd.MM.yyyy', 'en-US') : null
       })
     );
     this.params.total = response.total;
@@ -77,7 +87,7 @@ export class OrdersComponent implements OnInit {
 
   @Confirmable({
     title: 'Diqqat',
-    message: `Buyurtmani o'chirishni tasdiqlaysizmi?`,
+    message: `Buyurtmani o'chirishni tasdiqlaysizmi?`
   })
   async deleteProduct(_id: string) {
     const response = await firstValueFrom(
@@ -114,13 +124,13 @@ export class OrdersComponent implements OnInit {
         _id: id,
         status: $event.value
       })
-    )
+    );
 
     if (response && response.statusCode === 200) {
       this.toasterService.open({
         message: `Buyurtmaning statusi o'zgartirildi`,
         duration: 1000
-      })
+      });
       return;
     }
 
@@ -128,7 +138,7 @@ export class OrdersComponent implements OnInit {
       message: `Buyurtmaning statusi o'zgartirishda xatolik sodir bo'ldi`,
       duration: 1000,
       type: 'warning'
-    })
+    });
   }
 
   async getOrderStatuses() {

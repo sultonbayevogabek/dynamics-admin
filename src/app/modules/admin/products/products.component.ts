@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit } from '@angular/core';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 import { ProductCreateComponent } from './product-create/product-create.component';
@@ -45,7 +45,8 @@ import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular
     MatDatepickerInput,
     MatDatepickerToggle,
     MatSuffix,
-    DatePipe
+    DatePipe,
+    MatIconButton
   ],
   templateUrl: './products.component.html',
   standalone: true,
@@ -70,7 +71,8 @@ export class ProductsComponent implements OnInit {
     mainCategoryId: null,
     middleCategoryId: null,
     subCategoryId: null,
-    createdDate: null
+    fromDate: null,
+    toDate: null
   };
   products: IProduct[] = [];
   categories: { [key: string]: ICategory[] } = {
@@ -112,7 +114,8 @@ export class ProductsComponent implements OnInit {
       this.productsService.getProductsList({
         ...this.params,
         page: this.params.page + 1,
-        createdDate: this.params.createdDate ? formatDate(this.params.createdDate, 'dd.MM.yyyy', 'en-US') : null
+        fromDate: this.params.fromDate ? formatDate(this.params.fromDate, 'dd.MM.yyyy', 'en-US') : null,
+        toDate: this.params.toDate ? formatDate(this.params.toDate, 'dd.MM.yyyy', 'en-US') : null
       })
     );
     this.params.total = response.total;
