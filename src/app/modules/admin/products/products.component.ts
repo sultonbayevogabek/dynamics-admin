@@ -25,6 +25,8 @@ import { IBrand } from '../brands/brands.interface';
 import { BrandsService } from '../brands/brands.service';
 import { ImgUrlPipe } from '@shared/pipes/img-url.pipe';
 import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular/material/datepicker';
+import { FileUploadComponent } from '@shared/components/file-upload/file-upload.component';
+import { IFile } from '@shared/interfaces/file.interface';
 
 @Component({
   selector: 'products',
@@ -46,7 +48,8 @@ import { MatDatepicker, MatDatepickerInput, MatDatepickerToggle } from '@angular
     MatDatepickerToggle,
     MatSuffix,
     DatePipe,
-    MatIconButton
+    MatIconButton,
+    FileUploadComponent
   ],
   templateUrl: './products.component.html',
   standalone: true,
@@ -128,7 +131,7 @@ export class ProductsComponent implements OnInit {
       height: '100vh',
       maxWidth: '100vw',
       maxHeight: '100vh'
-    }).afterClosed())
+    }).afterClosed());
     await this.searchProduct();
   }
 
@@ -144,7 +147,7 @@ export class ProductsComponent implements OnInit {
         maxHeight: '100vh',
         data
       }).afterClosed()
-    )
+    );
     if (result === 'edited') {
       await this.searchProduct();
     }
@@ -238,20 +241,44 @@ export class ProductsComponent implements OnInit {
   }
 
   async productStatusChange($event: MatSlideToggleChange, product: IProduct) {
-    const newStatus = $event.checked ? 1 : 0
+    const newStatus = $event.checked ? 1 : 0;
     const params = {
       _id: product._id,
-      status: newStatus,
-    }
+      status: newStatus
+    };
 
     await firstValueFrom(
       this.productsService.editProduct(params)
-    )
+    );
 
     product.status = newStatus;
     this.toasterService.open({
       message: `Tovar status o'zgartirildi`,
       duration: 1000
+    });
+  }
+
+  async uploadProductImage($event: IFile[], product: IProduct) {
+    const response = await firstValueFrom(
+      this.productsService.editProduct({
+        _id: product._id,
+        images: $event
+      })
+    );
+
+    if (response && response.statusCode === 200) {
+      this.toasterService.open({
+        message: `Tovar rasmi muvaffaqiyatli yuklandi`
+      });
+      product.thumbs = $event;
+      return;
+    }
+
+    this.toasterService.open({
+      message: 'Tovar rasmini yuklashda xatolik yuz berdi',
+      type: 'warning'
     })
   }
+
+  protected readonly length = length;
 }

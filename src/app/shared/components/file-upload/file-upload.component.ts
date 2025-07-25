@@ -1,5 +1,5 @@
 import { Component, inject, input, output, viewChild } from '@angular/core';
-import { MatButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { FileService } from '../../services/file.service';
 import { firstValueFrom } from 'rxjs';
@@ -8,8 +8,8 @@ import { IFile } from '../../interfaces/file.interface';
 @Component({
   selector: 'file-upload',
   imports: [
-    MatButton,
-    MatIcon
+    MatIcon,
+    MatIconButton
   ],
   templateUrl: './file-upload.component.html',
   standalone: true
