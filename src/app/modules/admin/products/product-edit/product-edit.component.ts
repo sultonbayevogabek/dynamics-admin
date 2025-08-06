@@ -60,7 +60,7 @@ export class ProductEditComponent implements OnInit {
       middleCategoryId: new FormControl<string>(null, Validators.required)
     }),
     _id: new FormControl(null, [Validators.required]),
-    categoryId: new FormControl<string>(null, [ Validators.required ]),
+    categoryId: new FormControl<string>(null),
     nameUz: new FormControl<string>(null, [ Validators.required ]),
     nameRu: new FormControl<string>(null, [ Validators.required ]),
     nameEn: new FormControl<string>(null, [ Validators.required ]),
@@ -252,7 +252,8 @@ export class ProductEditComponent implements OnInit {
       const response = await firstValueFrom(
         this.productsService.editProduct({
           ...form.getRawValue(),
-          oldPrice: form.getRawValue().oldPrice || null
+          oldPrice: form.getRawValue().oldPrice || null,
+          categoryId: form.getRawValue().categoryId || form.getRawValue().details.middleCategoryId
         })
       );
       if (response && response.statusCode === 200) {

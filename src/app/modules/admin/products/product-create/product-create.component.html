@@ -54,6 +54,7 @@
             classes="fuse-mat-dense w-full"
             [options]="categories.sub"
             [multiple]="false"
+            [emptyOption]="true"
             [defaultValue]="productForm.get('categoryId').value"
             (selectionChangeEvent)="selectCategory('sub', $event)"
             [required]="true"

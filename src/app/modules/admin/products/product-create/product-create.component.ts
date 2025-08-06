@@ -56,7 +56,7 @@ export class ProductCreateComponent implements OnInit {
       mainCategoryId: new FormControl<string>(null, Validators.required),
       middleCategoryId: new FormControl<string>(null, Validators.required)
     }),
-    categoryId: new FormControl<string>(null, [ Validators.required ]),
+    categoryId: new FormControl<string>(null),
     nameUz: new FormControl<string>('', [ Validators.required ]),
     nameRu: new FormControl<string>('', [ Validators.required ]),
     nameEn: new FormControl<string>('', [ Validators.required ]),
@@ -225,7 +225,8 @@ export class ProductCreateComponent implements OnInit {
       const response = await firstValueFrom(
         this.productsService.createProduct({
           ...form.getRawValue(),
-          oldPrice: form.getRawValue().oldPrice || null
+          oldPrice: form.getRawValue().oldPrice || null,
+          categoryId: form.getRawValue().categoryId || form.getRawValue().details.middleCategoryId,
         })
       );
       if (response && response.statusCode === 201) {
