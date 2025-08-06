@@ -57,7 +57,6 @@
             [emptyOption]="true"
             [defaultValue]="productForm.get('categoryId').value"
             (selectionChangeEvent)="selectCategory('sub', $event)"
-            [required]="true"
             errorMessage="Majburiy maydon"
             [showErrorMessage]="!!productForm.get('categoryId').errors"
             [disabled]="productForm.disabled"
